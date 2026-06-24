@@ -1,0 +1,14 @@
+﻿bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.db
+*.cache
+*.pdb
+*.log
+TestResults/
+appsettings.Development.json
+**/bin/
+**/obj/

@@ -1,0 +1,19 @@
+﻿using MediatR;
+using RealEstate.Application.Common.Interfaces;
+using RealEstate.Shared.Common;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace RealEstate.Application.Features.Properties.Queries.GetFeaturedProperties
+{
+    public sealed class GetFeaturedPropertiesQuery
+       : IRequest<ApiResponse<PagedResult<PropertyListDto>>>, IAutoTenantRequest
+    {
+        public Guid CompanyId { get; private set; }
+        public int Page { get; init; } = 1;
+        public int PageSize { get; init; } = 10;
+
+        public void SetCompanyId(Guid companyId) => CompanyId = companyId;
+    }
+}
