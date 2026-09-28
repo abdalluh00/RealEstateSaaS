@@ -57,25 +57,29 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
             // Open, InProgress, Done, Cancelled
 
             // ── Relations ─────────────────────────────────
+            builder.HasOne(x => x.Company)
+         .WithMany()
+         .HasForeignKey(x => x.CompanyId)
+         .OnDelete(DeleteBehavior.Restrict);
+
+            // These have no nav props — add IsRequired()
             builder.HasOne<Property>()
                    .WithMany()
                    .HasForeignKey(x => x.PropertyId)
+                   .IsRequired(false)   // nullable FK
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne<Client>()
                    .WithMany()
                    .HasForeignKey(x => x.ClientId)
+                   .IsRequired(false)   // nullable FK
                    .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne<User>()
                    .WithMany()
                    .HasForeignKey(x => x.AssignedToId)
+                   .IsRequired(false)   // nullable FK
                    .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne<Company>()
-                   .WithMany()
-                   .HasForeignKey(x => x.CompanyId)
-                   .OnDelete(DeleteBehavior.Restrict);
 
             // ── Indexes ───────────────────────────────────
             builder.HasIndex(x => x.CompanyId);

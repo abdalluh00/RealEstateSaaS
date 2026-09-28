@@ -1,68 +1,65 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.Application.Features.Payments.Commands.CancelPayment;
 using RealEstate.Application.Features.Payments.Commands.MarkPaymentPaid;
-using RealEstate.Application.Features.Payments.Queries.GetOverduePayments;
-using RealEstate.Application.Features.Payments.Queries.GetPayments;
-using RealEstate.Application.Features.Payments.Queries.GetPaymentSummary;
+using RealEstate.Application.Features.Payments.Queries.GetContractPaymentSummary;
+using RealEstate.Application.Features.Payments.Queries.GetContractPayments;
+using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class PaymentsController : ControllerBase
+    [Route("api/payments")]
+    [Authorize(Policy = Policies.AgentAndUp)]
+    public class PaymentController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public PaymentsController(IMediator mediator) => _mediator = mediator;
+        public PaymentController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet("contract/{contractId:guid}")]
-        public async Task<IActionResult> GetByContract(Guid contractId)
+        public async Task<IActionResult> GetByContract(
+            Guid contractId,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetPaymentsQuery(contractId));
-            return Ok(result);
+            var result = await _mediator.Send(
+                new GetContractPaymentsQuery { ContractId = contractId }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("overdue/{companyId:guid}")]
-        public async Task<IActionResult> GetOverdue(Guid companyId)
+        [HttpGet("contract/{contractId:guid}/summary")]
+        public async Task<IActionResult> GetSummary(
+            Guid contractId,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetOverduePaymentsQuery(companyId));
-            return Ok(result);
+            var result = await _mediator.Send(
+                new GetContractPaymentSummaryQuery { ContractId = contractId }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("summary/{companyId:guid}")]
-        public async Task<IActionResult> GetSummary(Guid companyId)
-        {
-            var result = await _mediator.Send(new GetPaymentSummaryQuery(companyId));
-            return Ok(result);
-        }
-
-        [HttpPut("pay/{paymentId:guid}")]
+        [HttpPatch("{id:guid}/paid")]
+        [Authorize(Policy = Policies.AdminAndUp)]
         public async Task<IActionResult> MarkPaid(
-            Guid paymentId,
-            [FromBody] MarkPaymentPaidCommand command)
+            Guid id,
+            [FromBody] MarkPaymentPaidCommand cmd,
+            CancellationToken ct = default)
         {
-            if (paymentId != command.PaymentId) return BadRequest("المعرف غير متطابق");
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPut("cancel/{paymentId:guid}")]
-        public async Task<IActionResult> Cancel(Guid paymentId)
+        [HttpPatch("{id:guid}/cancel")]
+        [Authorize(Policy = Policies.AdminAndUp)]
+        public async Task<IActionResult> Cancel(
+            Guid id,
+            [FromBody] CancelPaymentCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new CancelPaymentCommand(paymentId));
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
-
-        // PaymentsController.cs
-        //[HttpGet("upcoming/{companyId:guid}")]
-        //public async Task<IActionResult> GetUpcoming(
-        //    Guid companyId,
-        //    [FromQuery] int daysAhead = 30)
-        //{
-        //    var result = await _mediator.Send(
-        //        new GetUpcomingPaymentsQuery(companyId, daysAhead));
-        //    return Ok(result);
-        //}
     }
 }

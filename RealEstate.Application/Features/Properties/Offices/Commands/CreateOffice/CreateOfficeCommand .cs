@@ -33,7 +33,7 @@ namespace RealEstate.Application.Features.Properties.Offices.Commands.CreateOffi
 
         public int? ParkingSpots { get; init; }
         public int? AgeInYears { get; init; }
-        public string? FacingDirection { get; init; }
+        public FacingDirection FacingDirection { get; init; }
         public FurnishedStatus FurnishedStatus { get; init; }
 
         public string? RegaLicenseNumber { get; init; }

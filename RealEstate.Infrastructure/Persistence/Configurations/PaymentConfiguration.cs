@@ -42,14 +42,16 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
             // ✅ changed to enum — Cash, BankTransfer, Moyasar, Cheque
 
             // ── Relations ─────────────────────────────────
-            builder.HasOne<Contract>()
-                   .WithMany()
-                   .HasForeignKey(x => x.ContractId)
-                   .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(x => x.Contract)
+         .WithMany()
+         .HasForeignKey(x => x.ContractId)
+         .IsRequired()
+         .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<Company>()
+            builder.HasOne(x => x.Company)
                    .WithMany()
                    .HasForeignKey(x => x.CompanyId)
+                   .IsRequired()
                    .OnDelete(DeleteBehavior.Restrict);
 
             // ── Indexes ───────────────────────────────────
@@ -68,7 +70,7 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
             // no duplicate payment numbers per contract
 
             // ── Soft Delete ───────────────────────────────
-            builder.HasQueryFilter(x => !x.IsDeleted);
+            //builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

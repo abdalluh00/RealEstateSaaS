@@ -38,9 +38,7 @@ namespace RealEstate.Application.Features.Properties.Offices.Commands.CreateOffi
                 .MaximumLength(500)
                 .When(x => !string.IsNullOrWhiteSpace(x.Address));
 
-            RuleFor(x => x.FacingDirection)
-                .MaximumLength(50)
-                .When(x => !string.IsNullOrWhiteSpace(x.FacingDirection));
+          
 
             RuleFor(x => x.RegaLicenseNumber)
                 .MaximumLength(100)

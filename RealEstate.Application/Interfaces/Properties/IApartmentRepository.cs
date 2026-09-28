@@ -1,14 +1,16 @@
-﻿using RealEstate.Domain.Common.Enums;
+﻿// Application/Interfaces/Properties/IApartmentRepository.cs
+using RealEstate.Application.DTOs.Properties.Apartment;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities.Properties;
-using RealEstate.Domain.ReadModels.PropertyModel;
+using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 
-namespace RealEstate.Domain.Interfaces.Properties
+namespace RealEstate.Application.Interfaces.Properties
 {
     public interface IApartmentRepository : IGenericRepository<ApartmentProperty>
     {
-        // ── Paged list with apartment-specific filters ────
-        Task<PagedResult<ApartmentListReadModel>> GetPagedAsync(
+        // ── Queries ───────────────────────────────────────
+        Task<PagedResult<ApartmentListDto>> GetPagedAsync(
             Guid companyId,
             int page,
             int pageSize,
@@ -19,17 +21,19 @@ namespace RealEstate.Domain.Interfaces.Properties
             FurnishedStatus? furnishedStatus = null,
             CancellationToken ct = default);
 
-        // ── Detail — base + apartment fields + relations ──
-        Task<ApartmentDetailReadModel?> GetByIdWithDetailsAsync(
+        Task<ApartmentDetailDto?> GetDetailByIdAsync(
             Guid id,
             Guid companyId,
             CancellationToken ct = default);
 
-        // ── Commands support ──────────────────────────────
-        Task<ApartmentProperty?> GetByIdForUpdateAsync(
+        // ── Validation ────────────────────────────────────
+        Task<bool> IsAvailableAsync(
             Guid id,
-            Guid companyId,
+            CancellationToken ct = default);
+
+        Task<bool> UnitNumberExistsAsync(
+            string unitNumber,
+            Guid parentPropertyId,
             CancellationToken ct = default);
     }
-
 }

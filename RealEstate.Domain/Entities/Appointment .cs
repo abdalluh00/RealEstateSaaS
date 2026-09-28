@@ -1,5 +1,6 @@
 ﻿using RealEstate.Domain.Common;
 using RealEstate.Domain.Common.Enums;
+using RealEstate.Domain.Entities.Properties;
 
 namespace RealEstate.Domain.Entities
 {
@@ -30,5 +31,8 @@ namespace RealEstate.Domain.Entities
 
         public Guid CompanyId { get; set; }
         public Company Company { get; set; } = null!;
+        public Property Property { get; set; } = null!;
+        public Client Client { get; set; } = null!;
+        public User Agent { get; set; } = null!;
     }
 }

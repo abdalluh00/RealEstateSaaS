@@ -1,47 +1,36 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Contracts.DTO;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Application.DTOs.Contracts;
+using RealEstate.Application.Interfaces;
 using RealEstate.Shared.Common;
-namespace RealEstate.Application.Features.Contracts.Queries.GetContracts
+
+namespace RealEstate.Application.Features.Contracts.Queries.GetPagedContracts
 {
-    public class GetContractsHandler
-       : IRequestHandler<GetContractsQuery, ApiResponse<List<ContractDto>>>
+    public sealed class GetPagedContractsQueryHandler
+        : IRequestHandler<GetPagedContractsQuery, ApiResponse<PagedResult<ContractListDto>>>
     {
-        private readonly IContractRepository _contractRepository;
+        private readonly IContractRepository _contracts;
 
-        public GetContractsHandler(IContractRepository contractLookupRepository)
-        {
-            _contractRepository = contractLookupRepository;
-        }
+        public GetPagedContractsQueryHandler(IContractRepository contracts)
+            => _contracts = contracts;
 
-        public async Task<ApiResponse<List<ContractDto>>> Handle(
-            GetContractsQuery request,
+        public async Task<ApiResponse<PagedResult<ContractListDto>>> Handle(
+            GetPagedContractsQuery query,
             CancellationToken ct)
         {
-            var contracts = await _contractRepository.GetByCompanyAsync(
-                request.CompanyId,
-                ct);
+            var result = await _contracts.GetPagedAsync(
+                companyId: query.CompanyId,
+                page: query.Page,
+                pageSize: query.PageSize,
+                status: query.Status,
+                contractType: query.ContractType,
+                agentId: query.AgentId,
+                clientId: query.ClientId,
+                propertyId: query.PropertyId,
+                dateFrom: query.DateFrom,
+                dateTo: query.DateTo,
+                ct: ct);
 
-            var result = contracts.Select(c => new ContractDto
-            {
-                Id = c.Id,
-                ContractNumber = c.ContractNumber,
-                PropertyTitle = c.PropertyTitle,
-                ClientName = c.ClientName,
-                ClientPhone = c.ClientPhone,
-                AgentName = c.AgentName,
-                ContractType = c.ContractType.ToString(),
-                Status = c.Status.ToString(),
-                Amount = c.Amount,
-                Commission = c.Commission,
-                StartDate = c.StartDate,
-                EndDate = c.EndDate,
-                TotalPayments = c.TotalPayments,
-                PaidPayments = c.PaidPayments,
-                TotalPaid = c.TotalPaid
-            }).ToList();
-
-            return ApiResponse<List<ContractDto>>.Ok(result);
+            return ApiResponse<PagedResult<ContractListDto>>.Ok(result, "Success");
         }
     }
 }

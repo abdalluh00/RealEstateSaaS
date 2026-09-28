@@ -28,7 +28,7 @@ namespace RealEstate.Tests.Common
                 Id = TestConstants.CompanyId,
                 Name = "مكتب النرجس",
                 Phone = "0512345678",
-                SubscriptionPlan = "Basic",
+                
                 SubscriptionExpiry = DateTime.UtcNow.AddDays(30),
                 IsActive = true
             };

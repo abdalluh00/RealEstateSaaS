@@ -1,41 +1,37 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Lands.Commands.DeleteLand
+namespace RealEstate.Application.Features.Lands.Commands.DeleteLand
 {
-    public class DeleteLandHandler : IRequestHandler<DeleteLandCommand, ApiResponse<bool>>
+    public sealed class DeleteLandCommandHandler
+        : IRequestHandler<DeleteLandCommand, ApiResponse<bool>>
     {
-        private readonly ILandRepository _landRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILandRepository _lands;
+        private readonly IUnitOfWork _uow;
 
-        public DeleteLandHandler(
-            ILandRepository landRepository,
-            IUnitOfWork unitOfWork)
+        public DeleteLandCommandHandler(ILandRepository lands, IUnitOfWork uow)
         {
-            _landRepository = landRepository;
-            _unitOfWork = unitOfWork;
+            _lands = lands;
+            _uow = uow;
         }
 
-        public async Task<ApiResponse<bool>> Handle(DeleteLandCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(
+            DeleteLandCommand cmd,
+            CancellationToken ct)
         {
-            var entity = await _landRepository.GetByIdAsync(request.Id, request.CompanyId);
-            if (entity is null)
-                throw new NotFoundException("الأرض غير موجودة");
+            var land = await _lands.Query()
+                .FirstOrDefaultAsync(x => x.Id == cmd.Id
+                                       && x.CompanyId == cmd.CompanyId, ct);
 
-            var hasChildren = await _landRepository.HasChildrenAsync(request.Id, request.CompanyId);
-            if (hasChildren)
-                throw new ConflictException("لا يمكن حذف الأرض لوجود عقارات مرتبطة بها");
+            if (land is null)
+                throw new NotFoundException("الأرض", cmd.Id);
 
-            entity.IsDeleted = true;
-
-            _landRepository.Update(entity);
-            await _unitOfWork.SaveChangesAsync(ct);
+            _lands.SoftDelete(land);
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<bool>.Ok(true, "تم حذف الأرض بنجاح");
         }

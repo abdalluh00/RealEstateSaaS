@@ -15,6 +15,8 @@ namespace RealEstate.Domain.ReadModels.PropertyModel
         public string Type { get; init; } = string.Empty;      // discriminator from EF
         public PropertyPurpose Purpose { get; init; }
         public PropertyStatus PropertyStatus { get; init; }
+        public string? UnitNumber { get; init; }
+
         public decimal Price { get; init; }
         public decimal Area { get; init; }
         public string City { get; init; } = string.Empty;

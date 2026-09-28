@@ -1,112 +1,100 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.Interfaces.Properties.RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace RealEstate.Application.Features.Properties.Apartments.Commands.CreateApartment
 {
-    public class CreateApartmentHandler : IRequestHandler<CreateApartmentCommand, ApiResponse<Guid>>
+    public sealed class CreateApartmentCommandHandler
+         : IRequestHandler<CreateApartmentCommand, ApiResponse<Guid>>
     {
-        private readonly IApartmentRepository _apartmentRepository;
-        private readonly IPropertyLookupRepository _propertyLookupRepository;
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApartmentRepository _apartments;
+        private readonly IPropertyRepository _properties;
+        private readonly IUnitOfWork _uow;
+        private readonly IPropertyCodeGenerator _codeGenerator;
 
-        public CreateApartmentHandler(
-            IApartmentRepository apartmentRepository,
-            IPropertyLookupRepository propertyLookupRepository,
-            IOwnerRepository ownerRepository,
-            IUserRepository userRepository,
-            IUnitOfWork unitOfWork)
+        public CreateApartmentCommandHandler(
+            IApartmentRepository apartments,
+            IPropertyRepository properties,
+            IUnitOfWork uow,
+            IPropertyCodeGenerator codeGenerator)
         {
-            _apartmentRepository = apartmentRepository;
-            _propertyLookupRepository = propertyLookupRepository;
-            _ownerRepository = ownerRepository;
-            _userRepository = userRepository;
-            _unitOfWork = unitOfWork;
+            _apartments = apartments;
+            _properties = properties;
+            _uow = uow;
+            _codeGenerator = codeGenerator;
         }
 
-        public async Task<ApiResponse<Guid>> Handle(CreateApartmentCommand request, CancellationToken ct)
+        public async Task<ApiResponse<Guid>> Handle(
+            CreateApartmentCommand cmd,
+            CancellationToken ct)
         {
-            var dto = request.Apartment;
-
-            // Validate owner in same company
-            var ownerExists = await _ownerRepository.ExistsInCompanyAsync(dto.OwnerId, request.CompanyId);
-            if (!ownerExists)
-                throw new NotFoundException("المالك غير موجود ضمن نفس الشركة");
-
-            // Validate agent in same company
-            var agentExists = await _userRepository.ExistsInCompanyAsync(dto.AgentId, request.CompanyId);
-            if (!agentExists)
-                throw new NotFoundException("الوسيط/المستخدم غير موجود ضمن نفس الشركة");
-
-            // Validate parent property if provided
-            if (dto.ParentPropertyId.HasValue)
+            // ── Validate parent exists if provided ────────
+            if (cmd.ParentPropertyId.HasValue)
             {
-                var parentExists = await _propertyLookupRepository.ExistsInCompanyAsync(
-                    dto.ParentPropertyId.Value,
-                    request.CompanyId);
+                var parentExists = await _properties.ExistsAsync(
+                    cmd.ParentPropertyId.Value, cmd.CompanyId, ct);
 
                 if (!parentExists)
-                    throw new NotFoundException("العقار الأب غير موجود ضمن نفس الشركة");
+                    throw new NotFoundException("العقار الأب", cmd.ParentPropertyId.Value);
 
-                var duplicateUnit = await _apartmentRepository.UnitNumberExistsUnderParentAsync(
-                    request.CompanyId,
-                    dto.ParentPropertyId.Value,
-                    dto.UnitNumber);
+                // ── Unit number must be unique inside parent
+                var unitTaken = await _apartments.UnitNumberExistsAsync(
+                    cmd.UnitNumber!, cmd.ParentPropertyId.Value, ct);
 
-                if (duplicateUnit)
-                    throw new ConflictException("رقم الوحدة مستخدم مسبقاً داخل العقار الأب");
+                if (unitTaken)
+                    throw new ConflictException("رقم الوحدة مستخدم بالفعل في هذا العقار");
             }
 
+            // ── Generate unique property code ─────────────
+            var code = await _codeGenerator.GenerateAsync(cmd.CompanyId,"PROP", ct);
+
+            // ── Build entity ──────────────────────────────
             var apartment = new ApartmentProperty
             {
-                CompanyId = request.CompanyId,
-                PropertyCode = string.Empty, // temporary until property code generator is added
+                // Type is set in constructor automatically
+                PropertyCode = code,
+                Title = cmd.Title,
+                Description = cmd.Description,
+                Purpose = cmd.Purpose,
+                PropertyStatus = PropertyStatus.Available,
+                Price = cmd.Price,
+                Area = cmd.Area,
+                City = cmd.City,
+                District = cmd.District,
+                Address = cmd.Address,
+                Latitude = cmd.Latitude,
+                Longitude = cmd.Longitude,
+                ParkingSpots = cmd.ParkingSpots,
+                AgeInYears = cmd.AgeInYears,
+                FacingDirection =(FacingDirection) cmd.FacingDirection!,
+                RegaLicenseNumber = cmd.RegaLicenseNumber,
+                DeedNumber = cmd.DeedNumber,
+                MunicipalityNumber = cmd.MunicipalityNumber,
+                CompanyId = cmd.CompanyId,
+                OwnerId = cmd.OwnerId,
+                AgentId = cmd.AgentId,
+                ParentPropertyId = cmd.ParentPropertyId,
+                UnitNumber = cmd.UnitNumber,
 
-                Title = dto.Title,
-                Description = dto.Description,
-                Purpose = dto.Purpose,
-                PropertyStatus = dto.PropertyStatus,
-                Price = dto.Price,
-                Area = dto.Area,
-                City = dto.City,
-                District = dto.District,
-                Address = dto.Address,
-                Latitude = dto.Latitude,
-                Longitude = dto.Longitude,
-                ParkingSpots = dto.ParkingSpots,
-                AgeInYears = dto.AgeInYears,
-                FacingDirection = dto.FacingDirection,
-                FurnishedStatus = dto.FurnishedStatus,
-                RegaLicenseNumber = dto.RegaLicenseNumber,
-                DeedNumber = dto.DeedNumber,
-                MunicipalityNumber = dto.MunicipalityNumber,
-                IsFeatured = dto.IsFeatured,
-                ParentPropertyId = dto.ParentPropertyId,
-                OwnerId = dto.OwnerId,
-                AgentId = dto.AgentId,
-
-                UnitNumber = dto.UnitNumber,
-                Bedrooms = dto.Bedrooms,
-                Bathrooms = dto.Bathrooms,
-                FloorNumber = dto.FloorNumber,
-                LivingRooms = dto.LivingRooms,
-                HasMaidRoom = dto.HasMaidRoom,
-                HasElevator = dto.HasElevator,
-                HasCentralAc = dto.HasCentralAc,
-                HasBalcony = dto.HasBalcony
+                // ── Apartment specific ────────────────────
+                Bedrooms = cmd.Bedrooms,
+                Bathrooms = cmd.Bathrooms,
+                LivingRooms = cmd.LivingRooms,
+                FloorNumber = cmd.FloorNumber,
+                HasMaidRoom = cmd.HasMaidRoom,
+                HasElevator = cmd.HasElevator,
+                HasCentralAC = cmd.HasCentralAC,
+                HasBalcony = cmd.HasBalcony,
+                HasStorage = cmd.HasStorage,
+                FurnishedStatus = cmd.FurnishedStatus
             };
 
-            await _apartmentRepository.AddAsync(apartment);
-            await _unitOfWork.SaveChangesAsync(ct);
+            _apartments.Add(apartment);
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<Guid>.Ok(apartment.Id, "تم إنشاء الشقة بنجاح");
         }

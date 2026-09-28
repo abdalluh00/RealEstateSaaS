@@ -9,8 +9,9 @@ using System.Text;
 namespace RealEstate.Application.Features.Properties.Villas.Commands.DeleteVilla
 {
     [Authorize(Roles = "Owner,Admin")]
-    public record DeleteVillaCommand(Guid Id) : IRequest<ApiResponse<bool>>, IAutoTenantRequest
+    public sealed record DeleteVillaCommand : IRequest<ApiResponse<bool>>, IAutoTenantRequest
     {
+        public Guid Id { get; set; }
         public Guid CompanyId { get; private set; }
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }

@@ -16,7 +16,7 @@ namespace RealEstate.Domain.Entities
         public LeadStatus LeadStatus { get; set; } = LeadStatus.Lead;
         // Lead → Prospect → Active → Inactive
 
-        public LeadSource? Source { get; set; }
+        public LeadSource Source { get; set; }
         // WhatsApp, Website, Referral, WalkIn, Call
 
         // ── Flags ─────────────────────────────────────────

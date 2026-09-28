@@ -9,7 +9,8 @@ using System.Text;
 namespace RealEstate.Application.Features.Properties.Buildings.Commands.DeleteBuilding
 {
     [Authorize(Roles = "Owner,Admin")]
-    public record DeleteBuildingCommand(Guid Id) : IRequest<ApiResponse<bool>>, IAutoTenantRequest
+    public record DeleteBuildingCommand(Guid Id)
+        : IRequest<ApiResponse<bool>>, IAutoTenantRequest
     {
         public Guid CompanyId { get; private set; }
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;

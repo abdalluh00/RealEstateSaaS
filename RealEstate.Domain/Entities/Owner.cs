@@ -1,5 +1,6 @@
 ﻿using RealEstate.Domain.Common;
 using RealEstate.Domain.Common.Enums;
+using RealEstate.Domain.Entities.Properties;
 
 namespace RealEstate.Domain.Entities
 {
@@ -31,5 +32,6 @@ namespace RealEstate.Domain.Entities
         public Guid CompanyId { get; set; }
         public Company Company { get; set; } = null!;
         
+        public ICollection<Property> Properties { get; set; } = [];
     }
 }

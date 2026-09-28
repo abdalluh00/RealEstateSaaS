@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
@@ -25,7 +26,6 @@ namespace RealEstate.Application.Features.Appointments.Commands.DeleteAppointmen
 
             appointment.IsDeleted = true;
             _repo.Update(appointment);
-            await _repo.SaveChangesAsync();
 
             return ApiResponse<bool>.Ok(true, "تم حذف الموعد بنجاح");
         }

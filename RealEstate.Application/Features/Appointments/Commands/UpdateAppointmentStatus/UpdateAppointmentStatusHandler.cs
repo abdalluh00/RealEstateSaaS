@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
@@ -28,7 +29,6 @@ namespace RealEstate.Application.Features.Appointments.Commands.UpdateAppointmen
             appointment.Feedback = request.Feedback;
 
             _repo.Update(appointment);
-            await _repo.SaveChangesAsync();
 
             return ApiResponse<bool>.Ok(true, "تم تحديث حالة الموعد بنجاح");
         }

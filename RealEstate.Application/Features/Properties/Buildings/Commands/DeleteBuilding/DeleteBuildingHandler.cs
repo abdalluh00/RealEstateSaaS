@@ -1,43 +1,47 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Features.Properties.Buildings.Commands.DeleteBuilding;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Buildings.Commands.DeleteBuilding
+namespace RealEstate.Application.Features.Properties.Building.Commands.DeleteBuilding
 {
     public class DeleteBuildingHandler : IRequestHandler<DeleteBuildingCommand, ApiResponse<bool>>
     {
-        private readonly IBuildingRepository _buildingRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBuildingRepository _buildingRepo;
+        private readonly IUnitOfWork _uow;
 
         public DeleteBuildingHandler(
-            IBuildingRepository buildingRepository,
-            IUnitOfWork unitOfWork)
+            IBuildingRepository buildingRepo,
+            IUnitOfWork uow)
         {
-            _buildingRepository = buildingRepository;
-            _unitOfWork = unitOfWork;
+            _buildingRepo = buildingRepo;
+            _uow = uow;
         }
 
-        public async Task<ApiResponse<bool>> Handle(DeleteBuildingCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(
+            DeleteBuildingCommand request,
+            CancellationToken ct)
         {
-            var entity = await _buildingRepository.GetByIdAsync(request.Id, request.CompanyId);
-            if (entity is null)
-                throw new NotFoundException("المبنى غير موجود");
+            // ── Fetch entity ──────────────────────────────
+            var building = await _buildingRepo
+                .Query()
+                .FirstOrDefaultAsync(b => b.Id == request.Id
+                                       && b.CompanyId == request.CompanyId, ct)
+                ?? throw new NotFoundException("المبنى غير موجود");
 
-            var hasChildren = await _buildingRepository.HasChildrenAsync(request.Id, request.CompanyId);
-            if (hasChildren)
-                throw new ConflictException("لا يمكن حذف المبنى لوجود وحدات مرتبطة به، احذف الشقق أولاً");
+            // ── Business rule: cannot delete if has units ─
+            var hasUnits = await _buildingRepo.HasUnitsAsync(request.Id, ct);
+            if (hasUnits)
+                throw new ValidationException("لا يمكن حذف المبنى — يحتوي على وحدات نشطة");
 
-            entity.IsDeleted = true;
+            _buildingRepo.SoftDelete(building);
+            await _uow.SaveChangesAsync(ct);
 
-            _buildingRepository.Update(entity);
-            await _unitOfWork.SaveChangesAsync(ct);
-
-            return ApiResponse<bool>.Ok(true, "تم حذف المبنى بنجاح");
+            return ApiResponse<bool>.Ok(true);
         }
     }
 }

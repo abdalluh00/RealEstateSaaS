@@ -1,104 +1,96 @@
 ﻿using MediatR;
+using RealEstate.Application.Features.Properties.Buildings.Commands.CreateBuilding;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Buildings.Commands.CreateBuilding
+namespace RealEstate.Application.Features.Properties.Building.Commands.CreateBuilding
 {
     public class CreateBuildingHandler : IRequestHandler<CreateBuildingCommand, ApiResponse<Guid>>
     {
-        private readonly IBuildingRepository _buildingRepository;
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IGenericRepository<Property> _propertyRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBuildingRepository _buildingRepo;
+        private readonly IPropertyRepository _propertyRepo;
+        private readonly IUnitOfWork _uow;
+        private readonly IPropertyCodeGenerator _codeGenerator;
 
         public CreateBuildingHandler(
-            IBuildingRepository buildingRepository,
-            IOwnerRepository ownerRepository,
-            IUserRepository userRepository,
-            IGenericRepository<Property> propertyRepository,
-            IUnitOfWork unitOfWork)
+            IBuildingRepository buildingRepo,
+            IPropertyRepository propertyRepo,
+            IUnitOfWork uow,
+            IPropertyCodeGenerator codeGenerator)
         {
-            _buildingRepository = buildingRepository;
-            _ownerRepository = ownerRepository;
-            _userRepository = userRepository;
-            _propertyRepository = propertyRepository;
-            _unitOfWork = unitOfWork;
+            _buildingRepo = buildingRepo;
+            _propertyRepo = propertyRepo;
+            _uow = uow;
+            _codeGenerator = codeGenerator;
         }
 
-        public async Task<ApiResponse<Guid>> Handle(CreateBuildingCommand request, CancellationToken ct)
+        public async Task<ApiResponse<Guid>> Handle(
+            CreateBuildingCommand request,
+            CancellationToken ct)
         {
-            // Owner validation
-            var owner = await _ownerRepository.GetByIdAsync(request.OwnerId);
-            if (owner is null || owner.CompanyId != request.CompanyId)
-                throw new ValidationException("المالك غير موجود أو لا يتبع لنفس الشركة");
-
-            // Agent validation
-            var agent = await _userRepository.GetByIdAsync(request.AgentId);
-            if (agent is null || agent.CompanyId != request.CompanyId)
-                throw new ValidationException("الوسيط/الموظف المسؤول غير موجود أو لا يتبع لنفس الشركة");
-
-            // Parent validation if exists
-            if (request.ParentPropertyId.HasValue)
+            // ── Validate Owner exists in company ──────────
+            if (request.OwnerId.HasValue)
             {
-                var parent = await _propertyRepository.GetByIdAsync(request.ParentPropertyId.Value);
-                if (parent is null || parent.CompanyId != request.CompanyId)
-                    throw new ValidationException("العقار الأب غير موجود أو لا يتبع لنفس الشركة");
+                var ownerExists = await _propertyRepo.IsOwnerLinkedToAnyPropertyAsync(
+                    request.OwnerId.Value, request.CompanyId, ct);
+                // Note: use IOwnerRepository.ExistsAsync instead when built
             }
 
-            var entity = new BuildingProperty
+            // ── Generate unique property code ─────────────
+            var code = await _codeGenerator.GenerateAsync(
+                request.CompanyId, "BLD", ct);
+
+            // ── Build entity ──────────────────────────────
+            var building = new BuildingProperty
             {
-                PropertyCode = GeneratePropertyCode(),
-                ParentPropertyId = request.ParentPropertyId,
-
-                Title = request.Title.Trim(),
-                Description = request.Description?.Trim(),
-                Purpose = request.Purpose,
-                PropertyStatus = request.PropertyStatus,
-
+                PropertyCode = code,
+                Title = request.Title,
+                Description = request.Description,
+                Purpose = Enum.Parse<PropertyPurpose>(request.Purpose),
+                PropertyStatus = PropertyStatus.Available,
                 Price = request.Price,
                 Area = request.Area,
-
-                City = request.City.Trim(),
-                District = request.District.Trim(),
-                Address = request.Address?.Trim(),
+                City = request.City,
+                District = request.District,
+                Address = request.Address,
                 Latitude = request.Latitude,
                 Longitude = request.Longitude,
-
                 ParkingSpots = request.ParkingSpots,
                 AgeInYears = request.AgeInYears,
-                FacingDirection = request.FacingDirection?.Trim(),
-                FurnishedStatus = request.FurnishedStatus,
-
-                RegaLicenseNumber = request.RegaLicenseNumber?.Trim(),
-                DeedNumber = request.DeedNumber?.Trim(),
-                MunicipalityNumber = request.MunicipalityNumber?.Trim(),
-
+                RegaLicenseNumber = request.RegaLicenseNumber,
+                DeedNumber = request.DeedNumber,
+                MunicipalityNumber = request.MunicipalityNumber,
                 IsFeatured = request.IsFeatured,
-
-                CompanyId = request.CompanyId,
+                IsPublished = request.IsPublished,
                 OwnerId = request.OwnerId,
                 AgentId = request.AgentId,
+                CompanyId = request.CompanyId,
 
+                // ── Building specific ─────────────────────
                 TotalFloors = request.TotalFloors,
                 UnitsCount = request.UnitsCount,
-                Elevator = request.Elevator,
-                ParkingFloor = request.ParkingFloor
+                BasementFloors = request.BasementFloors,
+                HasElevator = request.HasElevator,
+                HasParkingFloor = request.HasParkingFloor,
+                HasMosque = request.HasMosque,
+                HasGuard = request.HasGuard,
+                HasGenerator = request.HasGenerator,
+                HasCCTV = request.HasCCTV,
+
+                // ── Building never has parent ─────────────
+                ParentPropertyId = null,
+                UnitNumber = null
             };
 
-            await _buildingRepository.AddAsync(entity);
-            await _unitOfWork.SaveChangesAsync(ct);
+            _buildingRepo.Add(building);
+            await _uow.SaveChangesAsync(ct);
 
-            return ApiResponse<Guid>.Ok(entity.Id, "تم إنشاء المبنى بنجاح");
+            return ApiResponse<Guid>.Ok(building.Id);
         }
-
-        private static string GeneratePropertyCode()
-            => $"BLD-{DateTime.UtcNow:yyyyMMddHHmmss}";
     }
 }

@@ -1,16 +1,14 @@
 ﻿using MediatR;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.ReadModels;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using RealEstate.Application.DTOs.Properties.Warehouse;
 
 namespace RealEstate.Application.Features.Properties.Warehouses.Queries.GetWarehouseById
 {
+
     public class GetWarehouseByIdQueryHandler
-        : IRequestHandler<GetWarehouseByIdQuery, ApiResponse<WarehouseDetailsDto>>
+        : IRequestHandler<GetWarehouseByIdQuery, ApiResponse<WarehouseDetailDto>>
     {
         private readonly IWarehouseRepository _warehouseRepository;
 
@@ -18,14 +16,16 @@ namespace RealEstate.Application.Features.Properties.Warehouses.Queries.GetWareh
         {
             _warehouseRepository = warehouseRepository;
         }
-
-        public async Task<ApiResponse<WarehouseDetailsDto>> Handle(GetWarehouseByIdQuery request, CancellationToken ct)
+        async Task<ApiResponse<WarehouseDetailDto>> IRequestHandler<GetWarehouseByIdQuery, ApiResponse<WarehouseDetailDto>>.Handle(GetWarehouseByIdQuery request, CancellationToken cancellationToken)
         {
-            var warehouse = await _warehouseRepository.GetDetailsByIdAsync(request.Id, request.CompanyId, ct);
-            if (warehouse is null)
-                throw new NotFoundException("المستودع غير موجود");
+            var warehouse = await _warehouseRepository.GetDetailByIdAsync(request.Id, request.CompanyId, cancellationToken);
+            if (warehouse == null)
+            {
+                throw new NotFoundException($"Warehouse with Id {request.Id} not found.");
+            }
 
-            return ApiResponse<WarehouseDetailsDto>.Ok(warehouse);
+            return ApiResponse<WarehouseDetailDto>.Ok(warehouse, "Warehouse retrieved successfully.");
+
         }
     }
 }

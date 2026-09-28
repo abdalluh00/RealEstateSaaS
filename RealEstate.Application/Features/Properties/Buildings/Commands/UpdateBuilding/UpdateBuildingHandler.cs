@@ -1,100 +1,75 @@
 ﻿using MediatR;
-using RealEstate.Domain.Entities.Properties;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Features.Properties.Buildings.Commands.UpdateBuilding;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Buildings.Commands.UpdateBuilding
+namespace RealEstate.Application.Features.Properties.Building.Commands.UpdateBuilding
 {
-    public class UpdateBuildingHandler : IRequestHandler<UpdateBuildingCommand, ApiResponse<Guid>>
+    public class UpdateBuildingHandler : IRequestHandler<UpdateBuildingCommand, ApiResponse<bool>>
     {
-        private readonly IBuildingRepository _buildingRepository;
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IGenericRepository<Property> _propertyRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBuildingRepository _buildingRepo;
+        private readonly IUnitOfWork _uow;
 
         public UpdateBuildingHandler(
-            IBuildingRepository buildingRepository,
-            IOwnerRepository ownerRepository,
-            IUserRepository userRepository,
-            IGenericRepository<Property> propertyRepository,
-            IUnitOfWork unitOfWork)
+            IBuildingRepository buildingRepo,
+            IUnitOfWork uow)
         {
-            _buildingRepository = buildingRepository;
-            _ownerRepository = ownerRepository;
-            _userRepository = userRepository;
-            _propertyRepository = propertyRepository;
-            _unitOfWork = unitOfWork;
+            _buildingRepo = buildingRepo;
+            _uow = uow;
         }
 
-        public async Task<ApiResponse<Guid>> Handle(UpdateBuildingCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(
+            UpdateBuildingCommand request,
+            CancellationToken ct)
         {
-            var entity = await _buildingRepository.GetByIdAsync(request.Id, request.CompanyId);
-            if (entity is null)
-                throw new NotFoundException("المبنى غير موجود");
+            // ── Fetch tracked entity ──────────────────────
+            var building = await _buildingRepo
+                .Query()
+                .FirstOrDefaultAsync(b => b.Id == request.Id
+                                       && b.CompanyId == request.CompanyId, ct)
+                ?? throw new NotFoundException("المبنى غير موجود");
 
-            var owner = await _ownerRepository.GetByIdAsync(request.OwnerId);
-            if (owner is null || owner.CompanyId != request.CompanyId)
-                throw new ValidationException("المالك غير موجود أو لا يتبع لنفس الشركة");
+            // ── Update base fields ────────────────────────
+            building.Title = request.Title;
+            building.Description = request.Description;
+            building.Purpose = Enum.Parse<PropertyPurpose>(request.Purpose);
+            building.Price = request.Price;
+            building.Area = request.Area;
+            building.City = request.City;
+            building.District = request.District;
+            building.Address = request.Address;
+            building.Latitude = request.Latitude;
+            building.Longitude = request.Longitude;
+            building.ParkingSpots = request.ParkingSpots;
+            building.AgeInYears = request.AgeInYears;
+            building.RegaLicenseNumber = request.RegaLicenseNumber;
+            building.DeedNumber = request.DeedNumber;
+            building.MunicipalityNumber = request.MunicipalityNumber;
+            building.IsFeatured = request.IsFeatured;
+            building.IsPublished = request.IsPublished;
+            building.OwnerId = request.OwnerId;
+            building.AgentId = request.AgentId;
 
-            var agent = await _userRepository.GetByIdAsync(request.AgentId);
-            if (agent is null || agent.CompanyId != request.CompanyId)
-                throw new ValidationException("الوسيط/الموظف المسؤول غير موجود أو لا يتبع لنفس الشركة");
+            // ── Update building specific fields ───────────
+            building.TotalFloors = request.TotalFloors;
+            building.UnitsCount = request.UnitsCount;
+            building.BasementFloors = request.BasementFloors;
+            building.HasElevator = request.HasElevator;
+            building.HasParkingFloor = request.HasParkingFloor;
+            building.HasMosque = request.HasMosque;
+            building.HasGuard = request.HasGuard;
+            building.HasGenerator = request.HasGenerator;
+            building.HasCCTV = request.HasCCTV;
 
-            if (request.ParentPropertyId.HasValue)
-            {
-                if (request.ParentPropertyId.Value == request.Id)
-                    throw new ValidationException("لا يمكن ربط المبنى بنفسه كعقار أب");
+            _buildingRepo.Update(building);
+            await _uow.SaveChangesAsync(ct);
 
-                var parent = await _propertyRepository.GetByIdAsync(request.ParentPropertyId.Value);
-                if (parent is null || parent.CompanyId != request.CompanyId)
-                    throw new ValidationException("العقار الأب غير موجود أو لا يتبع لنفس الشركة");
-            }
-
-            entity.ParentPropertyId = request.ParentPropertyId;
-
-            entity.Title = request.Title.Trim();
-            entity.Description = request.Description?.Trim();
-            entity.Purpose = request.Purpose;
-            entity.PropertyStatus = request.PropertyStatus;
-
-            entity.Price = request.Price;
-            entity.Area = request.Area;
-
-            entity.City = request.City.Trim();
-            entity.District = request.District.Trim();
-            entity.Address = request.Address?.Trim();
-            entity.Latitude = request.Latitude;
-            entity.Longitude = request.Longitude;
-
-            entity.ParkingSpots = request.ParkingSpots;
-            entity.AgeInYears = request.AgeInYears;
-            entity.FacingDirection = request.FacingDirection?.Trim();
-            entity.FurnishedStatus = request.FurnishedStatus;
-
-            entity.RegaLicenseNumber = request.RegaLicenseNumber?.Trim();
-            entity.DeedNumber = request.DeedNumber?.Trim();
-            entity.MunicipalityNumber = request.MunicipalityNumber?.Trim();
-
-            entity.IsFeatured = request.IsFeatured;
-
-            entity.OwnerId = request.OwnerId;
-            entity.AgentId = request.AgentId;
-
-            entity.TotalFloors = request.TotalFloors;
-            entity.UnitsCount = request.UnitsCount;
-            entity.Elevator = request.Elevator;
-            entity.ParkingFloor = request.ParkingFloor;
-
-            _buildingRepository.Update(entity);
-            await _unitOfWork.SaveChangesAsync(ct);
-
-            return ApiResponse<Guid>.Ok(entity.Id, "تم تحديث المبنى بنجاح");
+            return ApiResponse<bool>.Ok(true);
         }
     }
 }

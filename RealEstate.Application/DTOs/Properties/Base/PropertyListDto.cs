@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealEstate.Domain.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,9 +18,6 @@ namespace RealEstate.Application.DTOs.Properties.Base
         public string City { get; init; } = string.Empty;
         public string District { get; init; } = string.Empty;
         public string? UnitNumber { get; init; }
-        public string? CoverImageUrl { get; init; }
-        public string? OwnerName { get; init; }
-        public string? AgentName { get; init; }
         public bool IsFeatured { get; init; }
         public DateTime CreatedAt { get; init; }
     }

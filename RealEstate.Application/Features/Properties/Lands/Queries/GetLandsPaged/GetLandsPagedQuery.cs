@@ -1,14 +1,20 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Interfaces;
-using RealEstate.Application.Features.Properties.Lands.Dtos;
+using RealEstate.Application.DTOs.Properties.Land;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Common;
 
-namespace RealEstate.Application.Features.Properties.Lands.Queries.GetLandsPaged
+namespace RealEstate.Application.Features.Lands.Queries.GetPagedLands
 {
-    public record GetLandsPagedQuery(int Page = 1, int PageSize = 10)
-        : IRequest<ApiResponse<PagedResult<LandListItemDto>>>, IAutoTenantRequest
+    public sealed class GetPagedLandsQuery
+        : IRequest<ApiResponse<PagedResult<LandListDto>>>, IAutoTenantRequest
     {
         public Guid CompanyId { get; private set; }
+        public PropertyStatus? Status { get; init; }
+        public PropertyPurpose? Purpose { get; init; }
+        public ZoningType? ZoningType { get; init; }
+        public int Page { get; init; } = 1;
+        public int PageSize { get; init; } = 10;
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }
 }

@@ -1,100 +1,67 @@
 ﻿using MediatR;
-using RealEstate.Domain.Entities.Properties;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Lands.Commands.UpdateLand
+namespace RealEstate.Application.Features.Lands.Commands.UpdateLand
 {
-    public class UpdateLandHandler : IRequestHandler<UpdateLandCommand, ApiResponse<Guid>>
+    public sealed class UpdateLandCommandHandler
+        : IRequestHandler<UpdateLandCommand, ApiResponse<bool>>
     {
-        private readonly ILandRepository _landRepository;
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IGenericRepository<Property> _propertyRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ILandRepository _lands;
+        private readonly IUnitOfWork _uow;
 
-        public UpdateLandHandler(
-            ILandRepository landRepository,
-            IOwnerRepository ownerRepository,
-            IUserRepository userRepository,
-            IGenericRepository<Property> propertyRepository,
-            IUnitOfWork unitOfWork)
+        public UpdateLandCommandHandler(ILandRepository lands, IUnitOfWork uow)
         {
-            _landRepository = landRepository;
-            _ownerRepository = ownerRepository;
-            _userRepository = userRepository;
-            _propertyRepository = propertyRepository;
-            _unitOfWork = unitOfWork;
+            _lands = lands;
+            _uow = uow;
         }
 
-        public async Task<ApiResponse<Guid>> Handle(UpdateLandCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(
+            UpdateLandCommand cmd,
+            CancellationToken ct)
         {
-            var entity = await _landRepository.GetByIdAsync(request.Id, request.CompanyId);
-            if (entity is null)
-                throw new NotFoundException("الأرض غير موجودة");
+            var land = await _lands.Query()
+                .FirstOrDefaultAsync(x => x.Id == cmd.Id
+                                       && x.CompanyId == cmd.CompanyId, ct);
 
-            var owner = await _ownerRepository.GetByIdAsync(request.OwnerId);
-            if (owner is null || owner.CompanyId != request.CompanyId)
-                throw new ValidationException("المالك غير موجود أو لا يتبع لنفس الشركة");
+            if (land is null)
+                throw new NotFoundException("الأرض", cmd.Id);
 
-            var agent = await _userRepository.GetByIdAsync(request.AgentId);
-            if (agent is null || agent.CompanyId != request.CompanyId)
-                throw new ValidationException("الوسيط/الموظف المسؤول غير موجود أو لا يتبع لنفس الشركة");
+            land.Title = cmd.Title;
+            land.Description = cmd.Description;
+            land.Purpose = cmd.Purpose;
+            land.Price = cmd.Price;
+            land.Area = cmd.Area;
+            land.City = cmd.City;
+            land.District = cmd.District;
+            land.Address = cmd.Address;
+            land.Latitude = cmd.Latitude;
+            land.Longitude = cmd.Longitude;
+            land.AgeInYears = cmd.AgeInYears;
+            land.FacingDirection = cmd.FacingDirection;
+            land.RegaLicenseNumber = cmd.RegaLicenseNumber;
+            land.DeedNumber = cmd.DeedNumber;
+            land.MunicipalityNumber = cmd.MunicipalityNumber;
+            land.OwnerId = cmd.OwnerId;
+            land.AgentId = cmd.AgentId;
+            land.IsFeatured = cmd.IsFeatured;
+            land.IsPublished = cmd.IsPublished;
+            land.StreetWidth = cmd.StreetWidth;
+            land.NumberOfStreets = cmd.NumberOfStreets;
+            land.ZoningType = cmd.ZoningType;
+            land.LandShape = cmd.LandShape;
+            land.IsCornerLand = cmd.IsCornerLand;
+            land.IsWalled = cmd.IsWalled;
+            land.HasElectricity = cmd.HasElectricity;
+            land.HasWater = cmd.HasWater;
+            land.HasSewer = cmd.HasSewer;
 
-            if (request.ParentPropertyId.HasValue)
-            {
-                if (request.ParentPropertyId.Value == request.Id)
-                    throw new ValidationException("لا يمكن ربط الأرض بنفسها كعقار أب");
+            await _uow.SaveChangesAsync(ct);
 
-                var parent = await _propertyRepository.GetByIdAsync(request.ParentPropertyId.Value);
-                if (parent is null || parent.CompanyId != request.CompanyId)
-                    throw new ValidationException("العقار الأب غير موجود أو لا يتبع لنفس الشركة");
-            }
-
-            entity.ParentPropertyId = request.ParentPropertyId;
-
-            entity.Title = request.Title.Trim();
-            entity.Description = request.Description?.Trim();
-            entity.Purpose = request.Purpose;
-            entity.PropertyStatus = request.PropertyStatus;
-
-            entity.Price = request.Price;
-            entity.Area = request.Area;
-
-            entity.City = request.City.Trim();
-            entity.District = request.District.Trim();
-            entity.Address = request.Address?.Trim();
-            entity.Latitude = request.Latitude;
-            entity.Longitude = request.Longitude;
-
-            entity.ParkingSpots = request.ParkingSpots;
-            entity.AgeInYears = request.AgeInYears;
-            entity.FacingDirection = request.FacingDirection?.Trim();
-            entity.FurnishedStatus = request.FurnishedStatus;
-
-            entity.RegaLicenseNumber = request.RegaLicenseNumber?.Trim();
-            entity.DeedNumber = request.DeedNumber?.Trim();
-            entity.MunicipalityNumber = request.MunicipalityNumber?.Trim();
-
-            entity.IsFeatured = request.IsFeatured;
-
-            entity.OwnerId = request.OwnerId;
-            entity.AgentId = request.AgentId;
-
-            entity.StreetWidth = request.StreetWidth;
-            entity.ZoningType = request.ZoningType?.Trim();
-            entity.CornerLand = request.CornerLand;
-            entity.NumberOfStreets = request.CornerLand ? request.NumberOfStreets : null;
-
-            _landRepository.Update(entity);
-            await _unitOfWork.SaveChangesAsync(ct);
-
-            return ApiResponse<Guid>.Ok(entity.Id, "تم تحديث الأرض بنجاح");
+            return ApiResponse<bool>.Ok(true, "تم تحديث الأرض بنجاح");
         }
     }
 }

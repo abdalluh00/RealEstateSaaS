@@ -2,19 +2,21 @@
 
 namespace RealEstate.Application.Features.Payments.Commands.MarkPaymentPaid
 {
-    public class MarkPaymentPaidValidator : AbstractValidator<MarkPaymentPaidCommand>
+    public sealed class MarkPaymentPaidCommandValidator
+        : AbstractValidator<MarkPaymentPaidCommand>
     {
-        private static readonly string[] AllowedMethods =
-            ["Cash", "Bank", "Online", "Mada", "STC"];
-
-        public MarkPaymentPaidValidator()
+        public MarkPaymentPaidCommandValidator()
         {
-            RuleFor(x => x.PaymentId).NotEmpty();
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage("معرف الدفعة مطلوب");
 
-            RuleFor(x => x.Method)
-                .NotEmpty().WithMessage("طريقة الدفع مطلوبة")
-                .Must(m => AllowedMethods.Contains(m))
-                .WithMessage("طريقة الدفع غير صحيحة — Cash, Bank, Online, Mada, STC");
+            RuleFor(x => x.PaidDate)
+                .NotEmpty().WithMessage("تاريخ الدفع مطلوب")
+                .LessThanOrEqualTo(DateTime.UtcNow)
+                .WithMessage("تاريخ الدفع لا يمكن أن يكون في المستقبل");
+
+            RuleFor(x => x.PaymentMethod)
+                .IsInEnum().WithMessage("طريقة الدفع غير صحيحة");
         }
     }
 }

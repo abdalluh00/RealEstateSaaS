@@ -1,20 +1,14 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.DTOs.Users;
 using RealEstate.Shared.Common;
+
 namespace RealEstate.Application.Features.Auth.Commands.Login
 {
-    public record LoginCommand(
-    string Email,
-    string Password
-) : IRequest<ApiResponse<LoginResult>>, IAuthRequest;
-
-    public record LoginResult(
-        Guid Id,
-        string Token,
-        string FullName,
-        string Email,
-        string Role,
-        Guid CompanyId,
-        DateTime ExpiresAt
-    );
+    public sealed class LoginCommand
+        : IRequest<ApiResponse<LoginResponseDto>>, IAuthRequest
+    {
+        public string Email { get; init; } = string.Empty;
+        public string Password { get; init; } = string.Empty;
+    }
 }

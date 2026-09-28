@@ -1,19 +1,49 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.DTOs.Properties.Apartment;
+using RealEstate.Application.DTOs.Properties.Base;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Application.Common.Extensions;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities.Properties;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.ReadModels.PropertyModel;
 using RealEstate.Infrastructure.Persistence;
 using RealEstate.Shared.Common;
-namespace RealEstate.Infrastructure.Repositories
+using System.Linq.Expressions;
+
+namespace RealEstate.Infrastructure.Repositories.Properties
 {
     public class ApartmentRepository : GenericRepository<ApartmentProperty>, IApartmentRepository
     {
         public ApartmentRepository(AppDbContext context) : base(context) { }
 
-        // ── Paged List ────────────────────────────────────
+        // ── Reusable list projection ──────────────────────
+        private static readonly Expression<Func<ApartmentProperty, ApartmentListDto>> ToListDto =
+            a => new ApartmentListDto
+            {
+                // ── Base fields ───────────────────────────
+                Id = a.Id,
+                PropertyCode = a.PropertyCode,
+                Title = a.Title,
+                Type = a.Type.ToArabicString(),
+                Purpose = a.Purpose.ToArabicString(),
+                Status = a.PropertyStatus.ToArabicString(),
+                Price = a.Price,
+                Area = a.Area,
+                City = a.City,
+                District = a.District,
+                UnitNumber = a.UnitNumber,
+                IsFeatured = a.IsFeatured,
+                CreatedAt = a.CreatedAt,
 
-        public async Task<PagedResult<ApartmentListReadModel>> GetPagedAsync(
+                // ── Apartment specific ────────────────────
+                Bedrooms = a.Bedrooms,
+                Bathrooms = a.Bathrooms,
+                FloorNumber = a.FloorNumber,
+                HasElevator = a.HasElevator,
+                FurnishedStatus = a.FurnishedStatus.ToString(),
+            };
+
+        // ── Paged List ────────────────────────────────────
+        public async Task<PagedResult<ApartmentListDto>> GetPagedAsync(
             Guid companyId,
             int page,
             int pageSize,
@@ -26,128 +56,138 @@ namespace RealEstate.Infrastructure.Repositories
         {
             var query = _dbSet
                 .AsNoTracking()
-                .Where(x => x.CompanyId == companyId);
+                .Where(a => a.CompanyId == companyId);
 
             if (status.HasValue)
-                query = query.Where(x => x.PropertyStatus == status.Value);
+                query = query.Where(a => a.PropertyStatus == status.Value);
 
             if (purpose.HasValue)
-                query = query.Where(x => x.Purpose == purpose.Value);
+                query = query.Where(a => a.Purpose == purpose.Value);
 
             if (minBedrooms.HasValue)
-                query = query.Where(x => x.Bedrooms >= minBedrooms.Value);
+                query = query.Where(a => a.Bedrooms >= minBedrooms.Value);
 
             if (maxBedrooms.HasValue)
-                query = query.Where(x => x.Bedrooms <= maxBedrooms.Value);
+                query = query.Where(a => a.Bedrooms <= maxBedrooms.Value);
 
             if (furnishedStatus.HasValue)
-                query = query.Where(x => x.FurnishedStatus == furnishedStatus.Value);
+                query = query.Where(a => a.FurnishedStatus == furnishedStatus.Value);
 
             var totalCount = await query.CountAsync(ct);
 
             if (totalCount == 0)
-                return PagedResult<ApartmentListReadModel>.Empty(page, pageSize);
+                return PagedResult<ApartmentListDto>.Empty(page, pageSize);
 
             var items = await query
-                .OrderByDescending(x => x.IsFeatured)
-                .ThenByDescending(x => x.CreatedAt)
+                .OrderByDescending(a => a.IsFeatured)
+                .ThenByDescending(a => a.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(x => new ApartmentListReadModel
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-                    IsFeatured = x.IsFeatured,
-                    IsPublished = x.IsPublished,
-                    CreatedAt = x.CreatedAt,
-                    Bedrooms = x.Bedrooms,
-                    Bathrooms = x.Bathrooms,
-                    FloorNumber = x.FloorNumber,
-                    FurnishedStatus = x.FurnishedStatus,
-                    HasElevator = x.HasElevator,
-                    HasBalcony = x.HasBalcony
-                })
+                .Select(ToListDto)
                 .ToListAsync(ct);
 
-            return PagedResult<ApartmentListReadModel>.Create(items, totalCount, page, pageSize);
+            return PagedResult<ApartmentListDto>.Create(items, totalCount, page, pageSize);
         }
 
         // ── Detail ────────────────────────────────────────
-
-        public async Task<ApartmentDetailReadModel?> GetByIdWithDetailsAsync(
+        public async Task<ApartmentDetailDto?> GetDetailByIdAsync(
             Guid id,
             Guid companyId,
             CancellationToken ct = default) =>
-            await _dbSet
-                .AsNoTracking()
-                .Where(x => x.Id == id && x.CompanyId == companyId)
-                .Select(x => new ApartmentDetailReadModel
+            await QueryNoTracking()
+                .Where(a => a.Id == id && a.CompanyId == companyId)
+                .Select(a => new ApartmentDetailDto
                 {
                     // ── Base ──────────────────────────────
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Description = x.Description,
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-                    Address = x.Address,
-                    Latitude = x.Latitude,
-                    Longitude = x.Longitude,
-                    ParkingSpots = x.ParkingSpots,
-                    AgeInYears = x.AgeInYears,
-                    IsFeatured = x.IsFeatured,
-                    IsPublished = x.IsPublished,
-                    DeedNumber = x.DeedNumber,
-                    RegaLicenseNumber = x.RegaLicenseNumber,
-                    MunicipalityNumber = x.MunicipalityNumber,
+                    Id = a.Id,
+                    PropertyCode = a.PropertyCode,
+                    Title = a.Title,
+                    Type = a.Type.ToArabicString(),
+                    Description = a.Description,
+                    Purpose = a.Purpose.ToArabicString(),
+                    Status = a.PropertyStatus.ToArabicString(),
+                    Price = a.Price,
+                    Area = a.Area,
+                    City = a.City,
+                    District = a.District,
+                    Address = a.Address,
+                    UnitNumber = a.UnitNumber,
+                    Latitude = a.Latitude,
+                    Longitude = a.Longitude,
+                    ParkingSpots = a.ParkingSpots,
+                    AgeInYears = a.AgeInYears,
+                    FacingDirection = a.FacingDirection.ToString(),
+                    RegaLicenseNumber = a.RegaLicenseNumber,
+                    DeedNumber = a.DeedNumber,
+                    MunicipalityNumber = a.MunicipalityNumber,
+                    IsFeatured = a.IsFeatured,
+                    IsPublished = a.IsPublished,
+                    CreatedAt = a.CreatedAt,
+                    UpdatedAt = a.UpdatedAt,
 
-                    // ── Apartment-specific ────────────────
-                    Bedrooms = x.Bedrooms,
-                    Bathrooms = x.Bathrooms,
-                    LivingRooms = x.LivingRooms,
-                    FloorNumber = x.FloorNumber,
-                    HasMaidRoom = x.HasMaidRoom,
-                    HasElevator = x.HasElevator,
-                    HasCentralAC = x.HasCentralAC,
-                    HasBalcony = x.HasBalcony,
-                    HasStorage = x.HasStorage,
-                    FurnishedStatus = x.FurnishedStatus,
+                    // ── Owner (single join, not two subqueries) ──
+                    OwnerId = a.OwnerId,
+                    OwnerName = a.Owner != null ? a.Owner.FullName : null,
+                    OwnerPhone = a.Owner != null ? a.Owner.Phone : null,
 
-                    // ── Relations (no Include needed — projected directly) ──
-                    OwnerId = x.OwnerId,
-                    OwnerName = x.Owner != null
-                        ? x.Owner.FullName
-                        : null,
-                    AgentId = x.AgentId,
-                    AgentName = x.Agent != null
-                        ? x.Agent.FullName
-                        : null,
+                    // ── Agent (single join) ───────────────
+                    AgentId = a.AgentId,
+                    AgentName = a.Agent != null ? a.Agent.FullName : null,
+                    AgentPhone = a.Agent != null ? a.Agent.Phone : null,
 
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt
+                    // ── Apartment specific ────────────────
+                    Bedrooms = a.Bedrooms,
+                    Bathrooms = a.Bathrooms,
+                    FloorNumber = a.FloorNumber,
+                    LivingRooms = a.LivingRooms,
+                    HasMaidRoom = a.HasMaidRoom,
+                    HasElevator = a.HasElevator,
+                    HasCentralAC = a.HasCentralAC,
+                    HasBalcony = a.HasBalcony,
+                    HasStorage = a.HasStorage,
+                    FurnishedStatus = a.FurnishedStatus.ToString(),
+
+                    // ── Media (ordered, no extra roundtrip) ──
+                    Media = a.Media
+                        .OrderBy(m => m.SortOrder)
+                        .Select(m => new PropertyMediaDto
+                        {
+                            Id = m.Id,
+                            MediaUrl = m.MediaUrl,
+                            MediaType = m.MediaType.ToString(),
+                            IsCover = m.IsCover,
+                            SortOrder = m.SortOrder
+                        })
+                        .ToList(),
+
+                    // ── Documents ─────────────────────────
+                    Documents = a.Documents
+                        .Select(d => new PropertyDocumentDto
+                        {
+                            Id = d.Id,
+                            DocumentType = d.DocumentType.ToString(),
+                            DocumentName = d.DocumentName,
+                            FileUrl = d.FileUrl,
+                            ExpiryDate = d.ExpiryDate
+                        })
+                        .ToList()
                 })
                 .FirstOrDefaultAsync(ct);
 
-        // ── Commands ──────────────────────────────────────
-
-        public async Task<ApartmentProperty?> GetByIdForUpdateAsync(
+        // ── Validation ────────────────────────────────────
+        public async Task<bool> IsAvailableAsync(
             Guid id,
-            Guid companyId,
             CancellationToken ct = default) =>
-            await _dbSet
-                .FirstOrDefaultAsync(x => x.Id == id && x.CompanyId == companyId, ct);
-        // Tracked — EF generates UPDATE on SaveChanges
-        // No AsNoTracking — we need change tracking for the update command
+            await QueryNoTracking()
+                .AnyAsync(a => a.Id == id
+                            && a.PropertyStatus == PropertyStatus.Available, ct);
+
+        public async Task<bool> UnitNumberExistsAsync(
+            string unitNumber,
+            Guid parentPropertyId,
+            CancellationToken ct = default) =>
+            await QueryNoTracking()
+                .AnyAsync(a => a.UnitNumber == unitNumber
+                            && a.ParentPropertyId == parentPropertyId, ct);
     }
 }

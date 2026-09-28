@@ -1,7 +1,7 @@
 ﻿using RealEstate.Domain.Common;
 using System.Linq.Expressions;
 
-namespace RealEstate.Domain.Interfaces
+namespace RealEstate.Application.Interfaces.Properties
 {
     public interface IGenericRepository<T> where T : BaseEntity
     {

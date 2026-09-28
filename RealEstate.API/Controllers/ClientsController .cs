@@ -3,61 +3,108 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RealEstate.Application.Features.Clients.Commands.CreateClient;
 using RealEstate.Application.Features.Clients.Commands.DeleteClient;
+using RealEstate.Application.Features.Clients.Commands.ReassignAgent;
 using RealEstate.Application.Features.Clients.Commands.UpdateClient;
-using RealEstate.Application.Features.Clients.Queries.GetClientById;
-using RealEstate.Application.Features.Clients.Queries.GetClients;
+using RealEstate.Application.Features.Clients.Commands.UpdateLeadStatus;
+using RealEstate.Application.Features.Clients.Queries.GetClientDetail;
+using RealEstate.Application.Features.Clients.Queries.GetPagedClients;
+using RealEstate.Domain.Common.Enums;
+using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
 {
-    [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
-    public class ClientsController : ControllerBase
+    [Route("api/clients")]
+    [Authorize(Policy = Policies.AgentAndUp)]
+    public class ClientController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public ClientsController(IMediator mediator) => _mediator = mediator;
-
-        //[HttpGet("{companyId:guid}")]
-        //public async Task<IActionResult> GetAll(Guid companyId, [FromQuery] string? leadStatus)
-        //{
-        //    var result = await _mediator.Send(new GetClientsQuery(companyId, leadStatus));
-        //    return Ok(result);
-        //}
+        public ClientController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll( [FromQuery] string? leadStatus)
+        public async Task<IActionResult> GetPaged(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] LeadStatus? leadStatus = null,
+            [FromQuery] LeadSource? source = null,
+            [FromQuery] bool? isActive = null,
+            [FromQuery] Guid? assignedAgentId = null,
+            [FromQuery] string? search = null,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetClientsQuery( leadStatus));
-            return Ok(result);
+            var result = await _mediator.Send(new GetPagedClientsQuery
+            {
+                Page = page,
+                PageSize = pageSize,
+                LeadStatus = leadStatus,
+                Source = source,
+                IsActive = isActive,
+                AssignedAgentId = assignedAgentId,
+                Search = search
+            }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("detail/{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetDetail(
+            Guid id, CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetClientByIdQuery(id));
-            return Ok(result);
+            var result = await _mediator.Send(
+                new GetClientDetailQuery { Id = id }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateClientCommand command)
+        public async Task<IActionResult> Create(
+            [FromBody] CreateClientCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateClientCommand command)
+        public async Task<IActionResult> Update(
+            Guid id,
+            [FromBody] UpdateClientCommand cmd,
+            CancellationToken ct = default)
         {
-            if (id != command.Id) return BadRequest("المعرف غير متطابق");
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPatch("{id:guid}/lead-status")]
+        public async Task<IActionResult> UpdateLeadStatus(
+            Guid id,
+            [FromBody] UpdateLeadStatusCommand cmd,
+            CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(cmd, ct);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPatch("{id:guid}/reassign")]
+        [Authorize(Policy = Policies.AdminAndUp)]
+        public async Task<IActionResult> ReassignAgent(
+            Guid id,
+            [FromBody] ReassignAgentCommand cmd,
+            CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [Authorize(Policy = Policies.AdminAndUp)]
+        public async Task<IActionResult> Delete(
+            Guid id, CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new DeleteClientCommand(id));
+            var result = await _mediator.Send(
+                new DeleteClientCommand { Id = id }, ct);
+
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using RealEstate.Application.Common.Interfaces;
-using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Common;
 namespace RealEstate.Application.Features.Properties.Buildings.Commands.CreateBuilding
 {
@@ -9,8 +8,7 @@ namespace RealEstate.Application.Features.Properties.Buildings.Commands.CreateBu
     public record CreateBuildingCommand(
         string Title,
         string? Description,
-        PropertyPurpose Purpose,
-        PropertyStatus PropertyStatus,
+        string Purpose,
         decimal Price,
         decimal Area,
         string City,
@@ -21,18 +19,27 @@ namespace RealEstate.Application.Features.Properties.Buildings.Commands.CreateBu
         int? ParkingSpots,
         int? AgeInYears,
         string? FacingDirection,
-        FurnishedStatus FurnishedStatus,
         string? RegaLicenseNumber,
         string? DeedNumber,
         string? MunicipalityNumber,
         bool IsFeatured,
-        Guid OwnerId,
-        Guid AgentId,
-        Guid? ParentPropertyId,
+        bool IsPublished,
+
+        // ── Building specific ─────────────────────────
         int? TotalFloors,
         int? UnitsCount,
-        bool Elevator,
-        bool ParkingFloor
+        int? BasementFloors,
+        bool HasElevator,
+        bool HasParkingFloor,
+        bool HasMosque,
+        bool HasGuard,
+        bool HasGenerator,
+        bool HasCCTV,
+
+        // ── Relations ─────────────────────────────────
+        Guid? OwnerId,
+        Guid? AgentId
+
     ) : IRequest<ApiResponse<Guid>>, IAutoTenantRequest
     {
         public Guid CompanyId { get; private set; }

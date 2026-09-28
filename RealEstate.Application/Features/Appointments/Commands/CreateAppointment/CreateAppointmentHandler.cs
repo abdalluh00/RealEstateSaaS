@@ -1,71 +1,67 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
+using RealEstate.Shared.Common.Exceptions;
 
 namespace RealEstate.Application.Features.Appointments.Commands.CreateAppointment
 {
-    public class CreateAppointmentHandler
+    public sealed class CreateAppointmentCommandHandler
         : IRequestHandler<CreateAppointmentCommand, ApiResponse<Guid>>
     {
-        private readonly IAppointmentRepository _appointmentRepository;
-        private readonly IPropertyRepository _propertyRepository;
-        private readonly IClientRepository _clientRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IAppointmentRepository _appointments;
+        private readonly IPropertyRepository _properties;
+        private readonly IUnitOfWork _uow;
 
-        public CreateAppointmentHandler(
-            IAppointmentRepository appointmentRepository,
-            IPropertyRepository propertyRepository,
-            IClientRepository clientRepository,
-            IUserRepository userRepository)
+        public CreateAppointmentCommandHandler(
+            IAppointmentRepository appointments,
+            IPropertyRepository properties,
+            IUnitOfWork uow)
         {
-            _appointmentRepository = appointmentRepository;
-            _propertyRepository = propertyRepository;
-            _clientRepository = clientRepository;
-            _userRepository = userRepository;
+            _appointments = appointments;
+            _properties = properties;
+            _uow = uow;
         }
 
         public async Task<ApiResponse<Guid>> Handle(
-            CreateAppointmentCommand request,
-            CancellationToken cancellationToken)
+            CreateAppointmentCommand cmd,
+            CancellationToken ct)
         {
-            // 1) Validate property exists
-            var propertyExists = await _propertyRepository.ExistsAsync(request.PropertyId);
-            if (!propertyExists)
-                return ApiResponse<Guid>.Fail("العقار غير موجود");
+            // ── Property must exist and be available ──────
+            var propertyAvailable = await _properties.IsAvailableAsync(
+                cmd.PropertyId, ct);
 
-            // 2) Validate client exists
-            var clientExists = await _clientRepository.ExistsAsync(request.ClientId);
-            if (!clientExists)
-                return ApiResponse<Guid>.Fail("العميل غير موجود");
+            if (!propertyAvailable)
+                throw new ConflictException("العقار غير متاح للحجز");
 
-            // 3) Validate agent exists
-            var agentExists = await _userRepository.ExistsAsync(request.AgentId);
-            if (!agentExists)
-                return ApiResponse<Guid>.Fail("الوسيط غير موجود");
-
-            // 4) Validate appointment conflict for the same agent at the same time
-            var hasConflict = await _appointmentRepository.HasConflictAsync(
-                request.AgentId,
-                request.ScheduledAt);
+            // ── Agent must not have conflicting appointment ─
+            var hasConflict = await _appointments.HasConflictAsync(
+                agentId: cmd.AgentId,
+                scheduledAt: cmd.ScheduledAt,
+                durationMinutes: cmd.DurationMinutes,
+                ct: ct);
 
             if (hasConflict)
-                return ApiResponse<Guid>.Fail("يوجد موعد آخر للوسيط في نفس الوقت");
+                throw new ConflictException(
+                    "الوكيل لديه موعد آخر في نفس الوقت");
 
-            // 5) Create appointment
             var appointment = new Appointment
             {
-                PropertyId = request.PropertyId,
-                ClientId = request.ClientId,
-                AgentId = request.AgentId,
-                ScheduledAt = request.ScheduledAt,
-                Notes = request.Notes,
+                PropertyId = cmd.PropertyId,
+                ClientId = cmd.ClientId,
+                AgentId = cmd.AgentId,
+                CompanyId = cmd.CompanyId,
+                ScheduledAt = cmd.ScheduledAt,
+                DurationMinutes = cmd.DurationMinutes,
+                Notes = cmd.Notes,
                 Status = AppointmentStatus.Pending
             };
 
-            await _appointmentRepository.AddAsync(appointment);
-            await _appointmentRepository.SaveChangesAsync();
+            _appointments.Add(appointment);
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<Guid>.Ok(appointment.Id, "تم إنشاء الموعد بنجاح");
         }

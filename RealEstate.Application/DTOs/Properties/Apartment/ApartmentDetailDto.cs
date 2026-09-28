@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RealEstate.Application.DTOs.Properties.Apartment
 {
-    public record ApartmentDetailDto : PropertyDetailDto
+    public sealed record ApartmentDetailDto : PropertyDetailDto
     {
         public int Bedrooms { get; init; }
         public int Bathrooms { get; init; }

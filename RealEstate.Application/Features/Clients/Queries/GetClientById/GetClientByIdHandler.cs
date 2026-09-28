@@ -1,38 +1,30 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Clients.DTO;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Application.DTOs.Clients;
+using RealEstate.Application.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 
-namespace RealEstate.Application.Features.Clients.Queries.GetClientById
+namespace RealEstate.Application.Features.Clients.Queries.GetClientDetail
 {
-    public class GetClientByIdHandler : IRequestHandler<GetClientByIdQuery, ApiResponse<ClientDetailDto>>
+    public sealed class GetClientDetailQueryHandler
+        : IRequestHandler<GetClientDetailQuery, ApiResponse<ClientDetailDto>>
     {
-        private readonly IClientRepository _repo;
+        private readonly IClientRepository _clients;
 
-        public GetClientByIdHandler(IClientRepository repo) => _repo = repo;
+        public GetClientDetailQueryHandler(IClientRepository clients)
+            => _clients = clients;
 
         public async Task<ApiResponse<ClientDetailDto>> Handle(
-            GetClientByIdQuery request,
+            GetClientDetailQuery query,
             CancellationToken ct)
         {
-            var client = await _repo.GetByIdAsync(request.Id);
+            var client = await _clients.GetDetailByIdAsync(
+                query.Id, query.CompanyId, ct);
 
             if (client is null)
-                throw new NotFoundException("العميل", request.Id);
+                throw new NotFoundException("العميل", query.Id);
 
-            var result = new ClientDetailDto(
-                client.Id,
-                client.FullName,
-                client.Phone,
-                client.Email,
-                client.LeadStatus,
-                client.Source,
-                client.Notes,
-                client.CreatedAt
-            );
-
-            return ApiResponse<ClientDetailDto>.Ok(result);
+            return ApiResponse<ClientDetailDto>.Ok(client);
         }
     }
 }

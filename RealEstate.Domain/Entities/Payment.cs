@@ -19,7 +19,7 @@ namespace RealEstate.Domain.Entities
         // Pending, Paid, Overdue, Cancelled
 
         // ── Payment Method ────────────────────────────────
-        public PaymentMethod? PaymentMethod { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         // Cash, BankTransfer, Moyasar, Cheque
 
         public string? Reference { get; set; }

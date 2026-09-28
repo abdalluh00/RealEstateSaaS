@@ -1,39 +1,32 @@
-﻿using MediatR;
-using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Shared.Common;
-using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RealEstate.Application.Features.Properties.Villas.Commands.DeleteVilla
+﻿namespace RealEstate.Application.Features.Properties.Villas.Commands.DeleteVilla
 {
-    public class DeleteVillaCommandHandler
-       : IRequestHandler<DeleteVillaCommand, ApiResponse<bool>>
+    using MediatR;
+    using Microsoft.EntityFrameworkCore;
+    using RealEstate.Application.Interfaces.Properties;
+    using RealEstate.Domain.Interfaces;
+    using RealEstate.Shared.Common;
+    using RealEstate.Shared.Common.Exceptions;
+    public sealed class DeleteVillaCommandHandler
+        : IRequestHandler<DeleteVillaCommand, ApiResponse<bool>>
     {
-        private readonly IVillaRepository _villaRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public DeleteVillaCommandHandler(
-            IVillaRepository villaRepository,
-            IUnitOfWork unitOfWork)
+        private readonly IVillaRepository _villas;
+        private readonly IUnitOfWork _uow;
+        public DeleteVillaCommandHandler(IVillaRepository villas, IUnitOfWork uow)
         {
-            _villaRepository = villaRepository;
-            _unitOfWork = unitOfWork;
+            _villas = villas;
+            _uow = uow;
         }
-
-        public async Task<ApiResponse<bool>> Handle(DeleteVillaCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(
+            DeleteVillaCommand cmd,
+            CancellationToken ct)
         {
-            var entity = await _villaRepository.GetByIdAsync(request.Id, request.CompanyId, ct);
-            if (entity is null)
-                throw new NotFoundException("الفيلا غير موجودة");
-
-            entity.IsDeleted = true;
-
-            _villaRepository.Update(entity);
-            await _unitOfWork.SaveChangesAsync(ct);
-
+            var villa = await _villas.Query()
+                .FirstOrDefaultAsync(x => x.Id == cmd.Id
+                                       && x.CompanyId == cmd.CompanyId, ct);
+            if (villa is null)
+                throw new NotFoundException("الفيلا", cmd.Id);
+            _villas.SoftDelete(villa);
+            await _uow.SaveChangesAsync(ct);
             return ApiResponse<bool>.Ok(true, "تم حذف الفيلا بنجاح");
         }
     }

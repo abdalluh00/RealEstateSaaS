@@ -1,14 +1,15 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Payments.DTO;
+using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.DTOs.Payments;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Payments.Queries.GetPaymentSummary
+namespace RealEstate.Application.Features.Payments.Queries.GetContractPaymentSummary
 {
-    public record GetPaymentSummaryQuery(Guid CompanyId)
-    : IRequest<ApiResponse<PaymentSummaryDto>>;
-
-   
+    public sealed class GetContractPaymentSummaryQuery
+        : IRequest<ApiResponse<PaymentSummaryDto>>, IAutoTenantRequest
+    {
+        public Guid ContractId { get; init; }
+        public Guid CompanyId { get; private set; }
+        public void SetCompanyId(Guid companyId) => CompanyId = companyId;
+    }
 }

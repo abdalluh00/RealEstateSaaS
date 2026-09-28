@@ -1,13 +1,30 @@
-﻿using RealEstate.Domain.Entities.Properties;
+﻿using RealEstate.Application.DTOs.Properties.Land;
+using RealEstate.Domain.Common.Enums;
+using RealEstate.Domain.Entities.Properties;
 using RealEstate.Shared.Common;
-namespace RealEstate.Domain.Interfaces.Properties
+
+namespace RealEstate.Application.Interfaces.Properties
 {
     public interface ILandRepository : IGenericRepository<LandProperty>
     {
-        Task<LandProperty?> GetByIdAsync(Guid id, Guid companyId);
-        Task<LandProperty?> GetByIdWithDetailsAsync(Guid id, Guid companyId);
-        Task<PagedResult<LandProperty>> GetPagedAsync(Guid companyId, int page, int pageSize);
-        Task<bool> ExistsAsync(Guid id, Guid companyId);
-        Task<bool> HasChildrenAsync(Guid landId, Guid companyId);
+        // ── Queries ───────────────────────────────────────
+        Task<PagedResult<LandListDto>> GetPagedAsync(
+            Guid companyId,
+            int page,
+            int pageSize,
+            PropertyStatus? status = null,
+            PropertyPurpose? purpose = null,
+            ZoningType? zoningType = null,
+            CancellationToken ct = default);
+
+        Task<LandDetailDto?> GetDetailByIdAsync(
+            Guid id,
+            Guid companyId,
+            CancellationToken ct = default);
+
+        // ── Validation ────────────────────────────────────
+        Task<bool> IsAvailableAsync(
+            Guid id,
+            CancellationToken ct = default);
     }
 }

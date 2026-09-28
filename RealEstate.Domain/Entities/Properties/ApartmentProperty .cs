@@ -4,6 +4,11 @@ namespace RealEstate.Domain.Entities.Properties
 {
     public class ApartmentProperty : Property
     {
+
+        //public ApartmentProperty()
+        //{
+        //    Type = PropertyType.Apartment;
+        //}
         // ── Unit Info ─────────────────────────────────────
         // null = standalone apartment, filled = inside building ("101", "A2")
         // UnitNumber already on base Property — remove from here

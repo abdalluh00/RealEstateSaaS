@@ -1,30 +1,34 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Clients.DTO;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Application.DTOs.Clients;
+using RealEstate.Application.Interfaces;
 using RealEstate.Shared.Common;
 
-namespace RealEstate.Application.Features.Clients.Queries.GetClients
+namespace RealEstate.Application.Features.Clients.Queries.GetPagedClients
 {
-    public class GetClientsHandler : IRequestHandler<GetClientsQuery, ApiResponse<List<ClientDto>>>
+    public sealed class GetPagedClientsQueryHandler
+        : IRequestHandler<GetPagedClientsQuery, ApiResponse<PagedResult<ClientListDto>>>
     {
-        private readonly IClientRepository _repo;
+        private readonly IClientRepository _clients;
 
-        public GetClientsHandler(IClientRepository repo) => _repo = repo;
+        public GetPagedClientsQueryHandler(IClientRepository clients)
+            => _clients = clients;
 
-        public async Task<ApiResponse<List<ClientDto>>> Handle(
-            GetClientsQuery request,
+        public async Task<ApiResponse<PagedResult<ClientListDto>>> Handle(
+            GetPagedClientsQuery query,
             CancellationToken ct)
         {
-            var clients = string.IsNullOrEmpty(request.LeadStatus)
-                ? await _repo.GetByCompanyAsync(request.CompanyId)
-                : await _repo.GetByLeadStatusAsync(request.CompanyId, request.LeadStatus);
+            var result = await _clients.GetPagedAsync(
+                companyId: query.CompanyId,
+                page: query.Page,
+                pageSize: query.PageSize,
+                leadStatus: query.LeadStatus,
+                source: query.Source,
+                isActive: query.IsActive,
+                assignedAgentId: query.AssignedAgentId,
+                search: query.Search,
+                ct: ct);
 
-            var result = clients.Select(c => new ClientDto(
-                c.Id, c.FullName, c.Phone,
-                c.Email, c.LeadStatus, c.Source, c.CreatedAt
-            )).ToList();
-
-            return ApiResponse<List<ClientDto>>.Ok(result);
+            return ApiResponse<PagedResult<ClientListDto>>.Ok(result);
         }
     }
 }

@@ -34,10 +34,6 @@ namespace RealEstate.Application.Features.Properties.Villas.Commands.UpdateVilla
                 .MaximumLength(500).When(x => !string.IsNullOrWhiteSpace(x.Address))
                 .WithMessage("العنوان يجب ألا يتجاوز 500 حرف");
 
-            RuleFor(x => x.FacingDirection)
-                .MaximumLength(50).When(x => !string.IsNullOrWhiteSpace(x.FacingDirection))
-                .WithMessage("الاتجاه يجب ألا يتجاوز 50 حرف");
-
             RuleFor(x => x.RegaLicenseNumber)
                 .MaximumLength(100).When(x => !string.IsNullOrWhiteSpace(x.RegaLicenseNumber));
 
@@ -66,6 +62,10 @@ namespace RealEstate.Application.Features.Properties.Villas.Commands.UpdateVilla
                 .GreaterThan(0)
                 .When(x => x.GardenArea.HasValue)
                 .WithMessage("مساحة الحديقة يجب أن تكون أكبر من صفر");
+
+            RuleFor(x => x.UnitNumber)
+               .NotEmpty().WithMessage("رقم الوحدة مطلوب عند وجود عقار أب")
+               .When(x => x.ParentPropertyId.HasValue);
         }
     }
 }

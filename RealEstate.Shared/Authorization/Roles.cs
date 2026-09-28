@@ -2,7 +2,8 @@
 {
     public static class Roles
     {
-        public const string Owner = "Viwer";
+        public const string Viewer = "Viwer";
+        public const string Owner = "Owner";
         public const string Admin = "Admin";
         public const string Agent = "Agent";
     }

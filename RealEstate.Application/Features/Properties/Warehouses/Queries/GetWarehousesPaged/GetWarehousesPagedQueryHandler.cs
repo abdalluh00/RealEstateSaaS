@@ -1,15 +1,14 @@
 ﻿using MediatR;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.ReadModels;
+using Microsoft.AspNetCore.Authorization;
+using RealEstate.Application.DTOs.Properties.Warehouse;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace RealEstate.Application.Features.Properties.Warehouses.Queries.GetWarehousesPaged
 {
-    public class GetWarehousesPagedQueryHandler
-        : IRequestHandler<GetWarehousesPagedQuery, ApiResponse<PagedResult<WarehouseListItemDto>>>
+    [Authorize(Roles = "Owner,Admin,Agent")]
+    public sealed class GetWarehousesPagedQueryHandler
+        : IRequestHandler<GetWarehousesPagedQuery, ApiResponse<PagedResult<WarehouseListDto>>>
     {
         private readonly IWarehouseRepository _warehouseRepository;
 
@@ -18,16 +17,17 @@ namespace RealEstate.Application.Features.Properties.Warehouses.Queries.GetWareh
             _warehouseRepository = warehouseRepository;
         }
 
-        public async Task<ApiResponse<PagedResult<WarehouseListItemDto>>> Handle(GetWarehousesPagedQuery request, CancellationToken ct)
+        public async Task<ApiResponse<PagedResult<WarehouseListDto>>> Handle(GetWarehousesPagedQuery request, CancellationToken ct)
         {
             var result = await _warehouseRepository.GetPagedAsync(
                 request.CompanyId,
                 request.Page,
                 request.PageSize,
-                request.Search,
-                ct);
+                request.status,
+                request.purpose);
 
-            return ApiResponse<PagedResult<WarehouseListItemDto>>.Ok(result);
+            
+            return ApiResponse<PagedResult<WarehouseListDto>>.Ok(result, "Warehouses retrieved successfully.");
         }
     }
 }

@@ -33,5 +33,6 @@ namespace RealEstate.Domain.Entities
         // ── Relations ─────────────────────────────────────
         public Guid ContractId { get; set; }        // FK only
         public Guid CompanyId { get; set; }         // tenant isolation
+        public Contract Contract { get; set; } = null!;
     }
 }

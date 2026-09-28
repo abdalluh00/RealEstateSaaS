@@ -1,34 +1,47 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Interfaces;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 
 namespace RealEstate.Application.Features.Users.Commands.UpdateUser
 {
-    public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, ApiResponse<bool>>
+    public sealed class UpdateUserCommandHandler
+        : IRequestHandler<UpdateUserCommand, ApiResponse<bool>>
     {
-        private readonly IUserRepository _repo;
+        private readonly IUserRepository _users;
+        private readonly IUnitOfWork _uow;
 
-        public UpdateUserHandler(IUserRepository repo) => _repo = repo;
+        public UpdateUserCommandHandler(IUserRepository users, IUnitOfWork uow)
+        {
+            _users = users;
+            _uow = uow;
+        }
 
         public async Task<ApiResponse<bool>> Handle(
-            UpdateUserCommand request,
+            UpdateUserCommand cmd,
             CancellationToken ct)
         {
-            var user = await _repo.GetByIdAsync(request.Id);
+            var user = await _users.Query()
+                .FirstOrDefaultAsync(u => u.Id == cmd.Id
+                                       && u.CompanyId == cmd.CompanyId, ct);
 
             if (user is null)
-                throw new NotFoundException("المستخدم", request.Id);
+                throw new NotFoundException("المستخدم", cmd.Id);
 
-            user.FullName = request.FullName;
-            user.Phone = request.Phone;
-            user.Role = request.Role;
-            user.IsActive = request.IsActive;
+            // ── Cannot change Owner role ───────────────────
+            if (user.Role == UserRole.Owner)
+                throw new ForbiddenException("لا يمكن تعديل صلاحيات المالك");
 
-            _repo.Update(user);
-            await _repo.SaveChangesAsync();
+            user.FullName = cmd.FullName;
+            user.Phone = cmd.Phone;
+            user.Role = cmd.Role;
 
-            return ApiResponse<bool>.Ok(true, "تم تحديث بيانات المستخدم بنجاح");
+            await _uow.SaveChangesAsync(ct);
+
+            return ApiResponse<bool>.Ok(true, "تم تحديث المستخدم بنجاح");
         }
     }
 }

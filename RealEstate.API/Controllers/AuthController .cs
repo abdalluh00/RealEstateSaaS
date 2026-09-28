@@ -1,15 +1,14 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RealEstate.Application.Features.Auth.Commands.AcceptInvitation;
+using RealEstate.Application.Features.Auth.Commands.ChangePassword;
 using RealEstate.Application.Features.Auth.Commands.Login;
-using RealEstate.Application.Features.Auth.Commands.SignUp;
-using RealEstate.Application.Features.Auth.Queries.GetMe;
-using System.Security.Claims;
+using RealEstate.Application.Features.Auth.Commands.ResetPassword;
 
 namespace RealEstate.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -17,31 +16,38 @@ namespace RealEstate.API.Controllers
         public AuthController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginCommand command)
+        public async Task<IActionResult> Login(
+            [FromBody] LoginCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(command);
-            return result.Success ? Ok(result) : Unauthorized(result);
+            var result = await _mediator.Send(cmd, ct);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        
-
-        [HttpGet("me")]
-        [Authorize]
-        public async Task<IActionResult> Me()
+        [HttpPost("accept-invitation")]
+        public async Task<IActionResult> AcceptInvitation(
+            [FromBody] AcceptInvitationCommand cmd,
+            CancellationToken ct = default)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized();
-
-            var result = await _mediator.Send(new GetMeQuery(Guid.Parse(userId)));
-            return Ok(result);
+            var result = await _mediator.Send(cmd, ct);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpPost("signup")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpCommand command)
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(
+            [FromBody] ResetPasswordCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(
+            [FromBody] ChangePasswordCommand cmd,
+            CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

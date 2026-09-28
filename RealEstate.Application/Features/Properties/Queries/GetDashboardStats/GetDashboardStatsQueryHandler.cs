@@ -1,5 +1,8 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Extensions;
+using RealEstate.Application.DTOs.Properties;
+using RealEstate.Application.DTOs.Properties.Base;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using System;
@@ -21,7 +24,7 @@ namespace RealEstate.Application.Features.Properties.Queries.GetDashboardStats
             CancellationToken ct)
         {
             // Two parallel DB calls — no dependency between them
-            var statsTask = _propertyRepo.GetDashboardStatsAsync(query.CompanyId, ct);
+            var statsTask = _propertyRepo.GetDashboardStatsAsync(query.CompanyId, query.FeaturedLimit, ct);
             var featuredTask = _propertyRepo.GetFeaturedAsync(query.CompanyId, query.FeaturedLimit, ct);
 
             await Task.WhenAll(statsTask, featuredTask);
@@ -44,14 +47,14 @@ namespace RealEstate.Application.Features.Properties.Queries.GetDashboardStats
                         Id = x.Id,
                         PropertyCode = x.PropertyCode,
                         Title = x.Title,
-                        Purpose = x.Purpose.ToArabicString(),
-                        PropertyStatus = x.PropertyStatus.ToArabicString(),
+                        Purpose = x.Purpose,
+                        Status = x.Status,
                         Price = x.Price,
                         Area = x.Area,
                         City = x.City,
                         District = x.District,
                         IsFeatured = x.IsFeatured,
-                        IsPublished = x.IsPublished,
+                        //IsPublished = x.IsPublished,
                         CreatedAt = x.CreatedAt
                     })
                     .ToList()

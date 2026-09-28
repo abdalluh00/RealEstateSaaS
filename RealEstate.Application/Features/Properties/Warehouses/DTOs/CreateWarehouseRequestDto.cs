@@ -41,10 +41,17 @@ namespace RealEstate.Application.Features.Properties.Warehouses.DTOs
         public Guid AgentId { get; set; }
 
         // Warehouse specific
-        public decimal? CeilingHeight { get; set; }
-        public int? LoadingDocks { get; set; }
-        public string? ElectricityCapacity { get; set; }
-        public bool OfficeSpace { get; set; }
-        public bool SecurityRoom { get; set; }
+        public decimal? CeilingHeight { get; init; }
+        public int? LoadingDocks { get; init; }
+        public int? GateCount { get; init; }
+        public ElectricityCapacity? ElectricityCapacity { get; init; }
+        public bool HasOfficeSpace { get; init; }
+        public bool HasSecurityRoom { get; init; }
+        public bool HasCCTV { get; init; }
+        public bool HasFireSystem { get; init; }
+        public bool HasColdStorage { get; init; }
+        public bool HasMosanada { get; init; }
+        public bool IsFenced { get; init; }
+        public bool HasTruckAccess { get; init; }
     }
 }

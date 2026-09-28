@@ -1,38 +1,42 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 
 namespace RealEstate.Application.Features.PropertyMedia.Commands.SetCover
 {
-    public class SetCoverHandler : IRequestHandler<SetCoverCommand, ApiResponse<bool>>
+    public sealed class SetCoverCommandHandler
+        : IRequestHandler<SetCoverCommand, ApiResponse<bool>>
     {
-        private readonly IPropertyMediaRepository _repo;
+        private readonly IPropertyMediaRepository _mediaRepo;
+        private readonly IUnitOfWork _uow;
 
-        public SetCoverHandler(IPropertyMediaRepository repo) => _repo = repo;
+        public SetCoverCommandHandler(
+            IPropertyMediaRepository mediaRepo,
+            IUnitOfWork uow)
+        {
+            _mediaRepo = mediaRepo;
+            _uow = uow;
+        }
 
         public async Task<ApiResponse<bool>> Handle(
-            SetCoverCommand request,
+            SetCoverCommand cmd,
             CancellationToken ct)
         {
-            var media = await _repo.GetByIdAsync(request.MediaId);
+            var media = await _mediaRepo.GetByIdForCommandAsync(
+                cmd.MediaId, cmd.CompanyId, ct);
 
-            if (media is null)
-                throw new NotFoundException("الملف", request.MediaId);
+            if (media is null || media.PropertyId != cmd.PropertyId)
+                throw new NotFoundException("الصورة", cmd.MediaId);
 
-            // احذف الغلاف القديم
-            var oldCover = await _repo.GetCoverAsync(media.PropertyId);
+            // ── Clear existing cover ──────────────────────
+            await _mediaRepo.ClearCoverAsync(cmd.PropertyId, ct);
 
-            if (oldCover is not null)
-            {
-                oldCover.IsCover = false;
-                _repo.Update(oldCover);
-            }
-
-            // اجعل هذا الملف غلافاً
+            // ── Set new cover ─────────────────────────────
             media.IsCover = true;
-            _repo.Update(media);
-            await _repo.SaveChangesAsync();
+
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<bool>.Ok(true, "تم تعيين صورة الغلاف بنجاح");
         }

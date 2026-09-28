@@ -21,7 +21,7 @@ namespace RealEstate.Domain.Entities.Properties
         public bool HasCCTV { get; set; } = false;         // كاميرات مراقبة
 
         // ── Furnished Status ──────────────────────────────
-        public FurnishedStatus? FurnishedStatus { get; set; }
+        public FurnishedStatus FurnishedStatus { get; set; }
         // Furnished, Unfurnished, SemiFurnished
     }
 }

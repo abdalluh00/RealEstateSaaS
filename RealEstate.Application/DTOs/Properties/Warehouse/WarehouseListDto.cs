@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealEstate.Application.DTOs.Properties.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

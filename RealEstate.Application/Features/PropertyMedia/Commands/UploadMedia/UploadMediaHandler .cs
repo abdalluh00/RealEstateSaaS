@@ -1,64 +1,81 @@
 ﻿using MediatR;
+using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
+
 namespace RealEstate.Application.Features.PropertyMedia.Commands.UploadMedia
 {
-    public class UploadMediaHandler : IRequestHandler<UploadMediaCommand, ApiResponse<Guid>>
+    public sealed class UploadPropertyMediaCommandHandler
+        : IRequestHandler<UploadPropertyMediaCommand, ApiResponse<Guid>>
     {
         private readonly IPropertyMediaRepository _mediaRepo;
-        private readonly IPropertyRepository _propertyRepo;
-        private readonly IStorageService _storage;
+        private readonly IPropertyRepository _properties;
+        private readonly IFileStorageService _storage;
+        private readonly IUnitOfWork _uow;
 
-        public UploadMediaHandler(
+        public UploadPropertyMediaCommandHandler(
             IPropertyMediaRepository mediaRepo,
-            IPropertyRepository propertyRepo,
-            IStorageService storage)
+            IPropertyRepository properties,
+            IFileStorageService storage,
+            IUnitOfWork uow)
         {
             _mediaRepo = mediaRepo;
-            _propertyRepo = propertyRepo;
+            _properties = properties;
             _storage = storage;
+            _uow = uow;
         }
 
         public async Task<ApiResponse<Guid>> Handle(
-            UploadMediaCommand request,
+            UploadPropertyMediaCommand cmd,
             CancellationToken ct)
         {
-            // تحقق من العقار
-            var property = await _propertyRepo.GetByIdAsync(request.PropertyId);
-            if (property is null)
-                throw new NotFoundException("العقار", request.PropertyId);
+            // ── Property must exist ───────────────────────
+            var propertyExists = await _properties.ExistsAsync(
+                cmd.PropertyId, cmd.CompanyId, ct);
 
-            // رفع الملف
-            var url = await _storage.UploadAsync(
-                request.FileStream,
-                request.FileName,
-                request.ContentType);
+            if (!propertyExists)
+                throw new NotFoundException("العقار", cmd.PropertyId);
 
-            // إذا هذه صورة الغلاف — احذف الغلاف القديم
-            if (request.IsCover)
+            // ── Detect media type from extension ──────────
+            var ext = Path.GetExtension(cmd.File.FileName).ToLowerInvariant();
+            var mediaType = ext == ".mp4"
+                ? MediaType.Video
+                : MediaType.Image;
+
+            // ── Save file to disk ─────────────────────────
+            var folder = $"properties/{cmd.PropertyId}/media";
+            var url = await _storage.SaveAsync(
+                cmd.File.OpenReadStream(),
+                cmd.File.FileName,
+                folder,
+                ct);
+
+            // ── First media auto-becomes cover ────────────
+            var hasCover = await _mediaRepo.HasCoverAsync(cmd.PropertyId, ct);
+
+            var media = new Domain.Entities.Properties.PropertyMedia
             {
-                var oldCover = await _mediaRepo.GetCoverAsync(request.PropertyId);
-                if (oldCover is not null)
-                {
-                    oldCover.IsCover = false;
-                    _mediaRepo.Update(oldCover);
-                }
-            }
-
-            var media = new RealEstate.Domain.Entities.PropertyMedia
-            {
-                PropertyId = request.PropertyId,
+                PropertyId = cmd.PropertyId,
+                CompanyId = cmd.CompanyId,
                 MediaUrl = url,
-                MediaType = request.MediaType,
-                IsCover = request.IsCover,
-                SortOrder = request.SortOrder
+                MediaType = mediaType,
+                Title = cmd.Title,
+                Description = cmd.Description,
+                SortOrder = cmd.SortOrder,
+                IsCover = !hasCover, // first upload = cover
+                FileName = cmd.File.FileName,
+                FileSizeInBytes = cmd.File.Length,
+                MimeType = cmd.File.ContentType
             };
 
-            await _mediaRepo.AddAsync(media);
-            await _mediaRepo.SaveChangesAsync();
+            _mediaRepo.Add(media);
+            await _uow.SaveChangesAsync(ct);
 
-            return ApiResponse<Guid>.Ok(media.Id, "تم رفع الملف بنجاح");
+            return ApiResponse<Guid>.Ok(media.Id, "تم رفع الصورة بنجاح");
         }
     }
 }

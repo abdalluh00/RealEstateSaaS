@@ -1,0 +1,17 @@
+﻿using MediatR;
+using RealEstate.Application.Common.Behaviors;
+using RealEstate.Application.Common.Interfaces;
+using RealEstate.Shared.Authorization;
+using RealEstate.Shared.Common;
+
+namespace RealEstate.Application.Features.Maintenance.Commands.DeleteMaintenanceMedia
+{
+    [Authorize(Roles = $"{Roles.Admin}")]
+    public sealed class DeleteMaintenanceMediaCommand
+        : IRequest<ApiResponse<bool>>, IAutoTenantRequest
+    {
+        public Guid MediaId { get; init; }
+        public Guid CompanyId { get; private set; }
+        public void SetCompanyId(Guid companyId) => CompanyId = companyId;
+    }
+}

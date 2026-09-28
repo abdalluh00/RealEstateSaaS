@@ -1,5 +1,4 @@
-﻿
-using RealEstate.Shared.Common;
+﻿using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 using System.Net;
 using System.Text.Json;
@@ -11,7 +10,9 @@ namespace RealEstate.API.Middleware
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
 
-        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
+        public ExceptionMiddleware(
+            RequestDelegate next,
+            ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -25,12 +26,13 @@ namespace RealEstate.API.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(
+            HttpContext context,
+            Exception ex)
         {
             context.Response.ContentType = "application/json";
 
@@ -44,13 +46,28 @@ namespace RealEstate.API.Middleware
                 _ => (HttpStatusCode.InternalServerError, "حدث خطأ غير متوقع")
             };
 
+            // ── Log with appropriate level ────────────────
+            if (statusCode == HttpStatusCode.InternalServerError)
+                _logger.LogError(ex,
+                    "Unhandled exception on {Method} {Path}",
+                    context.Request.Method,
+                    context.Request.Path);
+            else
+                _logger.LogWarning(
+                    "{ExceptionType} on {Method} {Path}: {Message}",
+                    ex.GetType().Name,
+                    context.Request.Method,
+                    context.Request.Path,
+                    ex.Message);
+
             context.Response.StatusCode = (int)statusCode;
 
             var response = ApiResponse<object>.Fail(message);
-            var json = JsonSerializer.Serialize(response, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(response,
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
 
             await context.Response.WriteAsync(json);
         }

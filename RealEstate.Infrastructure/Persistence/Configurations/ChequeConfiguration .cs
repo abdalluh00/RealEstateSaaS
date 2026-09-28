@@ -51,11 +51,11 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
                    .OnDelete(DeleteBehavior.Restrict);
 
             // ── Relations ─────────────────────────────────
-            builder.HasOne<Contract>()
+            
+            builder.HasOne(x => x.Contract)
                    .WithMany()
                    .HasForeignKey(x => x.ContractId)
                    .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasOne<Company>()
                    .WithMany()
                    .HasForeignKey(x => x.CompanyId)

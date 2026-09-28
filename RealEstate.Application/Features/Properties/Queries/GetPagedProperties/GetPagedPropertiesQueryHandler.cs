@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Extensions;
+using RealEstate.Application.DTOs.Properties.Base;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using System;
@@ -36,14 +38,14 @@ namespace RealEstate.Application.Features.Properties.Queries.GetPagedProperties
                     Id = x.Id,
                     PropertyCode = x.PropertyCode,
                     Title = x.Title,
-                    Purpose = x.Purpose.ToArabicString(),       // enum → localized
-                    PropertyStatus = x.PropertyStatus.ToArabicString(),
+                    Purpose = x.Purpose,       // enum → localized
+                    Status = x.Status,
                     Price = x.Price,
                     Area = x.Area,
                     City = x.City,
                     District = x.District,
                     IsFeatured = x.IsFeatured,
-                    IsPublished = x.IsPublished,
+                    //IsPublished = x.IsPublished,
                     CreatedAt = x.CreatedAt
                 }).ToList(),
                 totalCount: result.TotalCount,

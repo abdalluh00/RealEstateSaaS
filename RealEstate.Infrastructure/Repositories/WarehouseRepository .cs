@@ -1,152 +1,157 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.DTOs.Properties.Base;
+using RealEstate.Application.DTOs.Properties.Warehouse;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities.Properties;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.ReadModels;
 using RealEstate.Infrastructure.Persistence;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RealEstate.Infrastructure.Repositories
+using System.Linq.Expressions;
+using RealEstate.Application.Common.Extensions;
+namespace RealEstate.Infrastructure.Repositories.Properties
 {
     public class WarehouseRepository : GenericRepository<WarehouseProperty>, IWarehouseRepository
     {
-        public WarehouseRepository(AppDbContext context) : base(context)
-        {
-        }
+        public WarehouseRepository(AppDbContext context) : base(context) { }
 
-        public async Task<WarehouseProperty?> GetByIdForUpdateAsync(Guid id, Guid companyId, CancellationToken ct = default)
-        {
-            return await _context.WarehouseProperties
-                .FirstOrDefaultAsync(x => x.Id == id && x.CompanyId == companyId, ct);
-        }
+        private static readonly Expression<Func<WarehouseProperty, WarehouseListDto>> ToListDto =
+            w => new WarehouseListDto
+            {
+                Id = w.Id,
+                PropertyCode = w.PropertyCode,
+                Title = w.Title,
+                Type = w.Type.ToArabicString(),
+                Purpose = w.Purpose.ToArabicString(),
+                Status = w.PropertyStatus.ToArabicString(),
+                Price = w.Price,
+                Area = w.Area,
+                City = w.City,
+                District = w.District,
+                UnitNumber = w.UnitNumber,
+                IsFeatured = w.IsFeatured,
+                CreatedAt = w.CreatedAt,
+                CeilingHeight = w.CeilingHeight,
+                LoadingDocks = w.LoadingDocks,
+                ElectricityCapacity = w.ElectricityCapacity.ToArabicString(),
+                HasColdStorage = w.HasColdStorage
+            };
 
-        public async Task<WarehouseDetailsDto?> GetDetailsByIdAsync(Guid id, Guid companyId, CancellationToken ct = default)
-        {
-            return await _context.WarehouseProperties
-                .AsNoTracking()
-                .Where(x => x.Id == id && x.CompanyId == companyId)
-                .Select(x => new WarehouseDetailsDto
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-
-                    ParentPropertyId = x.ParentPropertyId,
-                    ParentPropertyTitle = x.ParentProperty != null ? x.ParentProperty.Title : null,
-
-                    Title = x.Title,
-                    Description = x.Description,
-
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-
-                    Price = x.Price,
-                    Area = x.Area,
-
-                    City = x.City,
-                    District = x.District,
-                    Address = x.Address,
-                    Latitude = x.Latitude,
-                    Longitude = x.Longitude,
-
-                    ParkingSpots = x.ParkingSpots,
-                    AgeInYears = x.AgeInYears,
-                    FacingDirection = x.FacingDirection,
-                    FurnishedStatus = x.FurnishedStatus,
-
-                    RegaLicenseNumber = x.RegaLicenseNumber,
-                    DeedNumber = x.DeedNumber,
-                    MunicipalityNumber = x.MunicipalityNumber,
-
-                    IsFeatured = x.IsFeatured,
-
-                    CompanyId = x.CompanyId,
-
-                    OwnerId = x.OwnerId,
-                    OwnerName = x.Owner != null ? x.Owner.FullName : null,
-
-                    AgentId = x.AgentId,
-                    AgentName = x.Agent != null ? x.Agent.FullName : null,
-
-                    CeilingHeight = x.CeilingHeight,
-                    LoadingDocks = x.LoadingDocks,
-                    ElectricityCapacity = x.ElectricityCapacity,
-                    OfficeSpace = x.OfficeSpace,
-                    SecurityRoom = x.SecurityRoom,
-
-                    CreatedAt = x.CreatedAt,
-                    UpdatedAt = x.UpdatedAt
-                })
-                .FirstOrDefaultAsync(ct);
-        }
-
-        public async Task<PagedResult<WarehouseListItemDto>> GetPagedAsync(
+        public async Task<PagedResult<WarehouseListDto>> GetPagedAsync(
             Guid companyId,
             int page,
             int pageSize,
-            string? search = null,
+            PropertyStatus? status = null,
+            PropertyPurpose? purpose = null,
+            bool? hasColdStorage = null,
             CancellationToken ct = default)
         {
-            var query = _context.WarehouseProperties
+            var query = _dbSet
                 .AsNoTracking()
-                .Where(x => x.CompanyId == companyId);
+                .Where(w => w.CompanyId == companyId);
 
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                search = search.Trim();
+            if (status.HasValue)
+                query = query.Where(w => w.PropertyStatus == status.Value);
 
-                query = query.Where(x =>
-                    x.Title.Contains(search) ||
-                    x.PropertyCode.Contains(search) ||
-                    x.City.Contains(search) ||
-                    x.District.Contains(search));
-            }
+            if (purpose.HasValue)
+                query = query.Where(w => w.Purpose == purpose.Value);
+
+            if (hasColdStorage.HasValue)
+                query = query.Where(w => w.HasColdStorage == hasColdStorage.Value);
 
             var totalCount = await query.CountAsync(ct);
 
+            if (totalCount == 0)
+                return PagedResult<WarehouseListDto>.Empty(page, pageSize);
+
             var items = await query
-                .OrderByDescending(x => x.CreatedAt)
+                .OrderByDescending(w => w.IsFeatured)
+                .ThenByDescending(w => w.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(x => new WarehouseListItemDto
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-
-                    ParentPropertyId = x.ParentPropertyId,
-                    ParentPropertyTitle = x.ParentProperty != null ? x.ParentProperty.Title : null,
-
-                    OwnerId = x.OwnerId,
-                    OwnerName = x.Owner != null ? x.Owner.FullName : null,
-
-                    AgentId = x.AgentId,
-                    AgentName = x.Agent != null ? x.Agent.FullName : null,
-
-                    CeilingHeight = x.CeilingHeight,
-                    LoadingDocks = x.LoadingDocks,
-                    OfficeSpace = x.OfficeSpace,
-                    SecurityRoom = x.SecurityRoom,
-
-                    IsFeatured = x.IsFeatured,
-                    CreatedAt = x.CreatedAt
-                })
+                .Select(ToListDto)
                 .ToListAsync(ct);
 
-            return new PagedResult<WarehouseListItemDto>
-            {
-                Items = items,
-                TotalCount = totalCount,
-                Page = page,
-                PageSize = pageSize
-            };
+            return PagedResult<WarehouseListDto>.Create(items, totalCount, page, pageSize);
         }
+
+        public async Task<WarehouseDetailDto?> GetDetailByIdAsync(
+            Guid id,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await QueryNoTracking()
+                .Where(w => w.Id == id && w.CompanyId == companyId)
+                .Select(w => new WarehouseDetailDto
+                {
+                    Id = w.Id,
+                    PropertyCode = w.PropertyCode,
+                    Title = w.Title,
+                    Type = w.Type.ToArabicString(),
+                    Description = w.Description,
+                    Purpose = w.Purpose.ToArabicString(),
+                    Status = w.PropertyStatus.ToArabicString(),
+                    Price = w.Price,
+                    Area = w.Area,
+                    City = w.City,
+                    District = w.District,
+                    Address = w.Address,
+                    UnitNumber = w.UnitNumber,
+                    Latitude = w.Latitude,
+                    Longitude = w.Longitude,
+                    ParkingSpots = w.ParkingSpots,
+                    AgeInYears = w.AgeInYears,
+                    FacingDirection = w.FacingDirection.ToArabicString(),
+                    RegaLicenseNumber = w.RegaLicenseNumber,
+                    DeedNumber = w.DeedNumber,
+                    MunicipalityNumber = w.MunicipalityNumber,
+                    IsFeatured = w.IsFeatured,
+                    IsPublished = w.IsPublished,
+                    CreatedAt = w.CreatedAt,
+                    UpdatedAt = w.UpdatedAt,
+                    OwnerId = w.OwnerId,
+                    OwnerName = w.Owner != null ? w.Owner.FullName : null,
+                    OwnerPhone = w.Owner != null ? w.Owner.Phone : null,
+                    AgentId = w.AgentId,
+                    AgentName = w.Agent != null ? w.Agent.FullName : null,
+                    AgentPhone = w.Agent != null ? w.Agent.Phone : null,
+                    CeilingHeight = w.CeilingHeight,
+                    LoadingDocks = w.LoadingDocks,
+                    GateCount = w.GateCount,
+                    ElectricityCapacity = w.ElectricityCapacity.ToArabicString(),
+                    HasOfficeSpace = w.HasOfficeSpace,
+                    HasSecurityRoom = w.HasSecurityRoom,
+                    HasCCTV = w.HasCCTV,
+                    HasFireSystem = w.HasFireSystem,
+                    HasColdStorage = w.HasColdStorage,
+                    HasMosanada = w.HasMosanada,
+                    IsFenced = w.IsFenced,
+                    HasTruckAccess = w.HasTruckAccess,
+                    Media = w.Media
+                        .OrderBy(m => m.SortOrder)
+                        .Select(m => new PropertyMediaDto
+                        {
+                            Id = m.Id,
+                            MediaUrl = m.MediaUrl,
+                            MediaType = m.MediaType.ToString(),
+                            IsCover = m.IsCover,
+                            SortOrder = m.SortOrder
+                        }).ToList(),
+                    Documents = w.Documents
+                        .Select(d => new PropertyDocumentDto
+                        {
+                            Id = d.Id,
+                            DocumentType = d.DocumentType.ToString(),
+                            DocumentName = d.DocumentName,
+                            FileUrl = d.FileUrl,
+                            ExpiryDate = d.ExpiryDate
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync(ct);
+
+        public async Task<bool> IsAvailableAsync(
+            Guid id,
+            CancellationToken ct = default) =>
+            await QueryNoTracking()
+                .AnyAsync(w => w.Id == id
+                            && w.PropertyStatus == PropertyStatus.Available, ct);
     }
 }

@@ -1,20 +1,21 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Interfaces;
-using RealEstate.Domain.ReadModels;
+using RealEstate.Application.DTOs.Properties.Warehouse;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace RealEstate.Application.Features.Properties.Warehouses.Queries.GetWarehousesPaged
 {
-    public record GetWarehousesPagedQuery(
-        int Page = 1,
-        int PageSize = 20,
+    public sealed record GetWarehousesPagedQuery(
+       
         string? Search = null)
-        : IRequest<ApiResponse<PagedResult<WarehouseListItemDto>>>, IAutoTenantRequest
+        : IRequest<ApiResponse<PagedResult<WarehouseListDto>>>, IAutoTenantRequest
     {
+        public PropertyStatus? status { get; init; }
+        public PropertyPurpose? purpose { get; init; }
+        public int Page { get; init; } = 1;
+        public int PageSize { get; init; } = 10;
         public Guid CompanyId { get; private set; }
+        public bool? HasColdStorage { get; init; }
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using RealEstate.Domain.Entities;
+﻿using RealEstate.Domain.Entities;
 
 namespace RealEstate.Domain.Interfaces
 {

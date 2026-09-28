@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using RealEstate.Application.Common.Interfaces;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace RealEstate.Application.Features.Properties.Villas.Commands.CreateVilla
 {
     [Authorize(Roles = "Owner,Admin")]
@@ -19,6 +15,7 @@ namespace RealEstate.Application.Features.Properties.Villas.Commands.CreateVilla
         public PropertyPurpose Purpose { get; init; }
         public PropertyStatus PropertyStatus { get; init; }
 
+        public FacingDirection FacingDirection { get; init; }
         public decimal Price { get; init; }
         public decimal Area { get; init; }
 
@@ -30,7 +27,7 @@ namespace RealEstate.Application.Features.Properties.Villas.Commands.CreateVilla
 
         public int? ParkingSpots { get; init; }
         public int? AgeInYears { get; init; }
-        public string? FacingDirection { get; init; }
+       
         public FurnishedStatus FurnishedStatus { get; init; }
 
         public string? RegaLicenseNumber { get; init; }
@@ -48,11 +45,20 @@ namespace RealEstate.Application.Features.Properties.Villas.Commands.CreateVilla
         public int Bedrooms { get; init; }
         public int Bathrooms { get; init; }
         public int Floors { get; init; }
+        public int LivingRooms { get; init; }
         public bool MaidRoom { get; init; }
         public bool DriverRoom { get; init; }
         public bool Pool { get; init; }
+        public bool HasGarden { get; init; }
+        public bool HasElevator { get; init; }
+        public bool HasMosque { get; init; }
+        public bool HasMajlis { get; init; }
+        public bool HasStorage { get; init; }
+        public bool HasCCTV { get; init; }
+        public bool HasGenerator { get; init; }
         public decimal? GardenArea { get; init; }
 
+        public string? UnitNumber { get; init; }
         public Guid CompanyId { get; private set; }
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }

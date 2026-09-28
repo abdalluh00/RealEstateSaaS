@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using RealEstate.Application.Common.Interfaces;
-using RealEstate.Application.Features.Contracts.DTO;
+using RealEstate.Application.DTOs.Contracts;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Common;
 using System;

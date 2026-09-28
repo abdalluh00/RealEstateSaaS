@@ -1,31 +1,45 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
+
 namespace RealEstate.Application.Features.Payments.Commands.CancelPayment
 {
-    public class CancelPaymentHandler : IRequestHandler<CancelPaymentCommand, ApiResponse<bool>>
+    public sealed class CancelPaymentCommandHandler
+        : IRequestHandler<CancelPaymentCommand, ApiResponse<bool>>
     {
-        private readonly IPaymentRepository _repo;
+        private readonly IPaymentRepository _payments;
+        private readonly IUnitOfWork _uow;
 
-        public CancelPaymentHandler(IPaymentRepository repo) => _repo = repo;
+        public CancelPaymentCommandHandler(
+            IPaymentRepository payments,
+            IUnitOfWork uow)
+        {
+            _payments = payments;
+            _uow = uow;
+        }
 
         public async Task<ApiResponse<bool>> Handle(
-            CancelPaymentCommand request,
+            CancelPaymentCommand cmd,
             CancellationToken ct)
         {
-            var payment = await _repo.GetByIdAsync(request.PaymentId);
+            var payment = await _payments.GetByIdForCommandAsync(
+                cmd.Id, cmd.CompanyId, ct);
 
             if (payment is null)
-                throw new NotFoundException("الدفعة", request.PaymentId);
+                throw new NotFoundException("الدفعة", cmd.Id);
 
-            if (payment.Status == "Paid")
-                throw new ConflictException("لا يمكن إلغاء دفعة مدفوعة");
+            if (payment.PaymentStatus is PaymentStatus.Paid
+                                      or PaymentStatus.Cancelled)
+                throw new ConflictException(
+                    "لا يمكن إلغاء هذه الدفعة");
 
-            payment.Status = "Cancelled";
+            payment.PaymentStatus = PaymentStatus.Cancelled;
+            payment.Notes = cmd.Notes;
 
-            _repo.Update(payment);
-            await _repo.SaveChangesAsync();
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<bool>.Ok(true, "تم إلغاء الدفعة بنجاح");
         }

@@ -10,7 +10,7 @@ using System.Text;
 namespace RealEstate.Application.Features.Properties.Offices.Commands.UpdateOffice
 {
     [Authorize(Roles = "Owner,Admin,Agent")]
-    public record UpdateOfficeCommand : IRequest<ApiResponse<Guid>>, IAutoTenantRequest
+    public record UpdateOfficeCommand : IRequest<ApiResponse<bool>>, IAutoTenantRequest
     {
         public Guid Id { get; init; }
 
@@ -35,7 +35,7 @@ namespace RealEstate.Application.Features.Properties.Offices.Commands.UpdateOffi
 
         public int? ParkingSpots { get; init; }
         public int? AgeInYears { get; init; }
-        public string? FacingDirection { get; init; }
+        public FacingDirection FacingDirection { get; init; }
         public FurnishedStatus FurnishedStatus { get; init; }
 
         public string? RegaLicenseNumber { get; init; }

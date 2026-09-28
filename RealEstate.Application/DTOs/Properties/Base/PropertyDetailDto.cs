@@ -17,10 +17,17 @@ namespace RealEstate.Application.DTOs.Properties.Base
         public string? DeedNumber { get; init; }
         public string? MunicipalityNumber { get; init; }
         public bool IsPublished { get; init; }
+
+        // ── Owner ─────────────────────────────────────────
         public Guid? OwnerId { get; init; }
+        public string? OwnerName { get; init; }   // ← add here, not in list
         public string? OwnerPhone { get; init; }
+
+        // ── Agent ─────────────────────────────────────────
         public Guid? AgentId { get; init; }
+        public string? AgentName { get; init; }   // ← add here, not in list
         public string? AgentPhone { get; init; }
+
         public DateTime? UpdatedAt { get; init; }
         public IEnumerable<PropertyMediaDto> Media { get; init; } = [];
         public IEnumerable<PropertyDocumentDto> Documents { get; init; } = [];

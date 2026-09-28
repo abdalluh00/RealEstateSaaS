@@ -1,34 +1,54 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Interfaces;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 
 namespace RealEstate.Application.Features.Clients.Commands.UpdateClient
 {
-    public class UpdateClientHandler : IRequestHandler<UpdateClientCommand, ApiResponse<bool>>
+    public sealed class UpdateClientCommandHandler
+        : IRequestHandler<UpdateClientCommand, ApiResponse<bool>>
     {
-        private readonly IClientRepository _repo;
+        private readonly IClientRepository _clients;
+        private readonly IUnitOfWork _uow;
 
-        public UpdateClientHandler(IClientRepository repo) => _repo = repo;
+        public UpdateClientCommandHandler(
+            IClientRepository clients,
+            IUnitOfWork uow)
+        {
+            _clients = clients;
+            _uow = uow;
+        }
 
         public async Task<ApiResponse<bool>> Handle(
-            UpdateClientCommand request,
+            UpdateClientCommand cmd,
             CancellationToken ct)
         {
-            var client = await _repo.GetByIdAsync(request.Id);
+            var client = await _clients.Query()
+                .FirstOrDefaultAsync(x => x.Id == cmd.Id
+                                       && x.CompanyId == cmd.CompanyId, ct);
 
             if (client is null)
-                throw new NotFoundException("العميل", request.Id);
+                throw new NotFoundException("العميل", cmd.Id);
 
-            client.FullName = request.FullName;
-            client.Phone = request.Phone;
-            client.Email = request.Email;
-            client.LeadStatus = request.LeadStatus;
-            client.Source = request.Source;
-            client.Notes = request.Notes;
+            var phoneTaken = await _clients.PhoneExistsForAnotherClientAsync(
+                cmd.Phone, cmd.Id, cmd.CompanyId, ct);
 
-            _repo.Update(client);
-            await _repo.SaveChangesAsync();
+            if (phoneTaken)
+                throw new ConflictException("رقم الجوال مستخدم بالفعل");
+
+            client.FullName = cmd.FullName;
+            client.Phone = cmd.Phone;
+            client.Email = cmd.Email;
+            client.NationalId = cmd.NationalId;
+            client.Nationality = cmd.Nationality;
+            client.Source =(LeadSource) cmd.Source!;
+            client.IsActive = cmd.IsActive;
+            client.Notes = cmd.Notes;
+
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<bool>.Ok(true, "تم تحديث العميل بنجاح");
         }

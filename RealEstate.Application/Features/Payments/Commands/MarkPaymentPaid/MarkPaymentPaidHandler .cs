@@ -1,56 +1,51 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 
 namespace RealEstate.Application.Features.Payments.Commands.MarkPaymentPaid
 {
-    public class MarkPaymentPaidHandler : IRequestHandler<MarkPaymentPaidCommand, ApiResponse<bool>>
+    public sealed class MarkPaymentPaidCommandHandler
+        : IRequestHandler<MarkPaymentPaidCommand, ApiResponse<bool>>
     {
-        private readonly IPaymentRepository _repo;
-        private readonly IWhatsAppService _whatsApp;
+        private readonly IPaymentRepository _payments;
+        private readonly IUnitOfWork _uow;
 
-        public MarkPaymentPaidHandler(IPaymentRepository repo, IWhatsAppService whatsApp)
+        public MarkPaymentPaidCommandHandler(
+            IPaymentRepository payments,
+            IUnitOfWork uow)
         {
-            _repo = repo;
-            _whatsApp = whatsApp;
+            _payments = payments;
+            _uow = uow;
         }
 
         public async Task<ApiResponse<bool>> Handle(
-            MarkPaymentPaidCommand request,
+            MarkPaymentPaidCommand cmd,
             CancellationToken ct)
         {
-            var payment = await _repo.GetByIdAsync(request.PaymentId);
+            var payment = await _payments.GetByIdForCommandAsync(
+                cmd.Id, cmd.CompanyId, ct);
 
             if (payment is null)
-                throw new NotFoundException("الدفعة", request.PaymentId);
+                throw new NotFoundException("الدفعة", cmd.Id);
 
-            if (payment.Status == "Paid")
-                throw new ConflictException("هذه الدفعة مدفوعة مسبقاً");
+            if (payment.PaymentStatus == PaymentStatus.Paid)
+                throw new ConflictException("الدفعة مدفوعة بالفعل");
 
-            payment.Status = "Paid";
-            payment.PaidDate = DateTime.UtcNow;
-            payment.Method = request.Method;
-            payment.Reference = request.Reference;
+            if (payment.PaymentStatus == PaymentStatus.Cancelled)
+                throw new ConflictException("لا يمكن تسجيل دفع لدفعة ملغاة");
 
-            _repo.Update(payment);
-            await _repo.SaveChangesAsync();
+            payment.PaymentStatus = PaymentStatus.Paid;
+            payment.PaidDate = cmd.PaidDate;
+            payment.PaymentMethod = cmd.PaymentMethod;
+            payment.Reference = cmd.Reference;
+            payment.Notes = cmd.Notes;
 
-            // إرسال إيصال للعميل
-            _ = _whatsApp.SendAsync(
-                payment.Contract.Client.Phone,
-                $"""
-                 ✅ تم استلام دفعتك بنجاح
+            await _uow.SaveChangesAsync(ct);
 
-                💰 المبلغ: {payment.Amount:N0} ريال
-                📅 تاريخ الدفع: {DateTime.UtcNow:dd/MM/yyyy}
-                💳 طريقة الدفع: {request.Method}
-
-                 شكراً لك! 🏠
-                """
-            );
-
-            return ApiResponse<bool>.Ok(true, "تم تسجيل الدفعة بنجاح");
+            return ApiResponse<bool>.Ok(true, "تم تسجيل الدفع بنجاح");
         }
     }
 }

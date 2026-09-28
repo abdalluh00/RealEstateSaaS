@@ -1,29 +1,18 @@
 ﻿using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Lands.Commands.CreateLand
+namespace RealEstate.Application.Features.Lands.Commands.CreateLand
 {
-    public class CreateLandCommandValidator : AbstractValidator<CreateLandCommand>
+    public sealed class CreateLandCommandValidator
+        : AbstractValidator<CreateLandCommand>
     {
         public CreateLandCommandValidator()
         {
             RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("عنوان الأرض مطلوب")
-                .MaximumLength(300).WithMessage("عنوان الأرض يجب ألا يتجاوز 300 حرف");
+                .NotEmpty().WithMessage("عنوان العقار مطلوب")
+                .MaximumLength(200).WithMessage("العنوان لا يتجاوز 200 حرف");
 
-            RuleFor(x => x.City)
-                .NotEmpty().WithMessage("المدينة مطلوبة")
-                .MaximumLength(100).WithMessage("المدينة يجب ألا تتجاوز 100 حرف");
-
-            RuleFor(x => x.District)
-                .NotEmpty().WithMessage("الحي مطلوب")
-                .MaximumLength(100).WithMessage("الحي يجب ألا يتجاوز 100 حرف");
-
-            RuleFor(x => x.Address)
-                .MaximumLength(500).WithMessage("العنوان يجب ألا يتجاوز 500 حرف")
-                .When(x => !string.IsNullOrWhiteSpace(x.Address));
+            RuleFor(x => x.Purpose)
+                .IsInEnum().WithMessage("نوع الغرض غير صحيح");
 
             RuleFor(x => x.Price)
                 .GreaterThan(0).WithMessage("السعر يجب أن يكون أكبر من صفر");
@@ -31,45 +20,19 @@ namespace RealEstate.Application.Features.Properties.Lands.Commands.CreateLand
             RuleFor(x => x.Area)
                 .GreaterThan(0).WithMessage("المساحة يجب أن تكون أكبر من صفر");
 
-            RuleFor(x => x.OwnerId)
-                .NotEmpty().WithMessage("المالك مطلوب");
+            RuleFor(x => x.City)
+                .NotEmpty().WithMessage("المدينة مطلوبة");
 
-            RuleFor(x => x.AgentId)
-                .NotEmpty().WithMessage("الوسيط/الموظف المسؤول مطلوب");
-
-            RuleFor(x => x.FacingDirection)
-                .MaximumLength(50).WithMessage("اتجاه الواجهة يجب ألا يتجاوز 50 حرف")
-                .When(x => !string.IsNullOrWhiteSpace(x.FacingDirection));
-
-            RuleFor(x => x.RegaLicenseNumber)
-                .MaximumLength(100).WithMessage("رقم ترخيص فال يجب ألا يتجاوز 100 حرف")
-                .When(x => !string.IsNullOrWhiteSpace(x.RegaLicenseNumber));
-
-            RuleFor(x => x.DeedNumber)
-                .MaximumLength(100).WithMessage("رقم الصك يجب ألا يتجاوز 100 حرف")
-                .When(x => !string.IsNullOrWhiteSpace(x.DeedNumber));
-
-            RuleFor(x => x.MunicipalityNumber)
-                .MaximumLength(100).WithMessage("رقم البلدية يجب ألا يتجاوز 100 حرف")
-                .When(x => !string.IsNullOrWhiteSpace(x.MunicipalityNumber));
+            RuleFor(x => x.District)
+                .NotEmpty().WithMessage("الحي مطلوب");
 
             RuleFor(x => x.StreetWidth)
-                .GreaterThan(0).WithMessage("عرض الشارع يجب أن يكون أكبر من صفر")
-                .When(x => x.StreetWidth.HasValue);
-
-            RuleFor(x => x.ZoningType)
-                .MaximumLength(100).WithMessage("نوع التصنيف يجب ألا يتجاوز 100 حرف")
-                .When(x => !string.IsNullOrWhiteSpace(x.ZoningType));
+                .GreaterThan(0).When(x => x.StreetWidth.HasValue)
+                .WithMessage("عرض الشارع يجب أن يكون أكبر من صفر");
 
             RuleFor(x => x.NumberOfStreets)
-                .GreaterThanOrEqualTo(2)
-                .WithMessage("عدد الشوارع يجب أن يكون 2 أو أكثر إذا كانت الأرض زاوية")
-                .When(x => x.CornerLand && x.NumberOfStreets.HasValue);
-
-            RuleFor(x => x.NumberOfStreets)
-                .Null()
-                .WithMessage("عدد الشوارع لا يجب إدخاله إذا لم تكن الأرض زاوية")
-                .When(x => !x.CornerLand);
+                .GreaterThan(0).When(x => x.NumberOfStreets.HasValue)
+                .WithMessage("عدد الشوارع يجب أن يكون أكبر من صفر");
         }
     }
 }

@@ -1,8 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.DTOs.Owner;
+using RealEstate.Application.Interfaces;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities;
-using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.ReadModels;
 using RealEstate.Infrastructure.Persistence;
+using RealEstate.Shared.Common;
+using System.Linq.Expressions;
+using RealEstate.Application.Common.Extensions;
 
 namespace RealEstate.Infrastructure.Repositories
 {
@@ -10,58 +14,115 @@ namespace RealEstate.Infrastructure.Repositories
     {
         public OwnerRepository(AppDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<OwnerListItem>> GetByCompanyAsync(Guid companyId) =>
-            await _dbSet
-                .AsNoTracking()
-                .Where(x => x.CompanyId == companyId)
-                .OrderByDescending(x => x.CreatedAt)
-                .Select(x => new OwnerListItem
-                {
-                    Id = x.Id,
-                    FullName = x.FullName,
-                    Phone = x.Phone,
-                    Email = x.Email,
-                    IdNumber = x.NationalId,
-                    //TotalProperties = x.Properties.Count,
-                    //ActiveContracts = x.Properties
-                    //    .SelectMany(p => p.Contracts)
-                    //    .Count(c => c.Status == "Active"),
-                    CreatedAt = x.CreatedAt
-                })
-                .ToListAsync();
+        // ── Reusable list projection ──────────────────────
+        private static readonly Expression<Func<Owner, OwnerListDto>> ToListDto =
+            o => new OwnerListDto
+            {
+                Id = o.Id,
+                FullName = o.FullName,
+                Phone = o.Phone,
+                Email = o.Email,
+                OwnerType = o.OwnerType.ToArabicString(),
+                CompanyName = o.CompanyName,
+                IsActive = o.IsActive,
+                PropertyCount = o.Properties.Count(p => !p.IsDeleted),
+                CreatedAt = o.CreatedAt
+            };
 
-        public async Task<OwnerDetailItem?> GetWithPropertiesAsync(Guid id) =>
-            await _dbSet
-                .AsNoTracking()
-                .Where(x => x.Id == id)
-                .Select(x => new OwnerDetailItem
-                {
-                    Id = x.Id,
-                    FullName = x.FullName,
-                    Phone = x.Phone,
-                    Email = x.Email,
-                    IdNumber = x.NationalId,
-                    Notes = x.Notes,
-                    //Properties = x.Properties.Select(p => new OwnerPropertyItem
-                    //{
-                    //    Id = p.Id,
-                    //    Title = p.Title,
-                    //    Type = p.Type,
-                    //    Status = p.Status,
-                    //    Price = p.Price,
-                    //    City = p.City
-                    //}).ToList()
-                })
-                .FirstOrDefaultAsync();
-
-        public async Task<bool> PhoneExistsAsync(Guid companyId, string phone) =>
-            await _dbSet
-                .AsNoTracking()
-                .AnyAsync(x => x.CompanyId == companyId && x.Phone == phone);
-
-        public async Task<bool> ExistsInCompanyAsync(Guid ownerId, Guid companyId)
+        // ── Paged List ────────────────────────────────────
+        public async Task<PagedResult<OwnerListDto>> GetPagedAsync(
+            Guid companyId,
+            int page,
+            int pageSize,
+            bool? isActive = null,
+            OwnerType? ownerType = null,
+            string? search = null,
+            CancellationToken ct = default)
         {
-            return await _dbSet.AnyAsync(x => x.Id == ownerId && x.CompanyId == companyId);
+            var query = _dbSet
+                .AsNoTracking()
+                .Where(o => o.CompanyId == companyId);
+
+            if (isActive.HasValue)
+                query = query.Where(o => o.IsActive == isActive.Value);
+
+            if (ownerType.HasValue)
+                query = query.Where(o => o.OwnerType == ownerType.Value);
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(o =>
+                    o.FullName.Contains(search) ||
+                    o.Phone.Contains(search) ||
+                    (o.CompanyName != null && o.CompanyName.Contains(search)));
+
+            var totalCount = await query.CountAsync(ct);
+
+            if (totalCount == 0)
+                return PagedResult<OwnerListDto>.Empty(page, pageSize);
+
+            var items = await query
+                .OrderBy(o => o.FullName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ToListDto)
+                .ToListAsync(ct);
+
+            return PagedResult<OwnerListDto>.Create(items, totalCount, page, pageSize);
         }
+
+        // ── Detail ────────────────────────────────────────
+        public async Task<OwnerDetailDto?> GetDetailByIdAsync(
+            Guid id,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AsNoTracking()
+                .Where(o => o.Id == id && o.CompanyId == companyId)
+                .Select(o => new OwnerDetailDto
+                {
+                    Id = o.Id,
+                    FullName = o.FullName,
+                    Phone = o.Phone,
+                    Email = o.Email,
+                    OwnerType = o.OwnerType.ToArabicString(),
+                    CompanyName = o.CompanyName,
+                    Nationality = o.Nationality,
+                    IsActive = o.IsActive,
+                    Notes = o.Notes,
+                    CommissionRate = o.CommissionRate,
+                    PropertyCount = o.Properties.Count(p => !p.IsDeleted),
+                    NationalId = o.NationalId,
+                    IBAN = o.IBAN,
+                    CreatedAt = o.CreatedAt,
+                    UpdatedAt = o.UpdatedAt
+                })
+                .FirstOrDefaultAsync(ct);
+
+        // ── Validation ────────────────────────────────────
+        public async Task<bool> PhoneExistsAsync(
+            string phone,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(o => o.Phone == phone
+                            && o.CompanyId == companyId, ct);
+
+        public async Task<bool> PhoneExistsForAnotherOwnerAsync(
+            string phone,
+            Guid ownerId,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(o => o.Phone == phone
+                            && o.CompanyId == companyId
+                            && o.Id != ownerId, ct);
+
+        public async Task<bool> ExistsInCompanyAsync(
+            Guid ownerId,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(o => o.Id == ownerId
+                            && o.CompanyId == companyId, ct);
     }
 }

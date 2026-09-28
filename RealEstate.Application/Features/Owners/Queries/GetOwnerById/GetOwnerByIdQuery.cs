@@ -1,12 +1,15 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Owners.DTO;
+using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.DTOs.Owner;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Owners.Queries.GetOwnerById
+namespace RealEstate.Application.Features.Owners.Queries.GetOwnerDetail
 {
-    public record GetOwnerByIdQuery(Guid Id) : IRequest<ApiResponse<OwnerDetailDto>>;
-
+    public sealed class GetOwnerDetailQuery
+        : IRequest<ApiResponse<OwnerDetailDto>>, IAutoTenantRequest
+    {
+        public Guid Id { get; init; }
+        public Guid CompanyId { get; private set; }
+        public void SetCompanyId(Guid companyId) => CompanyId = companyId;
+    }
 }

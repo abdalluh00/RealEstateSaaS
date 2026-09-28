@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.Interfaces;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.Interfaces.Properties.RealEstate.Domain.Interfaces;
 using RealEstate.Infrastructure.Jobs;
 using RealEstate.Infrastructure.Persistence;
 using RealEstate.Infrastructure.Repositories;
+using RealEstate.Infrastructure.Repositories.Properties;
 using RealEstate.Infrastructure.Services;
 using RealEstate.Infrastructure.Settings;
 using RealEstate.Shared.Settings;
+using Serilog;
+using Microsoft.Extensions.Logging;
 
 namespace RealEstate.Infrastructure
 {
@@ -21,53 +24,82 @@ namespace RealEstate.Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            // ── DbContext ─────────────────────────────────
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)
-                ));
+     options
+         .UseSqlServer(
+             configuration.GetConnectionString("DefaultConnection"),
+             b => b.MigrationsAssembly(
+                 typeof(AppDbContext).Assembly.FullName))
+         .LogTo(
+             message => Log.Debug(message),
+             LogLevel.Information)
+         .EnableSensitiveDataLogging(
+             Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
+             == "Development"));
 
-            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
-            services.AddScoped<IJwtService, JwtService>();
-
-            services.AddScoped<IContractRepository, ContractRepository>();
-            services.AddScoped<IClientRepository, ClientRepository>();
-            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            // ── UnitOfWork ────────────────────────────────
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-            services.AddScoped<IOwnerRepository, OwnerRepository>();
-            services.AddScoped<ICompanyRepository, CompanyRepository>();
-            services.AddScoped<IPropertyMediaRepository, PropertyMediaRepository>();
-            services.AddScoped<IStorageService, LocalStorageService>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IDashboardRepository, DashboardRepository>();
-            services.AddScoped<IApartmentRepository, ApartmentRepository>();
-            services.AddScoped<IBuildingRepository, BuildingRepository>();
-            services.AddScoped<ILandRepository, LandRepository>();
-            services.AddScoped<IOfficeRepository, OfficeRepository>();
-            services.AddScoped<IVillaRepository, VillaRepository>();
-            services.AddScoped<IWarehouseRepository, WarehouseRepository>();
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            // Services
-            services.Configure<TwilioSettings>(configuration.GetSection("Twilio"));
+            // ── Property Repositories ─────────────────────
+            services.AddScoped<IPropertyRepository, PropertyRepository>();
+            services.AddScoped<IApartmentRepository, ApartmentRepository>();
+            services.AddScoped<IVillaRepository, VillaRepository>();
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+            services.AddScoped<ILandRepository, LandRepository>();
+            services.AddScoped<IBuildingRepository, BuildingRepository>();
+
+            // ── Property Files ────────────────────────────
+            services.AddScoped<IPropertyMediaRepository, PropertyMediaRepository>();
+            services.AddScoped<IPropertyDocumentRepository, PropertyDocumentRepository>();
+
+            // ── Core Repositories ─────────────────────────
+            services.AddScoped<IOwnerRepository, OwnerRepository>();
+            services.AddScoped<IClientRepository, ClientRepository>();
+            services.AddScoped<IContractRepository, ContractRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IChequeRepository, ChequeRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
+
+            // ── Maintenance ───────────────────────────────
+            services.AddScoped<IMaintenanceRepository, MaintenanceRepository>();
+            services.AddScoped<IMaintenanceMediaRepository, MaintenanceMediaRepository>();
+
+            // ── Code Generators ───────────────────────────
+            services.AddScoped<IPropertyCodeGenerator, PropertyCodeGenerator>();
+            services.AddScoped<IContractNumberGenerator, ContractNumberGenerator>();
+            services.AddScoped<IMaintenanceNumberGenerator, MaintenanceNumberGenerator>();
+
+            // ── Services ──────────────────────────────────
+            services.AddScoped<IPaymentGeneratorService, PaymentGeneratorService>();
+            services.AddScoped<IFileStorageService, LocalFileStorageService>();
+            services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IWhatsAppService, WhatsAppService>();
 
-            // Hangfire
+            // ── Auth & Tenant ─────────────────────────────
+            services.AddHttpContextAccessor();
+          //  services.AddScoped<ICurrentUser, CurrentUserService>();
+            services.AddScoped<ITenantService, TenantService>();
+
+            // ── Settings ──────────────────────────────────
+            services.Configure<JwtSettings>(
+                configuration.GetSection("Jwt"));
+            services.Configure<TwilioSettings>(
+                configuration.GetSection("Twilio"));
+
+            // ── Hangfire ──────────────────────────────────
             services.AddHangfire(config => config
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection")));
+                .UseSqlServerStorage(
+                    configuration.GetConnectionString("DefaultConnection")));
 
             services.AddHangfireServer();
-
-            // Background Jobs
             services.AddScoped<INotificationJobService, NotificationJobService>();
-
-            services.AddHttpContextAccessor();
-            services.AddScoped<ICurrentUser, CurrentUserService>();
-            services.AddScoped<ITenantService, TenantService>();
 
             return services;
         }

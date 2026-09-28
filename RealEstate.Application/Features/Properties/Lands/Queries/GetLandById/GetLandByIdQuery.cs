@@ -1,15 +1,14 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Interfaces;
-using RealEstate.Application.Features.Properties.Lands.Dtos;
+using RealEstate.Application.DTOs.Properties.Land;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Lands.Queries.GetLandById
+namespace RealEstate.Application.Features.Lands.Queries.GetLandDetail
 {
-    public record GetLandByIdQuery(Guid Id) : IRequest<ApiResponse<LandDetailsDto>>, IAutoTenantRequest
+    public sealed class GetLandDetailQuery
+        : IRequest<ApiResponse<LandDetailDto>>, IAutoTenantRequest
     {
+        public Guid Id { get; init; }
         public Guid CompanyId { get; private set; }
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }

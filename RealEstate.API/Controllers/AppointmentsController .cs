@@ -1,61 +1,122 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RealEstate.Application.Features.Appointments.Commands.CancelAppointment;
+using RealEstate.Application.Features.Appointments.Commands.CompleteAppointment;
+using RealEstate.Application.Features.Appointments.Commands.ConfirmAppointment;
 using RealEstate.Application.Features.Appointments.Commands.CreateAppointment;
-using RealEstate.Application.Features.Appointments.Commands.DeleteAppointment;
-using RealEstate.Application.Features.Appointments.Commands.UpdateAppointmentStatus;
-using RealEstate.Application.Features.Appointments.Queries.GetAppointments;
+using RealEstate.Application.Features.Appointments.Commands.MarkNoShow;
+using RealEstate.Application.Features.Appointments.Queries.GetAppointmentDetail;
+using RealEstate.Application.Features.Appointments.Queries.GetPagedAppointments;
+using RealEstate.Application.Features.Appointments.Queries.GetTodayAppointments;
+using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
 {
-    [Authorize]
     [ApiController]
-    [Route("api/[controller]")]
-    public class AppointmentsController : ControllerBase
+    [Route("api/appointments")]
+    [Authorize(Policy = Policies.AgentAndUp)]
+    public class AppointmentController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AppointmentsController(IMediator mediator) => _mediator = mediator;
+        public AppointmentController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
-        [Authorize(Policy = Policies.AgentAndUp)]
-        public async Task<IActionResult> GetAll(
-            
-            [FromQuery] bool todayOnly = false)
+        public async Task<IActionResult> GetPaged(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] Guid? agentId = null,
+            [FromQuery] Guid? clientId = null,
+            [FromQuery] Guid? propertyId = null,
+            [FromQuery] AppointmentStatus? status = null,
+            [FromQuery] DateTime? from = null,
+            [FromQuery] DateTime? to = null,
+            CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(new GetPagedAppointmentsQuery
+            {
+                Page = page,
+                PageSize = pageSize,
+                AgentId = agentId,
+                ClientId = clientId,
+                PropertyId = propertyId,
+                Status = status,
+                From = from,
+                To = to
+            }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpGet("today")]
+        public async Task<IActionResult> GetToday(
+            [FromQuery] Guid? agentId = null,
+            CancellationToken ct = default)
         {
             var result = await _mediator.Send(
-                new GetAppointmentsQuery(todayOnly));
-            return Ok(result);
+                new GetTodayAppointmentsQuery { AgentId = agentId }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
-        // Admin و Owner فقط
-        [Authorize(Policy = Policies.AdminAndUp)]
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetDetail(
+            Guid id, CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(
+                new GetAppointmentDetailQuery { Id = id }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateAppointmentCommand command)
+        public async Task<IActionResult> Create(
+            [FromBody] CreateAppointmentCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        // Admin و Owner فقط
-        [Authorize(Policy = Policies.AdminAndUp)]
-        [HttpPut("{id:guid}/status")]
-        public async Task<IActionResult> UpdateStatus(
+        [HttpPatch("{id:guid}/confirm")]
+        public async Task<IActionResult> Confirm(
+            Guid id, CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(
+                new ConfirmAppointmentCommand { Id = id }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPatch("{id:guid}/cancel")]
+        public async Task<IActionResult> Cancel(
             Guid id,
-            [FromBody] UpdateAppointmentStatusCommand command)
+            [FromBody] CancelAppointmentCommand cmd,
+            CancellationToken ct = default)
         {
-            if (id != command.Id) return BadRequest("المعرف غير متطابق");
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-
-        // Owner فقط
-        [Authorize(Policy = Policies.OwnerOnly)]
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpPatch("{id:guid}/complete")]
+        public async Task<IActionResult> Complete(
+            Guid id,
+            [FromBody] CompleteAppointmentCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new DeleteAppointmentCommand(id));
+            var result = await _mediator.Send(cmd, ct);
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPatch("{id:guid}/no-show")]
+        public async Task<IActionResult> NoShow(
+            Guid id, CancellationToken ct = default)
+        {
+            var result = await _mediator.Send(
+                new MarkNoShowCommand { Id = id }, ct);
+
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

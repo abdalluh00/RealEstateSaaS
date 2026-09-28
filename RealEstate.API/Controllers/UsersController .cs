@@ -1,68 +1,69 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealEstate.Application.Features.Users.Commands.ChangePassword;
-using RealEstate.Application.Features.Users.Commands.CreateUser;
-using RealEstate.Application.Features.Users.Commands.DeleteUser;
+using RealEstate.Application.Features.Users.Commands.DeactivateUser;
+using RealEstate.Application.Features.Users.Commands.InviteUser;
 using RealEstate.Application.Features.Users.Commands.UpdateUser;
-using RealEstate.Application.Features.Users.Queries.GetUserById;
-using RealEstate.Application.Features.Users.Queries.GetUsers;
+using RealEstate.Application.Features.Users.Queries.GetPagedUsers;
+using RealEstate.Domain.Common.Enums;
+using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    [Route("api/users")]
+    [Authorize(Policy = Policies.AdminAndUp)]
+    public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public UsersController(IMediator mediator) => _mediator = mediator;
+        public UserController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetPaged(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] UserRole? role = null,
+            [FromQuery] bool? isActive = null,
+            CancellationToken ct = default)
         {
-           // var companyId = Guid.Parse(User.FindFirst("CompanyId")!.Value);
-            var result = await _mediator.Send(new GetUsersQuery());
-            return Ok(result);
+            var result = await _mediator.Send(new GetPagedUsersQuery
+            {
+                Page = page,
+                PageSize = pageSize,
+                Role = role,
+                IsActive = isActive
+            }, ct);
+
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("detail/{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpPost("invite")]
+        public async Task<IActionResult> Invite(
+            [FromBody] InviteUserCommand cmd,
+            CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new GetUserByIdQuery(id));
-            return Ok(result);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
-        {
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserCommand command)
-        {
-            if (id != command.Id) return BadRequest("المعرف غير متطابق");
-            var result = await _mediator.Send(command);
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpPut("{id:guid}/change-password")]
-        public async Task<IActionResult> ChangePassword(
+        public async Task<IActionResult> Update(
             Guid id,
-            [FromBody] ChangePasswordCommand command)
+            [FromBody] UpdateUserCommand cmd,
+            CancellationToken ct = default)
         {
-            if (id != command.UserId) return BadRequest("المعرف غير متطابق");
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(cmd, ct);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpPatch("{id:guid}/deactivate")]
+        public async Task<IActionResult> Deactivate(
+            Guid id, CancellationToken ct = default)
         {
-            var result = await _mediator.Send(new DeleteUserCommand(id));
+            var result = await _mediator.Send(
+                new DeactivateUserCommand { Id = id }, ct);
+
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

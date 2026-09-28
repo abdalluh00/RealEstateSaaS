@@ -1,39 +1,47 @@
 ﻿using MediatR;
+using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.Interfaces;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
+
 namespace RealEstate.Application.Features.PropertyMedia.Commands.DeleteMedia
 {
-    public class DeleteMediaHandler : IRequestHandler<DeleteMediaCommand, ApiResponse<bool>>
+    public sealed class DeleteMediaCommandHandler
+        : IRequestHandler<DeleteMediaCommand, ApiResponse<bool>>
     {
-        private readonly IPropertyMediaRepository _repo;
-        private readonly IStorageService _storage;
+        private readonly IPropertyMediaRepository _mediaRepo;
+        private readonly IFileStorageService _storage;
+        private readonly IUnitOfWork _uow;
 
-        public DeleteMediaHandler(
-            IPropertyMediaRepository repo,
-            IStorageService storage)
+        public DeleteMediaCommandHandler(
+            IPropertyMediaRepository mediaRepo,
+            IFileStorageService storage,
+            IUnitOfWork uow)
         {
-            _repo = repo;
+            _mediaRepo = mediaRepo;
             _storage = storage;
+            _uow = uow;
         }
 
         public async Task<ApiResponse<bool>> Handle(
-            DeleteMediaCommand request,
+            DeleteMediaCommand cmd,
             CancellationToken ct)
         {
-            var media = await _repo.GetByIdAsync(request.Id);
+            var media = await _mediaRepo.GetByIdForCommandAsync(
+                cmd.MediaId, cmd.CompanyId, ct);
 
-            if (media is null)
-                throw new NotFoundException("الملف", request.Id);
+            if (media is null || media.PropertyId != cmd.PropertyId)
+                throw new NotFoundException("الصورة", cmd.MediaId);
 
-            // احذف الملف من السيرفر
-            await _storage.DeleteAsync(media.MediaUrl);
+            // ── Delete physical file first ────────────────
+            await _storage.DeleteAsync(media.MediaUrl, ct);
 
-            // احذف من قاعدة البيانات
-            _repo.Delete(media);
-            await _repo.SaveChangesAsync();
+            // ── Remove DB record ──────────────────────────
+            _mediaRepo.HardDelete(media);
+            await _uow.SaveChangesAsync(ct);
 
-            return ApiResponse<bool>.Ok(true, "تم حذف الملف بنجاح");
+            return ApiResponse<bool>.Ok(true, "تم حذف الصورة بنجاح");
         }
     }
 }

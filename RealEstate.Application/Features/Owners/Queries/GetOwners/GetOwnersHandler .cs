@@ -1,29 +1,32 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Owners.DTO;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Application.DTOs.Owner;
+using RealEstate.Application.Interfaces;
 using RealEstate.Shared.Common;
-namespace RealEstate.Application.Features.Owners.Queries.GetOwners
+
+namespace RealEstate.Application.Features.Owners.Queries.GetPagedOwners
 {
-    public class GetOwnersHandler : IRequestHandler<GetOwnersQuery, ApiResponse<List<OwnerDto>>>
+    public sealed class GetPagedOwnersQueryHandler
+        : IRequestHandler<GetPagedOwnersQuery, ApiResponse<PagedResult<OwnerListDto>>>
     {
-        private readonly IOwnerRepository _repo;
+        private readonly IOwnerRepository _owners;
 
-        public GetOwnersHandler(IOwnerRepository repo) => _repo = repo;
+        public GetPagedOwnersQueryHandler(IOwnerRepository owners)
+            => _owners = owners;
 
-        public async Task<ApiResponse<List<OwnerDto>>> Handle(
-            GetOwnersQuery request,
+        public async Task<ApiResponse<PagedResult<OwnerListDto>>> Handle(
+            GetPagedOwnersQuery query,
             CancellationToken ct)
         {
-            var owners = await _repo.GetByCompanyAsync(request.CompanyId);
+            var result = await _owners.GetPagedAsync(
+                companyId: query.CompanyId,
+                page: query.Page,
+                pageSize: query.PageSize,
+                isActive: query.IsActive,
+                ownerType: query.OwnerType,
+                search: query.Search,
+                ct: ct);
 
-            var result = owners.Select(o => new OwnerDto(
-                o.Id, o.FullName, o.Phone,
-                o.Email, o.IdNumber,
-                o.TotalProperties, o.ActiveContracts,
-                o.CreatedAt
-            )).ToList();
-
-            return ApiResponse<List<OwnerDto>>.Ok(result);
+            return ApiResponse<PagedResult<OwnerListDto>>.Ok(result, "تم استرجاع قائمة الملاك بنجاح");
         }
     }
 }

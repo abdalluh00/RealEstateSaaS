@@ -1,6 +1,7 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 using System;
@@ -25,13 +26,14 @@ namespace RealEstate.Application.Features.Properties.Warehouses.Commands.DeleteW
 
         public async Task<ApiResponse<bool>> Handle(DeleteWarehouseCommand request, CancellationToken ct)
         {
-            var warehouse = await _warehouseRepository.GetByIdForUpdateAsync(request.Id, request.CompanyId, ct);
+            var warehouse = await _warehouseRepository.Query().FirstOrDefaultAsync(x=> x.Id == request.Id &&
+            x.CompanyId == request.CompanyId, ct);
             if (warehouse is null)
                 throw new NotFoundException("المستودع غير موجود");
 
-            warehouse.IsDeleted = true;
+           
 
-            _warehouseRepository.Update(warehouse);
+            _warehouseRepository.SoftDelete(warehouse);
             await _unitOfWork.SaveChangesAsync(ct);
 
             return ApiResponse<bool>.Ok(true, "تم حذف المستودع بنجاح");

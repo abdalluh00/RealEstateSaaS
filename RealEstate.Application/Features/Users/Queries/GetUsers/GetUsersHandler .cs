@@ -1,27 +1,31 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Users.DTO;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Application.DTOs.Users;
+using RealEstate.Application.Interfaces;
 using RealEstate.Shared.Common;
-namespace RealEstate.Application.Features.Users.Queries.GetUsers
+
+namespace RealEstate.Application.Features.Users.Queries.GetPagedUsers
 {
-    public class GetUsersHandler : IRequestHandler<GetUsersQuery, ApiResponse<List<UserDto>>>
+    public sealed class GetPagedUsersQueryHandler
+        : IRequestHandler<GetPagedUsersQuery, ApiResponse<PagedResult<UserListDto>>>
     {
-        private readonly IUserRepository _repo;
+        private readonly IUserRepository _users;
 
-        public GetUsersHandler(IUserRepository repo) => _repo = repo;
+        public GetPagedUsersQueryHandler(IUserRepository users)
+            => _users = users;
 
-        public async Task<ApiResponse<List<UserDto>>> Handle(
-            GetUsersQuery request,
+        public async Task<ApiResponse<PagedResult<UserListDto>>> Handle(
+            GetPagedUsersQuery query,
             CancellationToken ct)
         {
-            var users = await _repo.GetByCompanyAsync(request.CompanyId);
+            var result = await _users.GetPagedAsync(
+                companyId: query.CompanyId,
+                page: query.Page,
+                pageSize: query.PageSize,
+                role: query.Role,
+                isActive: query.IsActive,
+                ct: ct);
 
-            var result = users.Select(u => new UserDto(
-                u.Id, u.FullName, u.Email,
-                u.Phone, u.Role.ToString(), u.IsActive, u.CreatedAt
-            )).ToList();
-
-            return ApiResponse<List<UserDto>>.Ok(result);
+            return ApiResponse<PagedResult<UserListDto>>.Ok(result);
         }
     }
 }

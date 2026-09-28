@@ -10,7 +10,7 @@ namespace RealEstate.Domain.Entities.Properties
         public int? GateCount { get; set; }                 // عدد البوابات
 
         // ── Electricity ───────────────────────────────────
-        public ElectricityCapacity? ElectricityCapacity { get; set; }
+        public ElectricityCapacity ElectricityCapacity { get; set; }
         // V220, V380, V440 — enum instead of free text
 
         // ── Features ──────────────────────────────────────

@@ -1,6 +1,7 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 using System;
@@ -9,61 +10,25 @@ using System.Text;
 
 namespace RealEstate.Application.Features.Properties.Offices.Commands.UpdateOffice
 {
-    public class UpdateOfficeHandler : IRequestHandler<UpdateOfficeCommand, ApiResponse<Guid>>
+    public class UpdateOfficeHandler : IRequestHandler<UpdateOfficeCommand, ApiResponse<bool>>
     {
         private readonly IOfficeRepository _officeRepository;
-        private readonly IPropertyLookupRepository _propertyLookupRepository;
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly IUserRepository _userRepository;
+       
         private readonly IUnitOfWork _unitOfWork;
 
         public UpdateOfficeHandler(
             IOfficeRepository officeRepository,
-            IPropertyLookupRepository propertyLookupRepository,
-            IOwnerRepository ownerRepository,
-            IUserRepository userRepository,
             IUnitOfWork unitOfWork)
         {
             _officeRepository = officeRepository;
-            _propertyLookupRepository = propertyLookupRepository;
-            _ownerRepository = ownerRepository;
-            _userRepository = userRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ApiResponse<Guid>> Handle(UpdateOfficeCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(UpdateOfficeCommand request, CancellationToken ct)
         {
-            var office = await _officeRepository.GetByIdForCompanyAsync(request.Id, request.CompanyId, ct);
-            if (office is null)
-                throw new NotFoundException("المكتب غير موجود");
-
-            // Validate optional owner
-            if (request.OwnerId.HasValue)
-            {
-                var owner = await _ownerRepository.GetByIdAsync(request.OwnerId.Value);
-                if (owner is null || owner.CompanyId != request.CompanyId)
-                    throw new ValidationException("المالك غير موجود أو لا يتبع لنفس الشركة");
-            }
-
-            // Validate optional agent
-            if (request.AgentId.HasValue)
-            {
-                var agent = await _userRepository.GetByIdAsync(request.AgentId.Value);
-                if (agent is null || agent.CompanyId != request.CompanyId)
-                    throw new ValidationException("الوسيط غير موجود أو لا يتبع لنفس الشركة");
-            }
-
-            // Validate optional parent property
-            if (request.ParentPropertyId.HasValue)
-            {
-                var parentBelongsToCompany = await _propertyLookupRepository.ExistsInCompanyAsync(
-                    request.ParentPropertyId.Value,
-                    request.CompanyId,
-                    ct);
-
-                if (!parentBelongsToCompany)
-                    throw new ValidationException("العقار الأب غير موجود أو لا يتبع لنفس الشركة");
-            }
+            var office = await _officeRepository.Query()
+                .FirstOrDefaultAsync(x => x.Id == request.Id
+                                       && x.CompanyId == request.CompanyId, ct);
 
             office.PropertyCode = request.PropertyCode.Trim();
             office.ParentPropertyId = request.ParentPropertyId;
@@ -85,7 +50,7 @@ namespace RealEstate.Application.Features.Properties.Offices.Commands.UpdateOffi
 
             office.ParkingSpots = request.ParkingSpots;
             office.AgeInYears = request.AgeInYears;
-            office.FacingDirection = request.FacingDirection?.Trim();
+            office.FacingDirection = request.FacingDirection;
             office.FurnishedStatus = request.FurnishedStatus;
 
             office.RegaLicenseNumber = request.RegaLicenseNumber?.Trim();
@@ -99,17 +64,17 @@ namespace RealEstate.Application.Features.Properties.Offices.Commands.UpdateOffi
 
             // Office-specific
             office.UnitNumber = request.UnitNumber?.Trim();
-            office.Floor = request.Floor;
+            office.FloorNumber = request.Floor;
             office.Bathrooms = request.Bathrooms;
             office.OfficesCount = request.OfficesCount;
             office.MeetingRooms = request.MeetingRooms;
-            office.Elevator = request.Elevator;
-            office.CentralAC = request.CentralAC;
-            office.ReceptionArea = request.ReceptionArea;
+            office.HasElevator = request.Elevator;
+            office.HasCentralAC = request.CentralAC;
+            office.HasReceptionArea = request.ReceptionArea;
 
             await _unitOfWork.SaveChangesAsync(ct);
 
-            return ApiResponse<Guid>.Ok(office.Id, "تم تحديث المكتب بنجاح");
+            return ApiResponse<bool>.Ok(true, "تم تحديث المكتب بنجاح");
         }
     }
 }

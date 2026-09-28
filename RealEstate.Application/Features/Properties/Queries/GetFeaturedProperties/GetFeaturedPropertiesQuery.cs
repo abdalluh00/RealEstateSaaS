@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.DTOs.Properties.Base;
 using RealEstate.Shared.Common;
 using System;
 using System.Collections.Generic;

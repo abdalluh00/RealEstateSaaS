@@ -1,52 +1,32 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Properties.Buildings.Dtos;
-using RealEstate.Domain.Interfaces.Properties;
+using RealEstate.Application.DTOs.Properties.Building;
+using RealEstate.Application.Features.Properties.Buildings.Queries.GetBuildingsPaged;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Buildings.Queries.GetBuildingsPaged
+namespace RealEstate.Application.Features.Properties.Building.Queries.GetBuildings
 {
     public class GetBuildingsPagedHandler
-       : IRequestHandler<GetBuildingsPagedQuery, ApiResponse<PagedResult<BuildingListItemDto>>>
+        : IRequestHandler<GetBuildingsPagedQuery, ApiResponse<PagedResult<BuildingListDto>>>
     {
-        private readonly IBuildingRepository _buildingRepository;
+        private readonly IBuildingRepository _buildingRepo;
 
-        public GetBuildingsPagedHandler(IBuildingRepository buildingRepository)
+        public GetBuildingsPagedHandler(IBuildingRepository buildingRepo) =>
+            _buildingRepo = buildingRepo;
+
+        public async Task<ApiResponse<PagedResult<BuildingListDto>>> Handle(
+            GetBuildingsPagedQuery request,
+            CancellationToken ct)
         {
-            _buildingRepository = buildingRepository;
-        }
+            var result = await _buildingRepo.GetPagedAsync(
+                request.CompanyId,
+                request.Page,
+                request.PageSize,
+                request.Status,
+                request.Purpose,
+                ct);
 
-        public async Task<ApiResponse<PagedResult<BuildingListItemDto>>> Handle(GetBuildingsPagedQuery request, CancellationToken ct)
-        {
-            var paged = await _buildingRepository.GetPagedAsync(request.CompanyId, request.Page, request.PageSize);
-
-            var result = new PagedResult<BuildingListItemDto>
-            {
-                Page = paged.Page,
-                PageSize = paged.PageSize,
-                TotalCount = paged.TotalCount,
-                Items = paged.Items.Select(x => new BuildingListItemDto
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-                    PropertyStatus = x.PropertyStatus.ToString(),
-                    TotalFloors = x.TotalFloors,
-                    UnitsCount = x.UnitsCount,
-                    Elevator = x.Elevator,
-                    ParkingFloor = x.ParkingFloor,
-                    OwnerId = x.OwnerId ?? Guid.Empty,
-                    AgentId = x.AgentId ?? Guid.Empty
-                }).ToList()
-            };
-
-            return ApiResponse<PagedResult<BuildingListItemDto>>.Ok(result);
+            return ApiResponse<PagedResult<BuildingListDto>>.Ok(result);
         }
     }
 }

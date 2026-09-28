@@ -1,37 +1,35 @@
-﻿//using MediatR;
-//using RealEstate.Domain.Interfaces;
-//using RealEstate.Shared.Common;
-//namespace RealEstate.Application.Features.Appointments.Queries.GetAppointments
-//{
-//    public class GetAppointmentsHandler
-//     : IRequestHandler<GetAppointmentsQuery, ApiResponse<List<AppointmentDto>>>
-//    {
-//        private readonly IAppointmentRepository _repo;
+﻿using MediatR;
+using RealEstate.Application.DTOs.Appointments;
+using RealEstate.Application.Interfaces;
+using RealEstate.Shared.Common;
 
-//        public GetAppointmentsHandler(IAppointmentRepository repo) => _repo = repo;
+namespace RealEstate.Application.Features.Appointments.Queries.GetPagedAppointments
+{
+    public sealed class GetPagedAppointmentsQueryHandler
+        : IRequestHandler<GetPagedAppointmentsQuery, ApiResponse<PagedResult<AppointmentListDto>>>
+    {
+        private readonly IAppointmentRepository _appointments;
 
-//        public async Task<ApiResponse<List<AppointmentDto>>> Handle(
-//            GetAppointmentsQuery request,
-//            CancellationToken ct)
-//        {
-//            var appointments = request.TodayOnly
-//                ? await _repo.GetTodayAsync(request.CompanyId)
-//                : await _repo.GetByCompanyAsync(request.CompanyId);
+        public GetPagedAppointmentsQueryHandler(IAppointmentRepository appointments)
+            => _appointments = appointments;
 
-//            var result = appointments.Select(a => new AppointmentDto(
-//                a.Id,
-//                a.PropertyTitle,
-//                a.PropertyCity,
-//                a.ClientName,
-//                a.ClientPhone,
-//                a.AgentName,
-//                a.ScheduledAt,
-//                a.Status,
-//                a.Notes,
-//                a.Feedback
-//            )).ToList();
+        public async Task<ApiResponse<PagedResult<AppointmentListDto>>> Handle(
+            GetPagedAppointmentsQuery query,
+            CancellationToken ct)
+        {
+            var result = await _appointments.GetPagedAsync(
+                companyId: query.CompanyId,
+                page: query.Page,
+                pageSize: query.PageSize,
+                agentId: query.AgentId,
+                clientId: query.ClientId,
+                propertyId: query.PropertyId,
+                status: query.Status,
+                from: query.From,
+                to: query.To,
+                ct: ct);
 
-//            return ApiResponse<List<AppointmentDto>>.Ok(result);
-//        }
-//    }
-//}
+              return ApiResponse<PagedResult<AppointmentListDto>>.Ok(result, "Success");
+        }
+    }
+}

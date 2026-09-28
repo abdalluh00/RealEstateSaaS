@@ -2,9 +2,10 @@
 
 namespace RealEstate.Application.Features.Auth.Commands.Login
 {
-    public class LoginValidator : AbstractValidator<LoginCommand>
+    public sealed class LoginCommandValidator
+        : AbstractValidator<LoginCommand>
     {
-        public LoginValidator()
+        public LoginCommandValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("البريد الإلكتروني مطلوب")

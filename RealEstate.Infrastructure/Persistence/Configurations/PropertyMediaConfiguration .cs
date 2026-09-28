@@ -46,10 +46,10 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
 
             // ── Relations ─────────────────────────────────
             builder.HasOne<Property>()
-                   .WithMany()
-                   .HasForeignKey(x => x.PropertyId)
-                   .OnDelete(DeleteBehavior.Cascade);
-            // ✅ removed nav property — no navigation on PropertyMedia
+         .WithMany(x => x.Media)        // ← use nav on Property entity
+         .HasForeignKey(x => x.PropertyId)
+         .IsRequired()
+         .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne<Company>()
                    .WithMany()

@@ -9,7 +9,7 @@ namespace RealEstate.Domain.Entities.Properties
         public int? NumberOfStreets { get; set; }       // عدد الشوارع
 
         // ── Zoning ────────────────────────────────────────
-        public ZoningType? ZoningType { get; set; }
+        public ZoningType ZoningType { get; set; }
         // Residential, Commercial, Industrial, Agricultural
 
         // ── Features ──────────────────────────────────────
@@ -20,7 +20,7 @@ namespace RealEstate.Domain.Entities.Properties
         public bool HasSewer { get; set; } = false;        // متصلة بالصرف الصحي
 
         // ── Shape ─────────────────────────────────────────
-        public LandShape? LandShape { get; set; }
+        public LandShape LandShape { get; set; }
         // Square, Rectangular, Irregular
     }
 }

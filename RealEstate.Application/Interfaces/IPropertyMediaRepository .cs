@@ -1,10 +1,28 @@
-﻿using RealEstate.Domain.Entities;
-namespace RealEstate.Domain.Interfaces
+﻿using RealEstate.Application.DTOs.Properties.Base;
+using RealEstate.Application.Interfaces.Properties;
+using RealEstate.Domain.Entities.Properties;
+using RealEstate.Domain.Interfaces;
+
+namespace RealEstate.Application.Interfaces
 {
     public interface IPropertyMediaRepository : IGenericRepository<PropertyMedia>
     {
-        Task<IEnumerable<PropertyMedia>> GetByPropertyAsync(Guid propertyId);
-        Task<PropertyMedia?> GetCoverAsync(Guid propertyId);
-        Task RemoveAllByPropertyAsync(Guid propertyId);
+        Task<IReadOnlyList<PropertyMediaDto>> GetByPropertyAsync(
+            Guid propertyId,
+            Guid companyId,
+            CancellationToken ct = default);
+
+        Task<PropertyMedia?> GetByIdForCommandAsync(
+            Guid id,
+            Guid companyId,
+            CancellationToken ct = default);
+
+        Task<bool> HasCoverAsync(
+            Guid propertyId,
+            CancellationToken ct = default);
+
+        Task ClearCoverAsync(
+            Guid propertyId,
+            CancellationToken ct = default);
     }
 }

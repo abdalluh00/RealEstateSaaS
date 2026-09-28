@@ -1,10 +1,11 @@
-﻿using System;
+﻿using RealEstate.Application.DTOs.Properties.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace RealEstate.Application.DTOs.Properties.Building
 {
-    public record BuildingListDto : PropertyListDto
+    public sealed record BuildingListDto : PropertyListDto
     {
         public int? TotalFloors { get; init; }
         public int? UnitsCount { get; init; }

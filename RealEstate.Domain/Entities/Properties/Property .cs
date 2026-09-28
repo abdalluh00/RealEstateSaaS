@@ -19,7 +19,7 @@ namespace RealEstate.Domain.Entities.Properties
         // ── Core ─────────────────────────────────────────
         public string Title { get; set; } = string.Empty;
         public string? Description { get; set; }
-
+        public PropertyType Type { get; set; }
         public PropertyPurpose Purpose { get; set; }
         // ForRent, ForSale
 
@@ -40,7 +40,7 @@ namespace RealEstate.Domain.Entities.Properties
         // ── Common Optional ───────────────────────────────
         public int? ParkingSpots { get; set; }
         public int? AgeInYears { get; set; }
-        public FacingDirection? FacingDirection { get; set; }
+        public FacingDirection FacingDirection { get; set; }
         // North, South, East, West, NorthEast, NorthWest, SouthEast, SouthWest
 
         // ── Saudi Legal ───────────────────────────────────
@@ -61,5 +61,7 @@ namespace RealEstate.Domain.Entities.Properties
 
         public Guid? AgentId { get; set; }
         public User? Agent { get; set; }
+        public ICollection<PropertyMedia> Media { get; set; } = [];
+        public ICollection<PropertyDocument> Documents { get; set; } = [];
     }
 }

@@ -69,8 +69,9 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => new { x.CompanyId, x.Phone }).IsUnique();
             // ✅ added IsUnique — no duplicate phone per company
             builder.HasIndex(x => new { x.CompanyId, x.NationalId }).IsUnique();
-            // ✅ uncommented and made required — NationalId must be unique per company
-
+            builder.HasIndex(x => new { x.CompanyId, x.NationalId })
+                  .IsUnique()
+                  .HasFilter("[NationalId] IS NOT NULL");
             // ── Soft Delete ───────────────────────────────
             builder.HasQueryFilter(x => !x.IsDeleted);
         }

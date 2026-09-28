@@ -39,22 +39,23 @@ namespace RealEstate.Infrastructure.Persistence.Configurations
                    .HasMaxLength(20);
 
             // ── Relations ─────────────────────────────────
-            builder.HasOne<Property>()
+           
+            builder.HasOne(x => x.Property)
                    .WithMany()
                    .HasForeignKey(x => x.PropertyId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<Client>()
+            builder.HasOne(x => x.Client)
                    .WithMany()
                    .HasForeignKey(x => x.ClientId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<User>()
+            builder.HasOne(x => x.Agent)
                    .WithMany()
                    .HasForeignKey(x => x.AgentId)
                    .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne<Company>()
+            builder.HasOne(x => x.Company)
                    .WithMany()
                    .HasForeignKey(x => x.CompanyId)
                    .OnDelete(DeleteBehavior.Restrict);

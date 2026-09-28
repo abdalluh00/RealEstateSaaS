@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.DTOs.Companies;
+using RealEstate.Application.Interfaces;
 using RealEstate.Domain.Entities;
-using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.ReadModels;
 using RealEstate.Infrastructure.Persistence;
-
+using RealEstate.Application.Common.Extensions;
 
 namespace RealEstate.Infrastructure.Repositories
 {
@@ -11,47 +11,44 @@ namespace RealEstate.Infrastructure.Repositories
     {
         public CompanyRepository(AppDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<CompanyListItem>> GetAllCompaniesAsync() => await _dbSet
-            .AsNoTracking()
-            .OrderByDescending(x => x.CreatedAt)
-            .Select(x => new CompanyListItem
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Phone = x.Phone,
-                Logo = x.Logo,
-                SubscriptionPlan = x.SubscriptionPlan,
-                SubscriptionExpiry = x.SubscriptionExpiry,
-                IsActive = x.IsActive,
-                TotalUsers = x.Users.Count,
-                TotalProperties = x.Properties.Count
-            })
-            .ToListAsync();
-
-        public async Task<CompanyDetailItem?> GetWithStatsAsync(Guid id) =>
+        public async Task<CompanyDto?> GetDetailByIdAsync(
+            Guid id,
+            CancellationToken ct = default) =>
             await _dbSet
                 .AsNoTracking()
-                .Where(x => x.Id == id)
-                .Select(x => new CompanyDetailItem
+                .Where(c => c.Id == id)
+                .Select(c => new CompanyDto
                 {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Phone = x.Phone,
-                    Logo = x.Logo,
-                    Address = x.Address,
-                    SubscriptionPlan = x.SubscriptionPlan,
-                    SubscriptionExpiry = x.SubscriptionExpiry,
-                    IsActive = x.IsActive,
-                    TotalUsers = x.Users.Count,
-                    TotalProperties = x.Properties.Count,
-                    TotalClients = x.Clients.Count,
-                   
+                    Id = c.Id,
+                    Name = c.Name,
+                    Logo = c.Logo,
+                    Address = c.Address,
+                    Phone = c.Phone,
+                    SubscriptionPlan = c.SubscriptionPlan.ToArabicString(),
+                    SubscriptionExpiry = c.SubscriptionExpiry,
+                    IsActive = c.IsActive,
+                    CreatedAt = c.CreatedAt
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
 
-        public async Task<bool> PhoneExistsAsync(string phone) =>
+        public async Task<Company?> GetByIdForCommandAsync(
+            Guid id,
+            CancellationToken ct = default) =>
             await _dbSet
-                .AsNoTracking()
-                .AnyAsync(x => x.Phone == phone);
+                .FirstOrDefaultAsync(c => c.Id == id, ct);
+
+        public async Task<bool> IsActiveAsync(
+            Guid id,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(c => c.Id == id && c.IsActive, ct);
+
+        public async Task<bool> IsSubscriptionValidAsync(
+            Guid id,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(c => c.Id == id
+                            && c.IsActive
+                            && c.SubscriptionExpiry > DateTime.UtcNow, ct);
     }
 }

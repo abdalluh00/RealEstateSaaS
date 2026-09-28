@@ -68,16 +68,22 @@ namespace RealEstate.Infrastructure.Persistence.Configurations.Properties
                    .HasConversion<string>()
                    .HasMaxLength(20);
 
+            builder.Property(x => x.Type)
+       .HasConversion<string>()
+       .HasMaxLength(30)
+       .IsRequired();
+
             // ── Relations ─────────────────────────────────
             builder.HasOne(x => x.Company)
                    .WithMany()            // ✅ removed WithMany(x => x.Properties) — no nav collection on Company
                    .HasForeignKey(x => x.CompanyId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+
             builder.HasOne(x => x.Owner)
-                   .WithMany()
-                   .HasForeignKey(x => x.OwnerId)
-                   .OnDelete(DeleteBehavior.SetNull);
+        .WithMany(o => o.Properties)
+        .HasForeignKey(x => x.OwnerId)
+        .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(x => x.Agent)
                    .WithMany()
@@ -90,7 +96,7 @@ namespace RealEstate.Infrastructure.Persistence.Configurations.Properties
                    .OnDelete(DeleteBehavior.Restrict);
 
             // ── Indexes ───────────────────────────────────
-            builder.HasIndex(x => x.PropertyCode).IsUnique();  // unique code per property
+            builder.HasIndex(x => new { x.CompanyId, x.PropertyCode }).IsUnique();  // unique code per property
             builder.HasIndex(x => x.CompanyId);
             builder.HasIndex(x => x.PropertyStatus);
             builder.HasIndex(x => x.Purpose);

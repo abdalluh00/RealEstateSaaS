@@ -1,71 +1,31 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Properties.Buildings.Dtos;
-using RealEstate.Domain.Interfaces.Properties;
+using RealEstate.Application.DTOs.Properties.Building;
+using RealEstate.Application.Features.Properties.Buildings.Queries.GetBuildingById;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Buildings.Queries.GetBuildingById
+namespace RealEstate.Application.Features.Properties.Building.Queries.GetBuildingById
 {
-    public class GetBuildingByIdHandler : IRequestHandler<GetBuildingByIdQuery, ApiResponse<BuildingDetailsDto>>
+    public class GetBuildingByIdHandler
+        : IRequestHandler<GetBuildingByIdQuery, ApiResponse<BuildingDetailDto>>
     {
-        private readonly IBuildingRepository _buildingRepository;
+        private readonly IBuildingRepository _buildingRepo;
 
-        public GetBuildingByIdHandler(IBuildingRepository buildingRepository)
+        public GetBuildingByIdHandler(IBuildingRepository buildingRepo) =>
+            _buildingRepo = buildingRepo;
+
+        public async Task<ApiResponse<BuildingDetailDto>> Handle(
+            GetBuildingByIdQuery request,
+            CancellationToken ct)
         {
-            _buildingRepository = buildingRepository;
-        }
+            var building = await _buildingRepo.GetDetailByIdAsync(
+                request.Id,
+                request.CompanyId,
+                ct)
+                ?? throw new NotFoundException("المبنى غير موجود");
 
-        public async Task<ApiResponse<BuildingDetailsDto>> Handle(GetBuildingByIdQuery request, CancellationToken ct)
-        {
-            var entity = await _buildingRepository.GetByIdWithDetailsAsync(request.Id, request.CompanyId);
-            if (entity is null)
-                throw new NotFoundException("المبنى غير موجود");
-
-            var dto = new BuildingDetailsDto
-            {
-                Id = entity.Id,
-                PropertyCode = entity.PropertyCode,
-                ParentPropertyId = entity.ParentPropertyId,
-
-                Title = entity.Title,
-                Description = entity.Description,
-
-                Purpose = entity.Purpose.ToString(),
-                PropertyStatus = entity.PropertyStatus.ToString(),
-
-                Price = entity.Price,
-                Area = entity.Area,
-
-                City = entity.City,
-                District = entity.District,
-                Address = entity.Address,
-                Latitude = entity.Latitude,
-                Longitude = entity.Longitude,
-
-                ParkingSpots = entity.ParkingSpots,
-                AgeInYears = entity.AgeInYears,
-                FacingDirection = entity.FacingDirection,
-                FurnishedStatus = entity.FurnishedStatus.ToString(),
-
-                RegaLicenseNumber = entity.RegaLicenseNumber,
-                DeedNumber = entity.DeedNumber,
-                MunicipalityNumber = entity.MunicipalityNumber,
-
-                IsFeatured = entity.IsFeatured,
-
-                OwnerId = entity.OwnerId ?? Guid.Empty,
-                AgentId = entity.AgentId ?? Guid.Empty,
-
-                TotalFloors = entity.TotalFloors,
-                UnitsCount = entity.UnitsCount,
-                Elevator = entity.Elevator,
-                ParkingFloor = entity.ParkingFloor
-            };
-
-            return ApiResponse<BuildingDetailsDto>.Ok(dto);
+            return ApiResponse<BuildingDetailDto>.Ok(building);
         }
     }
 }

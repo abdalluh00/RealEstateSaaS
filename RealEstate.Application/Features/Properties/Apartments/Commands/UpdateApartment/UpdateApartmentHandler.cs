@@ -1,109 +1,74 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.Interfaces.Properties.RealEstate.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+using RealEstate.Domain.Common.Enums;
 namespace RealEstate.Application.Features.Properties.Apartments.Commands.UpdateApartment
 {
-    public class UpdateApartmentHandler : IRequestHandler<UpdateApartmentCommand, ApiResponse<Guid>>
+    public sealed class UpdateApartmentCommandHandler
+        : IRequestHandler<UpdateApartmentCommand, ApiResponse<bool>>
     {
-        private readonly IApartmentRepository _apartmentRepository;
-        private readonly IPropertyLookupRepository _propertyLookupRepository;
-        private readonly IOwnerRepository _ownerRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IApartmentRepository _apartments;
+        private readonly IUnitOfWork _uow;
 
-        public UpdateApartmentHandler(
-            IApartmentRepository apartmentRepository,
-            IPropertyLookupRepository propertyLookupRepository,
-            IOwnerRepository ownerRepository,
-            IUserRepository userRepository,
-            IUnitOfWork unitOfWork)
+        public UpdateApartmentCommandHandler(
+            IApartmentRepository apartments,
+            IUnitOfWork uow)
         {
-            _apartmentRepository = apartmentRepository;
-            _propertyLookupRepository = propertyLookupRepository;
-            _ownerRepository = ownerRepository;
-            _userRepository = userRepository;
-            _unitOfWork = unitOfWork;
+            _apartments = apartments;
+            _uow = uow;
         }
 
-        public async Task<ApiResponse<Guid>> Handle(UpdateApartmentCommand request, CancellationToken ct)
+        public async Task<ApiResponse<bool>> Handle(
+            UpdateApartmentCommand cmd,
+            CancellationToken ct)
         {
-            var apartment = await _apartmentRepository.GetByIdAsync(request.ApartmentId, request.CompanyId);
+            // ── Load tracked entity via Query() ───────────
+            var apartment = await _apartments.Query()
+                .FirstOrDefaultAsync(x => x.Id == cmd.Id
+                                       && x.CompanyId == cmd.CompanyId, ct);
+
             if (apartment is null)
-                throw new NotFoundException("الشقة غير موجودة");
+                throw new NotFoundException("الشقة", cmd.Id);
 
-            var dto = request.Apartment;
+            // ── Apply changes ─────────────────────────────
+            apartment.Title = cmd.Title;
+            apartment.Description = cmd.Description;
+            apartment.Purpose = cmd.Purpose;
+            apartment.Price = cmd.Price;
+            apartment.Area = cmd.Area;
+            apartment.City = cmd.City;
+            apartment.District = cmd.District;
+            apartment.Address = cmd.Address;
+            apartment.Latitude = cmd.Latitude;
+            apartment.Longitude = cmd.Longitude;
+            apartment.ParkingSpots = cmd.ParkingSpots;
+            apartment.AgeInYears = cmd.AgeInYears;
+            apartment.FacingDirection =(FacingDirection) cmd.FacingDirection!;
+            apartment.RegaLicenseNumber = cmd.RegaLicenseNumber;
+            apartment.DeedNumber = cmd.DeedNumber;
+            apartment.MunicipalityNumber = cmd.MunicipalityNumber;
+            apartment.OwnerId = cmd.OwnerId;
+            apartment.AgentId = cmd.AgentId;
+            apartment.IsFeatured = cmd.IsFeatured;
+            apartment.IsPublished = cmd.IsPublished;
+            apartment.Bedrooms = cmd.Bedrooms;
+            apartment.Bathrooms = cmd.Bathrooms;
+            apartment.LivingRooms = cmd.LivingRooms;
+            apartment.FloorNumber = cmd.FloorNumber;
+            apartment.HasMaidRoom = cmd.HasMaidRoom;
+            apartment.HasElevator = cmd.HasElevator;
+            apartment.HasCentralAC = cmd.HasCentralAC;
+            apartment.HasBalcony = cmd.HasBalcony;
+            apartment.HasStorage = cmd.HasStorage;
+            apartment.FurnishedStatus = cmd.FurnishedStatus;
+            // UpdatedAt stamped automatically by SaveChangesAsync
 
-            var ownerExists = await _ownerRepository.ExistsInCompanyAsync(dto.OwnerId, request.CompanyId);
-            if (!ownerExists)
-                throw new NotFoundException("المالك غير موجود ضمن نفس الشركة");
+            await _uow.SaveChangesAsync(ct);
 
-            var agentExists = await _userRepository.ExistsInCompanyAsync(dto.AgentId, request.CompanyId);
-            if (!agentExists)
-                throw new NotFoundException("الوسيط/المستخدم غير موجود ضمن نفس الشركة");
-
-            if (dto.ParentPropertyId.HasValue)
-            {
-                var parentExists = await _propertyLookupRepository.ExistsInCompanyAsync(
-                    dto.ParentPropertyId.Value,
-                    request.CompanyId);
-
-                if (!parentExists)
-                    throw new NotFoundException("العقار الأب غير موجود ضمن نفس الشركة");
-
-                var duplicateUnit = await _apartmentRepository.UnitNumberExistsUnderParentAsync(
-                    request.CompanyId,
-                    dto.ParentPropertyId.Value,
-                    dto.UnitNumber,
-                    apartment.Id);
-
-                if (duplicateUnit)
-                    throw new ConflictException("رقم الوحدة مستخدم مسبقاً داخل العقار الأب");
-            }
-
-            apartment.Title = dto.Title;
-            apartment.Description = dto.Description;
-            apartment.Purpose = dto.Purpose;
-            apartment.PropertyStatus = dto.PropertyStatus;
-            apartment.Price = dto.Price;
-            apartment.Area = dto.Area;
-            apartment.City = dto.City;
-            apartment.District = dto.District;
-            apartment.Address = dto.Address;
-            apartment.Latitude = dto.Latitude;
-            apartment.Longitude = dto.Longitude;
-            apartment.ParkingSpots = dto.ParkingSpots;
-            apartment.AgeInYears = dto.AgeInYears;
-            apartment.FacingDirection = dto.FacingDirection;
-            apartment.FurnishedStatus = dto.FurnishedStatus;
-            apartment.RegaLicenseNumber = dto.RegaLicenseNumber;
-            apartment.DeedNumber = dto.DeedNumber;
-            apartment.MunicipalityNumber = dto.MunicipalityNumber;
-            apartment.IsFeatured = dto.IsFeatured;
-            apartment.ParentPropertyId = dto.ParentPropertyId;
-            apartment.OwnerId = dto.OwnerId;
-            apartment.AgentId = dto.AgentId;
-
-            apartment.UnitNumber = dto.UnitNumber;
-            apartment.Bedrooms = dto.Bedrooms;
-            apartment.Bathrooms = dto.Bathrooms;
-            apartment.FloorNumber = dto.FloorNumber;
-            apartment.LivingRooms = dto.LivingRooms;
-            apartment.HasMaidRoom = dto.HasMaidRoom;
-            apartment.HasElevator = dto.HasElevator;
-            apartment.HasCentralAc = dto.HasCentralAc;
-            apartment.HasBalcony = dto.HasBalcony;
-
-            _apartmentRepository.Update(apartment);
-            await _unitOfWork.SaveChangesAsync(ct);
-
-            return ApiResponse<Guid>.Ok(apartment.Id, "تم تحديث الشقة بنجاح");
+            return ApiResponse<bool>.Ok(true, "تم تحديث الشقة بنجاح");
         }
     }
 }

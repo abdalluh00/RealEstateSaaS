@@ -1,19 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RealEstate.Application.DTOs.Properties;
+using RealEstate.Application.DTOs.Properties.Base;
+using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Entities.Properties;
-using RealEstate.Domain.Interfaces;
-using RealEstate.Domain.Interfaces.Properties;
-using RealEstate.Domain.ReadModels.PropertyModel;
 using RealEstate.Infrastructure.Persistence;
 using RealEstate.Shared.Common;
+using System.Linq.Expressions;
+
 namespace RealEstate.Infrastructure.Repositories
 {
     public class PropertyRepository : GenericRepository<Property>, IPropertyRepository
     {
         public PropertyRepository(AppDbContext context) : base(context) { }
 
-        // ── Validation ────────────────────────────────────
+        // ── Reusable projection ───────────────────────────
+        private static readonly Expression<Func<Property, PropertyListDto>> ToListDto =
+            x => new PropertyListDto
+            {
+                Id = x.Id,
+                PropertyCode = x.PropertyCode,
+                Title = x.Title,
+                Type = x.Type.ToString(),
+                Purpose = x.Purpose.ToString(),
+                Status = x.PropertyStatus.ToString(),
+                Price = x.Price,
+                Area = x.Area,
+                City = x.City,
+                District = x.District,
+                UnitNumber = x.UnitNumber,
+                IsFeatured = x.IsFeatured,
+                CreatedAt = x.CreatedAt
+            };
 
+        // ── Validation ────────────────────────────────────
         public async Task<bool> PropertyCodeExistsAsync(
             string code,
             Guid companyId,
@@ -28,9 +48,34 @@ namespace RealEstate.Infrastructure.Repositories
             await _dbSet
                 .AnyAsync(x => x.OwnerId == ownerId && x.CompanyId == companyId, ct);
 
-        // ── Paged List ────────────────────────────────────
+        public async Task<bool> ExistsAsync(
+            Guid id,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(x => x.Id == id && x.CompanyId == companyId, ct);
 
-        public async Task<PagedResult<PropertyListReadModel>> GetPagedAsync(
+        public async Task<bool> IsAvailableAsync(
+            Guid id,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(x => x.Id == id && x.PropertyStatus == PropertyStatus.Available, ct);
+
+        public async Task<bool> IsOwnerHasPropertyAsync(
+            Guid ownerId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AnyAsync(x => x.OwnerId == ownerId, ct);
+
+        public async Task<int> CountByStatusAsync(
+            Guid companyId,
+            PropertyStatus status,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .CountAsync(x => x.CompanyId == companyId && x.PropertyStatus == status, ct);
+
+        // ── Paged List ────────────────────────────────────
+        public async Task<PagedResult<PropertyListDto>> GetPagedAsync(
             Guid companyId,
             int page,
             int pageSize,
@@ -55,36 +100,21 @@ namespace RealEstate.Infrastructure.Repositories
             var totalCount = await query.CountAsync(ct);
 
             if (totalCount == 0)
-                return PagedResult<PropertyListReadModel>.Empty(page, pageSize);
+                return PagedResult<PropertyListDto>.Empty(page, pageSize);
 
             var items = await query
                 .OrderByDescending(x => x.IsFeatured)
                 .ThenByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(x => new PropertyListReadModel
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-                    IsFeatured = x.IsFeatured,
-                    IsPublished = x.IsPublished,
-                    CreatedAt = x.CreatedAt
-                })
+                .Select(ToListDto)
                 .ToListAsync(ct);
 
-            return PagedResult<PropertyListReadModel>.Create(items, totalCount, page, pageSize);
+            return PagedResult<PropertyListDto>.Create(items, totalCount, page, pageSize);
         }
 
         // ── Agent Properties ──────────────────────────────
-
-        public async Task<PagedResult<PropertyListReadModel>> GetByAgentAsync(
+        public async Task<PagedResult<PropertyListDto>> GetByAgentAsync(
             Guid agentId,
             Guid companyId,
             int page,
@@ -98,44 +128,83 @@ namespace RealEstate.Infrastructure.Repositories
             var totalCount = await query.CountAsync(ct);
 
             if (totalCount == 0)
-                return PagedResult<PropertyListReadModel>.Empty(page, pageSize);
+                return PagedResult<PropertyListDto>.Empty(page, pageSize);
 
             var items = await query
                 .OrderByDescending(x => x.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Select(x => new PropertyListReadModel
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-                    IsFeatured = x.IsFeatured,
-                    IsPublished = x.IsPublished,
-                    CreatedAt = x.CreatedAt
-                })
+                .Select(ToListDto)
                 .ToListAsync(ct);
 
-            return PagedResult<PropertyListReadModel>.Create(items, totalCount, page, pageSize);
+            return PagedResult<PropertyListDto>.Create(items, totalCount, page, pageSize);
         }
 
-        // ── Dashboard ─────────────────────────────────────
-
-        public async Task<PropertyDashboardReadModel> GetDashboardStatsAsync(
+        // ── Owner Properties ──────────────────────────────
+        public async Task<PagedResult<PropertyListDto>> GetByOwnerAsync(
+            Guid ownerId,
             Guid companyId,
+            int page,
+            int pageSize,
             CancellationToken ct = default)
         {
-            // Single query — grouped aggregation in SQL
-            // No subtype joins — only Properties table
-            var stats = await _dbSet
+            var query = _dbSet
+                .AsNoTracking()
+                .Where(x => x.OwnerId == ownerId && x.CompanyId == companyId);
+
+            var totalCount = await query.CountAsync(ct);
+
+            if (totalCount == 0)
+                return PagedResult<PropertyListDto>.Empty(page, pageSize);
+
+            var items = await query
+                .OrderByDescending(x => x.CreatedAt)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ToListDto)
+                .ToListAsync(ct);
+
+            return PagedResult<PropertyListDto>.Create(items, totalCount, page, pageSize);
+        }
+
+        // ── Children ──────────────────────────────────────
+        public async Task<IReadOnlyList<PropertyListDto>> GetChildrenAsync(
+            Guid parentPropertyId,
+            Guid companyId,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AsNoTracking()
+                .Where(x => x.ParentPropertyId == parentPropertyId
+                         && x.CompanyId == companyId)
+                .OrderBy(x => x.UnitNumber)
+                .Select(ToListDto)
+                .ToListAsync(ct);
+
+        // ── Featured ──────────────────────────────────────
+        public async Task<IReadOnlyList<PropertyListDto>> GetFeaturedAsync(
+            Guid companyId,
+            int limit,
+            CancellationToken ct = default) =>
+            await _dbSet
+                .AsNoTracking()
+                .Where(x => x.CompanyId == companyId
+                         && x.IsFeatured
+                         && x.IsPublished)
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(limit)
+                .Select(ToListDto)
+                .ToListAsync(ct);
+
+        // ── Dashboard ─────────────────────────────────────
+        public async Task<PropertyDashboardDto> GetDashboardStatsAsync(
+            Guid companyId,
+            int featuredLimit,
+            CancellationToken ct = default)
+        {
+            var statsTask = _dbSet
                 .Where(x => x.CompanyId == companyId)
-                .GroupBy(_ => 1)                          // group all into one row
-                .Select(g => new PropertyDashboardReadModel
+                .GroupBy(_ => 1)
+                .Select(g => new
                 {
                     TotalProperties = g.Count(),
                     Available = g.Count(x => x.PropertyStatus == PropertyStatus.Available),
@@ -147,40 +216,35 @@ namespace RealEstate.Infrastructure.Repositories
                 })
                 .FirstOrDefaultAsync(ct);
 
-            // If company has no properties yet return zeros
-            return stats ?? new PropertyDashboardReadModel();
-        }
-
-        public async Task<IReadOnlyList<PropertyListReadModel>> GetFeaturedAsync(
-            Guid companyId,
-            int limit,
-            CancellationToken ct = default) =>
-            await _dbSet
+            var featuredTask = _dbSet
                 .AsNoTracking()
                 .Where(x => x.CompanyId == companyId
                          && x.IsFeatured
                          && x.IsPublished)
                 .OrderByDescending(x => x.CreatedAt)
-                .Take(limit)
-                .Select(x => new PropertyListReadModel
-                {
-                    Id = x.Id,
-                    PropertyCode = x.PropertyCode,
-                    Title = x.Title,
-                    Purpose = x.Purpose,
-                    PropertyStatus = x.PropertyStatus,
-                    Price = x.Price,
-                    Area = x.Area,
-                    City = x.City,
-                    District = x.District,
-                    IsFeatured = x.IsFeatured,
-                    IsPublished = x.IsPublished,
-                    CreatedAt = x.CreatedAt
-                })
+                .Take(featuredLimit)
+                .Select(ToListDto)
                 .ToListAsync(ct);
 
-        // ── Commands ──────────────────────────────────────
+            await Task.WhenAll(statsTask, featuredTask);
 
+            var stats = await statsTask;
+            var featured = await featuredTask;
+
+            return new PropertyDashboardDto
+            {
+                TotalProperties = stats?.TotalProperties ?? 0,
+                Available = stats?.Available ?? 0,
+                Rented = stats?.Rented ?? 0,
+                Sold = stats?.Sold ?? 0,
+                Reserved = stats?.Reserved ?? 0,
+                Featured = stats?.Featured ?? 0,
+                Published = stats?.Published ?? 0,
+                TopFeatured = featured
+            };
+        }
+
+        // ── Commands ──────────────────────────────────────
         public async Task<Property?> GetByIdForDeleteAsync(
             Guid id,
             Guid companyId,

@@ -1,34 +1,41 @@
 ﻿using MediatR;
+using RealEstate.Application.Interfaces;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
+
 namespace RealEstate.Application.Features.Companies.Commands.UpdateCompany
 {
-    public class UpdateCompanyHandler : IRequestHandler<UpdateCompanyCommand, ApiResponse<bool>>
+    public sealed class UpdateCompanyCommandHandler
+        : IRequestHandler<UpdateCompanyCommand, ApiResponse<bool>>
     {
-        private readonly ICompanyRepository _repo;
+        private readonly ICompanyRepository _companies;
+        private readonly IUnitOfWork _uow;
 
-        public UpdateCompanyHandler(ICompanyRepository repo) => _repo = repo;
+        public UpdateCompanyCommandHandler(
+            ICompanyRepository companies,
+            IUnitOfWork uow)
+        {
+            _companies = companies;
+            _uow = uow;
+        }
 
         public async Task<ApiResponse<bool>> Handle(
-            UpdateCompanyCommand request,
+            UpdateCompanyCommand cmd,
             CancellationToken ct)
         {
-            var company = await _repo.GetByIdAsync(request.Id);
+            var company = await _companies.GetByIdForCommandAsync(
+                cmd.CompanyId, ct);
 
             if (company is null)
-                throw new NotFoundException("الشركة", request.Id);
+                throw new NotFoundException("الشركة", cmd.CompanyId);
 
-            company.Name = request.Name;
-            company.Phone = request.Phone;
-            company.Address = request.Address;
-            company.Logo = request.Logo;
-            company.SubscriptionPlan = request.SubscriptionPlan;
-            company.SubscriptionExpiry = request.SubscriptionExpiry;
-            company.IsActive = request.IsActive;
+            company.Name = cmd.Name;
+            company.Logo = cmd.Logo;
+            company.Address = cmd.Address;
+            company.Phone = cmd.Phone;
 
-            _repo.Update(company);
-            await _repo.SaveChangesAsync();
+            await _uow.SaveChangesAsync(ct);
 
             return ApiResponse<bool>.Ok(true, "تم تحديث بيانات الشركة بنجاح");
         }

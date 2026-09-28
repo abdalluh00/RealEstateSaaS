@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Interfaces;
+using RealEstate.Application.DTOs.Properties.Base;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Common;
 using System;
@@ -26,18 +27,3 @@ namespace RealEstate.Application.Features.Properties.Queries.GetPagedProperties
     }
 }
 
-public record PropertyListDto
-{
-    public Guid Id { get; init; }
-    public string PropertyCode { get; init; } = string.Empty;
-    public string Title { get; init; } = string.Empty;
-    public string Purpose { get; init; } = string.Empty;       // localized string
-    public string PropertyStatus { get; init; } = string.Empty; // localized string
-    public decimal Price { get; init; }
-    public decimal Area { get; init; }
-    public string City { get; init; } = string.Empty;
-    public string District { get; init; } = string.Empty;
-    public bool IsFeatured { get; init; }
-    public bool IsPublished { get; init; }
-    public DateTime CreatedAt { get; init; }
-}

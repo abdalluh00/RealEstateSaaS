@@ -1,31 +1,24 @@
 ﻿using MediatR;
-using RealEstate.Application.Features.Payments.DTO;
-using RealEstate.Domain.Interfaces;
+using RealEstate.Application.DTOs.Payments;
+using RealEstate.Application.Interfaces;
 using RealEstate.Shared.Common;
 
-namespace RealEstate.Application.Features.Payments.Queries.GetPaymentSummary
+namespace RealEstate.Application.Features.Payments.Queries.GetContractPaymentSummary
 {
-    public class GetPaymentSummaryHandler
-     : IRequestHandler<GetPaymentSummaryQuery, ApiResponse<PaymentSummaryDto>>
+    public sealed class GetContractPaymentSummaryQueryHandler
+        : IRequestHandler<GetContractPaymentSummaryQuery, ApiResponse<PaymentSummaryDto>>
     {
-        private readonly IPaymentRepository _repo;
+        private readonly IPaymentRepository _payments;
 
-        public GetPaymentSummaryHandler(IPaymentRepository repo) => _repo = repo;
+        public GetContractPaymentSummaryQueryHandler(IPaymentRepository payments)
+            => _payments = payments;
 
         public async Task<ApiResponse<PaymentSummaryDto>> Handle(
-            GetPaymentSummaryQuery request,
+            GetContractPaymentSummaryQuery query,
             CancellationToken ct)
         {
-            var summary = await _repo.GetSummaryAsync(request.CompanyId);
-
-            var result = new PaymentSummaryDto(
-                summary.TotalExpected,
-                summary.TotalCollected,
-                summary.TotalOverdue,
-                summary.TotalPending,
-                summary.OverdueCount,
-                summary.PendingCount
-            );
+            var result = await _payments.GetContractSummaryAsync(
+                query.ContractId, query.CompanyId, ct);
 
             return ApiResponse<PaymentSummaryDto>.Ok(result);
         }

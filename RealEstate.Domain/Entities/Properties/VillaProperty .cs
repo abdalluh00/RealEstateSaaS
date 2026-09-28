@@ -25,7 +25,7 @@ namespace RealEstate.Domain.Entities.Properties
         public bool HasGenerator { get; set; } = false;
 
         // ── Furnished Status ──────────────────────────────
-        public FurnishedStatus? FurnishedStatus { get; set; }
+        public FurnishedStatus FurnishedStatus { get; set; }
         // Furnished, Unfurnished, SemiFurnished
     }
 }
