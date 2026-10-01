@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Clients.Commands.CreateClient;
 using RealEstate.Application.Features.Clients.Commands.DeleteClient;
 using RealEstate.Application.Features.Clients.Commands.ReassignAgent;
@@ -16,6 +17,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/clients")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class ClientController : ControllerBase
     {
         private readonly IMediator _mediator;

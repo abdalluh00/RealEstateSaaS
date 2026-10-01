@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Payments.Commands.CancelPayment;
 using RealEstate.Application.Features.Payments.Commands.MarkPaymentPaid;
-using RealEstate.Application.Features.Payments.Queries.GetContractPaymentSummary;
 using RealEstate.Application.Features.Payments.Queries.GetContractPayments;
+using RealEstate.Application.Features.Payments.Queries.GetContractPaymentSummary;
 using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
@@ -12,6 +13,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/payments")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class PaymentController : ControllerBase
     {
         private readonly IMediator _mediator;

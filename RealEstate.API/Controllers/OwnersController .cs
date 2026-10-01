@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Owners.Commands.CreateOwner;
 using RealEstate.Application.Features.Owners.Commands.DeleteOwner;
 using RealEstate.Application.Features.Owners.Commands.UpdateOwner;
@@ -14,6 +15,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/owners")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class OwnerController : ControllerBase
     {
         private readonly IMediator _mediator;

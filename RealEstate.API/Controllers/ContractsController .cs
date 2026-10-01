@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Contracts.Commands.CancelContract;
 using RealEstate.Application.Features.Contracts.Commands.CreateContract;
 using RealEstate.Application.Features.Contracts.Commands.MarkCommissionPaid;
@@ -15,6 +16,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/contracts")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class ContractController : ControllerBase
     {
         private readonly IMediator _mediator;

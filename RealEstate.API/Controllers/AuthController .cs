@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Auth.Commands.AcceptInvitation;
 using RealEstate.Application.Features.Auth.Commands.ChangePassword;
 using RealEstate.Application.Features.Auth.Commands.Login;
 using RealEstate.Application.Features.Auth.Commands.ResetPassword;
+using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
 {
@@ -16,6 +18,7 @@ namespace RealEstate.API.Controllers
         public AuthController(IMediator mediator) => _mediator = mediator;
 
         [HttpPost("login")]
+        [EnableRateLimiting(RateLimitPolicies.Login)]
         public async Task<IActionResult> Login(
             [FromBody] LoginCommand cmd,
             CancellationToken ct = default)
@@ -25,6 +28,7 @@ namespace RealEstate.API.Controllers
         }
 
         [HttpPost("accept-invitation")]
+        [EnableRateLimiting(RateLimitPolicies.AcceptInvitation)]
         public async Task<IActionResult> AcceptInvitation(
             [FromBody] AcceptInvitationCommand cmd,
             CancellationToken ct = default)
@@ -34,6 +38,7 @@ namespace RealEstate.API.Controllers
         }
 
         [HttpPost("reset-password")]
+        [EnableRateLimiting(RateLimitPolicies.ResetPassword)]
         public async Task<IActionResult> ResetPassword(
             [FromBody] ResetPasswordCommand cmd,
             CancellationToken ct = default)
@@ -43,6 +48,7 @@ namespace RealEstate.API.Controllers
         }
 
         [HttpPost("change-password")]
+        [EnableRateLimiting(RateLimitPolicies.ChangePassword)]
         public async Task<IActionResult> ChangePassword(
             [FromBody] ChangePasswordCommand cmd,
             CancellationToken ct = default)

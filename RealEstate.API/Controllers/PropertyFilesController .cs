@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.PropertyDocuments.Commands.DeleteDocument;
 using RealEstate.Application.Features.PropertyDocuments.Commands.UploadDocument;
 using RealEstate.Application.Features.PropertyMedia.Commands.DeleteMedia;
@@ -13,6 +14,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/properties/{propertyId:guid}")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class PropertyFilesController : ControllerBase
     {
         private readonly IMediator _mediator;

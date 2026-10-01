@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Properties.Offices.Commands.CreateOffice;
 using RealEstate.Application.Features.Properties.Offices.Commands.UpdateOffice;
 using RealEstate.Application.Features.Properties.Offices.Query.GetOfficeDetailById;
@@ -13,6 +14,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/offices")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class OfficeController : ControllerBase
     {
         private readonly IMediator _mediator;

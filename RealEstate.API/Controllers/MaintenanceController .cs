@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Maintenance.Commands.AssignMaintenanceRequest;
 using RealEstate.Application.Features.Maintenance.Commands.CancelMaintenanceRequest;
 using RealEstate.Application.Features.Maintenance.Commands.CreateMaintenanceRequest;
@@ -17,6 +18,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/maintenance")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class MaintenanceController : ControllerBase
     {
         private readonly IMediator _mediator;

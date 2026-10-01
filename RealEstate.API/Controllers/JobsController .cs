@@ -1,11 +1,14 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Domain.Interfaces;
+using RealEstate.Shared.Authorization;
 
 namespace RealEstate.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class JobsController : ControllerBase
     {
         private readonly INotificationJobService _jobService;

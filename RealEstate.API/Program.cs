@@ -1,9 +1,12 @@
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealEstate.API.Authorization;
+using RealEstate.API.Extensions;
+using RealEstate.API.HealthChecks;
 using RealEstate.API.Middleware;
 using RealEstate.Application;
 using RealEstate.Domain.Interfaces;
@@ -25,6 +28,8 @@ try
     Log.Information("Starting RealEstate API...");
 
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddHealthChecks(builder.Configuration);
 
     // ── Serilog ───────────────────────────────────────────
     builder.Host.UseSerilog((context, services, config) =>
@@ -220,7 +225,7 @@ try
     });
 
     app.UseCors("AllowFrontend");
-
+    app.UseRateLimiter();
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -231,6 +236,34 @@ try
     app.UseStaticFiles();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    // ── Live — is process alive? ──────────────────
+    // No checks — if this responds the process is running
+    // Load balancer uses this to know if app is alive
+    app.MapHealthChecks("/health/live", new HealthCheckOptions
+    {
+        Predicate = _ => false, // run no checks — just return 200
+        ResponseWriter = HealthCheckResponseWriter.WriteResponse
+    }).DisableRateLimiting();
+    // ── Ready — is everything connected? ─────────
+    // Runs DB + disk + hangfire checks
+    // Load balancer uses this before routing traffic
+    app.MapHealthChecks("/health/ready", new HealthCheckOptions
+    {
+        Predicate = check => check.Tags.Contains("ready"),
+        ResponseWriter = HealthCheckResponseWriter.WriteResponse
+    }).DisableRateLimiting();
+
+    // ── Detail — full report for internal monitoring
+    // Protected — only authenticated admins
+    app.MapHealthChecks("/health/detail", new HealthCheckOptions
+    {
+        Predicate = _ => true,
+        ResponseWriter = HealthCheckResponseWriter.WriteResponse
+    })
+    .DisableRateLimiting()
+    .RequireAuthorization(Policies.AdminAndUp);
+
     app.UseHangfireDashboard("/jobs");
     app.MapHangfireDashboard();
 
@@ -242,7 +275,9 @@ try
         jobService.ScheduleJobs();
     }
 
+    // Apply general limit to all endpoints by default
     app.MapControllers();
+      // .RequireRateLimiting(RateLimitPolicies.General);
 
     Log.Information("RealEstate API started successfully");
     app.Run();

@@ -2,10 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using RealEstate.Application.Common.Interfaces;
 using RealEstate.Application.Interfaces;
 using RealEstate.Application.Interfaces.Properties;
 using RealEstate.Domain.Interfaces;
+using RealEstate.Infrastructure.Extensions;
 using RealEstate.Infrastructure.Jobs;
 using RealEstate.Infrastructure.Persistence;
 using RealEstate.Infrastructure.Repositories;
@@ -14,7 +16,6 @@ using RealEstate.Infrastructure.Services;
 using RealEstate.Infrastructure.Settings;
 using RealEstate.Shared.Settings;
 using Serilog;
-using Microsoft.Extensions.Logging;
 
 namespace RealEstate.Infrastructure
 {
@@ -100,6 +101,9 @@ namespace RealEstate.Infrastructure
 
             services.AddHangfireServer();
             services.AddScoped<INotificationJobService, NotificationJobService>();
+
+            // ── Rate Limiting ─────────────────────────────
+            services.AddRateLimiting(configuration);
 
             return services;
         }

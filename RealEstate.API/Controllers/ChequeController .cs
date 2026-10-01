@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Cheques.Commands.BounceCheque;
 using RealEstate.Application.Features.Cheques.Commands.CancelCheque;
 using RealEstate.Application.Features.Cheques.Commands.ClearCheque;
@@ -17,6 +18,7 @@ namespace RealEstate.Api.Controllers
     [ApiController]
     [Route("api/cheques")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class ChequeController : ControllerBase
     {
         private readonly IMediator _mediator;

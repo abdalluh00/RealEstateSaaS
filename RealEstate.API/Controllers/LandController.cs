@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Lands.Commands.CreateLand;
 using RealEstate.Application.Features.Lands.Commands.DeleteLand;
 using RealEstate.Application.Features.Lands.Commands.UpdateLand;
@@ -14,6 +15,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/lands")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class LandController : ControllerBase
     {
         private readonly IMediator _mediator;

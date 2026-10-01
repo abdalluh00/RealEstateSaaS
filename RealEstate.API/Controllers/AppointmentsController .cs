@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Appointments.Commands.CancelAppointment;
 using RealEstate.Application.Features.Appointments.Commands.CompleteAppointment;
 using RealEstate.Application.Features.Appointments.Commands.ConfirmAppointment;
@@ -17,6 +18,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/appointments")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class AppointmentController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Users.Commands.DeactivateUser;
 using RealEstate.Application.Features.Users.Commands.InviteUser;
 using RealEstate.Application.Features.Users.Commands.UpdateUser;
@@ -13,6 +14,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/users")]
     [Authorize(Policy = Policies.AdminAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;

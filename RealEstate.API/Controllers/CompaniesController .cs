@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RealEstate.Application.Features.Companies.Commands.UpdateCompany;
 using RealEstate.Application.Features.Companies.Commands.UpdateSubscription;
 using RealEstate.Application.Features.Companies.Queries.GetCompany;
@@ -11,6 +12,7 @@ namespace RealEstate.API.Controllers
     [ApiController]
     [Route("api/company")]
     [Authorize(Policy = Policies.AgentAndUp)]
+    [EnableRateLimiting(RateLimitPolicies.General)]
     public class CompanyController : ControllerBase
     {
         private readonly IMediator _mediator;
