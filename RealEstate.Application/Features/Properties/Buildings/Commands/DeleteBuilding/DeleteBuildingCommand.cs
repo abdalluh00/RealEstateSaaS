@@ -1,17 +1,16 @@
 ﻿using MediatR;
 using RealEstate.Application.Common.Behaviors;
 using RealEstate.Application.Common.Interfaces;
+using RealEstate.Shared.Authorization;
 using RealEstate.Shared.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace RealEstate.Application.Features.Properties.Buildings.Commands.DeleteBuilding
+namespace RealEstate.Application.Features.Buildings.Commands.DeleteBuilding
 {
-    [Authorize(Roles = "Owner,Admin")]
-    public record DeleteBuildingCommand(Guid Id)
+    [Authorize(Roles = $"{Roles.Admin}")]
+    public sealed class DeleteBuildingCommand
         : IRequest<ApiResponse<bool>>, IAutoTenantRequest
     {
+        public Guid Id { get; init; }
         public Guid CompanyId { get; private set; }
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }

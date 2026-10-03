@@ -10,12 +10,16 @@ namespace RealEstate.Application.Interfaces.Properties
     {
         // ── Queries ───────────────────────────────────────
         Task<PagedResult<BuildingListDto>> GetPagedAsync(
-            Guid companyId,
-            int page,
-            int pageSize,
-            PropertyStatus? status = null,
-            PropertyPurpose? purpose = null,
-            CancellationToken ct = default);
+    Guid companyId,
+    int page,
+    int pageSize,
+    PropertyStatus? status = null,
+    PropertyPurpose? purpose = null,
+    bool? hasElevator = null,
+    int? minFloors = null,
+    int? maxFloors = null,
+    CancellationToken ct = default);
+       
 
         Task<BuildingDetailDto?> GetDetailByIdAsync(
             Guid id,

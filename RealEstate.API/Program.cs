@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using RealEstate.API.Authorization;
 using RealEstate.API.Extensions;
 using RealEstate.API.HealthChecks;
@@ -15,6 +15,8 @@ using RealEstate.Infrastructure.Persistence;
 using RealEstate.Infrastructure.Persistence.Seeders;
 using RealEstate.Shared.Authorization;
 using Serilog;
+using Swashbuckle.AspNetCore.Filters;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -54,9 +56,19 @@ try
         options.SwaggerDoc("v1", new OpenApiInfo
         {
             Title = "RealEstate SaaS API",
-            Version = "v1"
+            Version = "v1",
+            Description = "نظام إدارة العقارات — واجهة برمجية متكاملة للسوق السعودي"
         });
 
+        // ── Read XML comments ─────────────────────────
+        var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+
+        // ── Show request/response examples ────────────
+        options.ExampleFilters();
+
+        // ── JWT Auth ──────────────────────────────────
         var securityScheme = new OpenApiSecurityScheme
         {
             Name = "Authorization",
@@ -64,28 +76,22 @@ try
             Scheme = JwtBearerDefaults.AuthenticationScheme,
             BearerFormat = "JWT",
             In = ParameterLocation.Header,
-            Description = "أدخل الـ Token هنا"
+            Description = "أدخل JWT Token هنا — مثال: Bearer eyJhbGci..."
         };
 
         options.AddSecurityDefinition("Bearer", securityScheme);
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        options.AddSecurityRequirement(document =>
+     new OpenApiSecurityRequirement
+     {
         {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id   = "Bearer"
-                    },
-                    Scheme = JwtBearerDefaults.AuthenticationScheme,
-                    Name   = "Bearer",
-                    In     = ParameterLocation.Header
-                },
-                Array.Empty<string>()
-            }
-        });
+            new OpenApiSecuritySchemeReference("Bearer", document),
+            new List<string>()
+        }
+     });
     });
+
+    // ── Register example filters ──────────────────────
+    builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
     // ── Application + Infrastructure ──────────────────────
     builder.Services.AddApplication();

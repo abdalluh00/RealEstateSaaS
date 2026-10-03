@@ -38,13 +38,7 @@ namespace RealEstate.Infrastructure.Repositories.Properties
             };
 
         // ── Paged List ────────────────────────────────────
-        public async Task<PagedResult<BuildingListDto>> GetPagedAsync(
-            Guid companyId,
-            int page,
-            int pageSize,
-            PropertyStatus? status = null,
-            PropertyPurpose? purpose = null,
-            CancellationToken ct = default)
+        public async Task<PagedResult<BuildingListDto>> GetPagedAsync(Guid companyId, int page, int pageSize, PropertyStatus? status = null, PropertyPurpose? purpose = null, bool? hasElevator = null, int? minFloors = null, int? maxFloors = null, CancellationToken ct = default)
         {
             var query = _dbSet
                 .AsNoTracking()
@@ -194,5 +188,7 @@ namespace RealEstate.Infrastructure.Repositories.Properties
             await _context.Properties
                 .CountAsync(p => p.ParentPropertyId == buildingId
                               && p.PropertyStatus == status, ct);
+
+
     }
 }

@@ -1,75 +1,70 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RealEstate.Application.Features.Properties.Buildings.Commands.UpdateBuilding;
-using RealEstate.Application.Interfaces;
 using RealEstate.Application.Interfaces.Properties;
-using RealEstate.Domain.Common.Enums;
 using RealEstate.Domain.Interfaces;
 using RealEstate.Shared.Common;
 using RealEstate.Shared.Common.Exceptions;
 
-namespace RealEstate.Application.Features.Properties.Building.Commands.UpdateBuilding
+namespace RealEstate.Application.Features.Buildings.Commands.UpdateBuilding
 {
-    public class UpdateBuildingHandler : IRequestHandler<UpdateBuildingCommand, ApiResponse<bool>>
+    public sealed class UpdateBuildingCommandHandler
+        : IRequestHandler<UpdateBuildingCommand, ApiResponse<bool>>
     {
-        private readonly IBuildingRepository _buildingRepo;
+        private readonly IBuildingRepository _buildings;
         private readonly IUnitOfWork _uow;
 
-        public UpdateBuildingHandler(
-            IBuildingRepository buildingRepo,
+        public UpdateBuildingCommandHandler(
+            IBuildingRepository buildings,
             IUnitOfWork uow)
         {
-            _buildingRepo = buildingRepo;
+            _buildings = buildings;
             _uow = uow;
         }
 
         public async Task<ApiResponse<bool>> Handle(
-            UpdateBuildingCommand request,
+            UpdateBuildingCommand cmd,
             CancellationToken ct)
         {
-            // ── Fetch tracked entity ──────────────────────
-            var building = await _buildingRepo
-                .Query()
-                .FirstOrDefaultAsync(b => b.Id == request.Id
-                                       && b.CompanyId == request.CompanyId, ct)
-                ?? throw new NotFoundException("المبنى غير موجود");
+            var building = await _buildings.Query()
+                .FirstOrDefaultAsync(x => x.Id == cmd.Id
+                                       && x.CompanyId == cmd.CompanyId, ct);
 
-            // ── Update base fields ────────────────────────
-            building.Title = request.Title;
-            building.Description = request.Description;
-            building.Purpose = Enum.Parse<PropertyPurpose>(request.Purpose);
-            building.Price = request.Price;
-            building.Area = request.Area;
-            building.City = request.City;
-            building.District = request.District;
-            building.Address = request.Address;
-            building.Latitude = request.Latitude;
-            building.Longitude = request.Longitude;
-            building.ParkingSpots = request.ParkingSpots;
-            building.AgeInYears = request.AgeInYears;
-            building.RegaLicenseNumber = request.RegaLicenseNumber;
-            building.DeedNumber = request.DeedNumber;
-            building.MunicipalityNumber = request.MunicipalityNumber;
-            building.IsFeatured = request.IsFeatured;
-            building.IsPublished = request.IsPublished;
-            building.OwnerId = request.OwnerId;
-            building.AgentId = request.AgentId;
+            if (building is null)
+                throw new NotFoundException("العمارة", cmd.Id);
 
-            // ── Update building specific fields ───────────
-            building.TotalFloors = request.TotalFloors;
-            building.UnitsCount = request.UnitsCount;
-            building.BasementFloors = request.BasementFloors;
-            building.HasElevator = request.HasElevator;
-            building.HasParkingFloor = request.HasParkingFloor;
-            building.HasMosque = request.HasMosque;
-            building.HasGuard = request.HasGuard;
-            building.HasGenerator = request.HasGenerator;
-            building.HasCCTV = request.HasCCTV;
+            building.Title = cmd.Title;
+            building.Description = cmd.Description;
+            building.Purpose = cmd.Purpose;
+            building.Price = cmd.Price;
+            building.Area = cmd.Area;
+            building.City = cmd.City;
+            building.District = cmd.District;
+            building.Address = cmd.Address;
+            building.Latitude = cmd.Latitude;
+            building.Longitude = cmd.Longitude;
+            building.ParkingSpots = cmd.ParkingSpots;
+            building.AgeInYears = cmd.AgeInYears;
+            building.FacingDirection = (Domain.Common.Enums.FacingDirection)cmd.FacingDirection!;
+            building.RegaLicenseNumber = cmd.RegaLicenseNumber;
+            building.DeedNumber = cmd.DeedNumber;
+            building.MunicipalityNumber = cmd.MunicipalityNumber;
+            building.OwnerId = cmd.OwnerId;
+            building.AgentId = cmd.AgentId;
+            building.IsFeatured = cmd.IsFeatured;
+            building.IsPublished = cmd.IsPublished;
+            building.TotalFloors = cmd.TotalFloors;
+            building.UnitsCount = cmd.UnitsCount;
+            building.BasementFloors = cmd.BasementFloors;
+            building.HasElevator = cmd.HasElevator;
+            building.HasParkingFloor = cmd.HasParkingFloor;
+            building.HasMosque = cmd.HasMosque;
+            building.HasGuard = cmd.HasGuard;
+            building.HasGenerator = cmd.HasGenerator;
+            building.HasCCTV = cmd.HasCCTV;
 
-            _buildingRepo.Update(building);
             await _uow.SaveChangesAsync(ct);
 
-            return ApiResponse<bool>.Ok(true);
+            return ApiResponse<bool>.Ok(true, "تم تحديث العمارة بنجاح");
         }
     }
 }

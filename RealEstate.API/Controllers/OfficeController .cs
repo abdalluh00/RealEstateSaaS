@@ -8,9 +8,13 @@ using RealEstate.Application.Features.Properties.Offices.Query.GetOfficeDetailBy
 using RealEstate.Application.Features.Properties.Offices.Query.GetOfficePages;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Authorization;
+using RealEstate.Shared.Common;
 
 namespace RealEstate.API.Controllers
 {
+    /// <summary>
+    /// إدارة المكاتب
+    /// </summary>
     [ApiController]
     [Route("api/offices")]
     [Authorize(Policy = Policies.AgentAndUp)]
@@ -21,7 +25,12 @@ namespace RealEstate.API.Controllers
 
         public OfficeController(IMediator mediator) => _mediator = mediator;
 
+        /// <summary>
+        /// الحصول على قائمة المكاتب مع الترقيم والتصفية.
+        /// </summary>
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> GetPaged(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -44,7 +53,12 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// الحصول على تفاصيل مكتب محدد.
+        /// </summary>
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 404)]
         public async Task<IActionResult> GetDetail(
             Guid id,
             CancellationToken ct = default)
@@ -59,7 +73,12 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// إنشاء مكتب جديد.
+        /// </summary>
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<Guid>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Create(
             [FromBody] CreateOfficeCommand cmd,
             CancellationToken ct = default)
@@ -69,7 +88,12 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// تحديث بيانات مكتب محدد.
+        /// </summary>
         [HttpPut("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Update(
             Guid id,
             [FromBody] UpdateOfficeCommand cmd,

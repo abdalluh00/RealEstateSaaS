@@ -1,48 +1,49 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+using RealEstate.Application.Common.Behaviors;
 using RealEstate.Application.Common.Interfaces;
+using RealEstate.Domain.Common.Enums;
+using RealEstate.Shared.Authorization;
 using RealEstate.Shared.Common;
-namespace RealEstate.Application.Features.Properties.Buildings.Commands.CreateBuilding
+
+namespace RealEstate.Application.Features.Buildings.Commands.CreateBuilding
 {
-    [Authorize(Roles = "Owner,Admin")]
-    public record CreateBuildingCommand(
-        string Title,
-        string? Description,
-        string Purpose,
-        decimal Price,
-        decimal Area,
-        string City,
-        string District,
-        string? Address,
-        double? Latitude,
-        double? Longitude,
-        int? ParkingSpots,
-        int? AgeInYears,
-        string? FacingDirection,
-        string? RegaLicenseNumber,
-        string? DeedNumber,
-        string? MunicipalityNumber,
-        bool IsFeatured,
-        bool IsPublished,
-
-        // ── Building specific ─────────────────────────
-        int? TotalFloors,
-        int? UnitsCount,
-        int? BasementFloors,
-        bool HasElevator,
-        bool HasParkingFloor,
-        bool HasMosque,
-        bool HasGuard,
-        bool HasGenerator,
-        bool HasCCTV,
-
-        // ── Relations ─────────────────────────────────
-        Guid? OwnerId,
-        Guid? AgentId
-
-    ) : IRequest<ApiResponse<Guid>>, IAutoTenantRequest
+    [Authorize(Roles = $"{Roles.Admin}")]
+    public sealed class CreateBuildingCommand
+        : IRequest<ApiResponse<Guid>>, IAutoTenantRequest
     {
         public Guid CompanyId { get; private set; }
+
+        // ── Base ──────────────────────────────────────────
+        public string Title { get; init; } = string.Empty;
+        public string? Description { get; init; }
+        public PropertyPurpose Purpose { get; init; }
+        public decimal Price { get; init; }
+        public decimal Area { get; init; }
+        public string City { get; init; } = string.Empty;
+        public string District { get; init; } = string.Empty;
+        public string? Address { get; init; }
+        public double? Latitude { get; init; }
+        public double? Longitude { get; init; }
+        public int? ParkingSpots { get; init; }
+        public int? AgeInYears { get; init; }
+        public FacingDirection? FacingDirection { get; init; }
+        public string? RegaLicenseNumber { get; init; }
+        public string? DeedNumber { get; init; }
+        public string? MunicipalityNumber { get; init; }
+        public Guid? OwnerId { get; init; }
+        public Guid? AgentId { get; init; }
+
+        // ── Building specific ─────────────────────────────
+        public int? TotalFloors { get; init; }
+        public int? UnitsCount { get; init; }
+        public int? BasementFloors { get; init; }
+        public bool HasElevator { get; init; }
+        public bool HasParkingFloor { get; init; }
+        public bool HasMosque { get; init; }
+        public bool HasGuard { get; init; }
+        public bool HasGenerator { get; init; }
+        public bool HasCCTV { get; init; }
+
         public void SetCompanyId(Guid companyId) => CompanyId = companyId;
     }
 }

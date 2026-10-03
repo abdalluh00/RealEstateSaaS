@@ -1,0 +1,949 @@
+[2026-10-03 01:12:21 WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development. {"EventId":{"Id":10400,"Name":"Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning"},"SourceContext":"Microsoft.EntityFrameworkCore.Model.Validation","MachineName":"DESKTOP-C2AKODT","ThreadId":2}
+[2026-10-03 01:12:21 DBG] warn: 10/3/2026 01:12:21.772 CoreEventId.SensitiveDataLoggingEnabledWarning[10400] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development. {"MachineName":"DESKTOP-C2AKODT","ThreadId":2}
+[2026-10-03 01:12:26 INF] Executed DbCommand (100ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Companies] AS [c]
+        WHERE [c].[IsDeleted] = CAST(0 AS bit)) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:26 DBG] info: 10/3/2026 01:12:26.062 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (100ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [Companies] AS [c]
+              WHERE [c].[IsDeleted] = CAST(0 AS bit)) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END {"MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:26 INF] Database already seeded — skipping {"SourceContext":"Program","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:26 INF] Start installing Hangfire SQL objects... {"SourceContext":"Hangfire.SqlServer.SqlServerObjectsInstaller","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:27 INF] Hangfire SQL objects installed. {"SourceContext":"Hangfire.SqlServer.SqlServerObjectsInstaller","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:27 INF] Background jobs scheduled successfully {"SourceContext":"RealEstate.Infrastructure.Jobs.NotificationJobService","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:27 INF] RealEstate API started successfully {"MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. {"EventId":{"Id":63,"Name":"UsingProfileAsKeyRepositoryWithDPAPI"},"SourceContext":"Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Now listening on: http://localhost:5171 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Starting Hangfire Server using job storage: 'SQL Server: (localdb)\MSSQLLocalDB@RealEstateSaasDb' {"SourceContext":"Hangfire.BackgroundJobServer","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Using the following options for SQL Server job storage: Queue poll interval: 00:00:00. {"SourceContext":"Hangfire.BackgroundJobServer","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15 {"SourceContext":"Hangfire.BackgroundJobServer","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Content root path: D:\RealEstate\RealEstate.API {"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:12:28 INF] Server desktop-c2akodt:10016:44a013dd successfully announced in 72.2628 ms {"SourceContext":"Hangfire.Server.BackgroundServerProcess","MachineName":"DESKTOP-C2AKODT","ThreadId":16}
+[2026-10-03 01:12:28 INF] Server desktop-c2akodt:10016:44a013dd is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, SqlServerHeartbeatProcess, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... {"SourceContext":"Hangfire.Server.BackgroundServerProcess","MachineName":"DESKTOP-C2AKODT","ThreadId":16}
+[2026-10-03 01:12:29 INF] 1 servers were removed due to timeout {"SourceContext":"Hangfire.Server.ServerWatchdog","MachineName":"DESKTOP-C2AKODT","ThreadId":18}
+[2026-10-03 01:12:29 INF] Server desktop-c2akodt:10016:44a013dd all the dispatchers started {"SourceContext":"Hangfire.Server.BackgroundServerProcess","MachineName":"DESKTOP-C2AKODT","ThreadId":16}
+[2026-10-03 01:12:31 INF] Executed DbCommand (21ms) [Parameters=[@today='2026-10-02T00:00:00.0000000Z'], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[Id], [p].[Amount], [p].[CompanyId], [p].[ContractId], [p].[CreatedAt], [p].[DueDate], [p].[IsDeleted], [p].[Notes], [p].[PaidDate], [p].[PaymentMethod], [p].[PaymentNumber], [p].[PaymentStatus], [p].[Reference], [p].[UpdatedAt]
+FROM [Payments] AS [p]
+WHERE [p].[IsDeleted] = CAST(0 AS bit) AND [p].[PaymentStatus] = N'Pending' AND CONVERT(date, [p].[DueDate]) < @today {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:31 DBG] info: 10/3/2026 01:12:31.181 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (21ms) [Parameters=[@today='2026-10-02T00:00:00.0000000Z'], CommandType='Text', CommandTimeout='30']
+      SELECT [p].[Id], [p].[Amount], [p].[CompanyId], [p].[ContractId], [p].[CreatedAt], [p].[DueDate], [p].[IsDeleted], [p].[Notes], [p].[PaidDate], [p].[PaymentMethod], [p].[PaymentNumber], [p].[PaymentStatus], [p].[Reference], [p].[UpdatedAt]
+      FROM [Payments] AS [p]
+      WHERE [p].[IsDeleted] = CAST(0 AS bit) AND [p].[PaymentStatus] = N'Pending' AND CONVERT(date, [p].[DueDate]) < @today {"MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:31 INF] Marked 0 payments as Overdue {"SourceContext":"RealEstate.Infrastructure.Jobs.NotificationJobService","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:31 INF] Executed DbCommand (39ms) [Parameters=[@today='2026-10-02T00:00:00.0000000Z', @targetDate='2026-10-05T00:00:00.0000000Z'], CommandType='"Text"', CommandTimeout='30']
+SELECT [p].[Id], [p].[Amount], [p].[CompanyId], [p].[ContractId], [p].[CreatedAt], [p].[DueDate], [p].[IsDeleted], [p].[Notes], [p].[PaidDate], [p].[PaymentMethod], [p].[PaymentNumber], [p].[PaymentStatus], [p].[Reference], [p].[UpdatedAt], [c0].[Id], [c0].[AgentId], [c0].[Amount], [c0].[CancellationReason], [c0].[CancelledAt], [c0].[ClientId], [c0].[Commission], [c0].[CommissionStatus], [c0].[CommissionType], [c0].[CompanyId], [c0].[ContractNumber], [c0].[ContractStatus], [c0].[ContractType], [c0].[CreatedAt], [c0].[EndDate], [c0].[IsDeleted], [c0].[Notes], [c0].[PaymentCycle], [c0].[PaymentMethod], [c0].[PropertyId], [c0].[RenewedFromContractId], [c0].[SecurityDeposit], [c0].[StartDate], [c0].[UpdatedAt], [c2].[Id], [c2].[AssignedAgentId], [c2].[CompanyId], [c2].[CreatedAt], [c2].[Email], [c2].[FullName], [c2].[IsActive], [c2].[IsDeleted], [c2].[LeadStatus], [c2].[NationalId], [c2].[Nationality], [c2].[Notes], [c2].[Phone], [c2].[Source], [c2].[UpdatedAt], [s].[Id], [s].[Address], [s].[AgeInYears], [s].[AgentId], [s].[Area], [s].[City], [s].[CompanyId], [s].[CreatedAt], [s].[DeedNumber], [s].[Description], [s].[District], [s].[FacingDirection], [s].[IsDeleted], [s].[IsFeatured], [s].[IsPublished], [s].[Latitude], [s].[Longitude], [s].[MunicipalityNumber], [s].[OwnerId], [s].[ParentPropertyId], [s].[ParkingSpots], [s].[Price], [s].[PropertyCode], [s].[PropertyStatus], [s].[Purpose], [s].[RegaLicenseNumber], [s].[Title], [s].[Type], [s].[UnitNumber], [s].[UpdatedAt], [s].[Bathrooms], [s].[Bedrooms], [s].[FloorNumber], [s].[FurnishedStatus], [s].[HasBalcony], [s].[HasCentralAC], [s].[HasElevator], [s].[HasMaidRoom], [s].[HasStorage], [s].[LivingRooms], [s].[BasementFloors], [s].[HasCCTV], [s].[HasElevator0], [s].[HasGenerator], [s].[HasGuard], [s].[HasMosque], [s].[HasParkingFloor], [s].[TotalFloors], [s].[UnitsCount], [s].[HasElectricity], [s].[HasSewer], [s].[HasWater], [s].[IsCornerLand], [s].[IsWalled], [s].[LandShape], [s].[NumberOfStreets], [s].[StreetWidth], [s].[ZoningType], [s].[Bathrooms0], [s].[FloorNumber0], [s].[FurnishedStatus0], [s].[HasCCTV0], [s].[HasCentralAC0], [s].[HasElevator1], [s].[HasKitchen], [s].[HasReceptionArea], [s].[HasStorage0], [s].[MeetingRooms], [s].[OfficesCount], [s].[Bathrooms1], [s].[Bedrooms0], [s].[Floors], [s].[FurnishedStatus1], [s].[GardenArea], [s].[HasCCTV1], [s].[HasDriverRoom], [s].[HasElevator2], [s].[HasGarden], [s].[HasGenerator0], [s].[HasMaidRoom0], [s].[HasMajlis], [s].[HasMosque0], [s].[HasPool], [s].[HasStorage1], [s].[LivingRooms0], [s].[CeilingHeight], [s].[ElectricityCapacity], [s].[GateCount], [s].[HasCCTV2], [s].[HasColdStorage], [s].[HasFireSystem], [s].[HasMosanada], [s].[HasOfficeSpace], [s].[HasSecurityRoom], [s].[HasTruckAccess], [s].[IsFenced], [s].[LoadingDocks], [s].[Discriminator]
+FROM [Payments] AS [p]
+INNER JOIN (
+    SELECT [c].[Id], [c].[AgentId], [c].[Amount], [c].[CancellationReason], [c].[CancelledAt], [c].[ClientId], [c].[Commission], [c].[CommissionStatus], [c].[CommissionType], [c].[CompanyId], [c].[ContractNumber], [c].[ContractStatus], [c].[ContractType], [c].[CreatedAt], [c].[EndDate], [c].[IsDeleted], [c].[Notes], [c].[PaymentCycle], [c].[PaymentMethod], [c].[PropertyId], [c].[RenewedFromContractId], [c].[SecurityDeposit], [c].[StartDate], [c].[UpdatedAt]
+    FROM [Contracts] AS [c]
+    WHERE [c].[IsDeleted] = CAST(0 AS bit)
+) AS [c0] ON [p].[ContractId] = [c0].[Id]
+INNER JOIN (
+    SELECT [c1].[Id], [c1].[AssignedAgentId], [c1].[CompanyId], [c1].[CreatedAt], [c1].[Email], [c1].[FullName], [c1].[IsActive], [c1].[IsDeleted], [c1].[LeadStatus], [c1].[NationalId], [c1].[Nationality], [c1].[Notes], [c1].[Phone], [c1].[Source], [c1].[UpdatedAt]
+    FROM [Clients] AS [c1]
+    WHERE [c1].[IsDeleted] = CAST(0 AS bit)
+) AS [c2] ON [c0].[ClientId] = [c2].[Id]
+INNER JOIN (
+    SELECT [p0].[Id], [p0].[Address], [p0].[AgeInYears], [p0].[AgentId], [p0].[Area], [p0].[City], [p0].[CompanyId], [p0].[CreatedAt], [p0].[DeedNumber], [p0].[Description], [p0].[District], [p0].[FacingDirection], [p0].[IsDeleted], [p0].[IsFeatured], [p0].[IsPublished], [p0].[Latitude], [p0].[Longitude], [p0].[MunicipalityNumber], [p0].[OwnerId], [p0].[ParentPropertyId], [p0].[ParkingSpots], [p0].[Price], [p0].[PropertyCode], [p0].[PropertyStatus], [p0].[Purpose], [p0].[RegaLicenseNumber], [p0].[Title], [p0].[Type], [p0].[UnitNumber], [p0].[UpdatedAt], [a].[Bathrooms], [a].[Bedrooms], [a].[FloorNumber], [a].[FurnishedStatus], [a].[HasBalcony], [a].[HasCentralAC], [a].[HasElevator], [a].[HasMaidRoom], [a].[HasStorage], [a].[LivingRooms], [b].[BasementFloors], [b].[HasCCTV], [b].[HasElevator] AS [HasElevator0], [b].[HasGenerator], [b].[HasGuard], [b].[HasMosque], [b].[HasParkingFloor], [b].[TotalFloors], [b].[UnitsCount], [l].[HasElectricity], [l].[HasSewer], [l].[HasWater], [l].[IsCornerLand], [l].[IsWalled], [l].[LandShape], [l].[NumberOfStreets], [l].[StreetWidth], [l].[ZoningType], [o].[Bathrooms] AS [Bathrooms0], [o].[FloorNumber] AS [FloorNumber0], [o].[FurnishedStatus] AS [FurnishedStatus0], [o].[HasCCTV] AS [HasCCTV0], [o].[HasCentralAC] AS [HasCentralAC0], [o].[HasElevator] AS [HasElevator1], [o].[HasKitchen], [o].[HasReceptionArea], [o].[HasStorage] AS [HasStorage0], [o].[MeetingRooms], [o].[OfficesCount], [v].[Bathrooms] AS [Bathrooms1], [v].[Bedrooms] AS [Bedrooms0], [v].[Floors], [v].[FurnishedStatus] AS [FurnishedStatus1], [v].[GardenArea], [v].[HasCCTV] AS [HasCCTV1], [v].[HasDriverRoom], [v].[HasElevator] AS [HasElevator2], [v].[HasGarden], [v].[HasGenerator] AS [HasGenerator0], [v].[HasMaidRoom] AS [HasMaidRoom0], [v].[HasMajlis], [v].[HasMosque] AS [HasMosque0], [v].[HasPool], [v].[HasStorage] AS [HasStorage1], [v].[LivingRooms] AS [LivingRooms0], [w].[CeilingHeight], [w].[ElectricityCapacity], [w].[GateCount], [w].[HasCCTV] AS [HasCCTV2], [w].[HasColdStorage], [w].[HasFireSystem], [w].[HasMosanada], [w].[HasOfficeSpace], [w].[HasSecurityRoom], [w].[HasTruckAccess], [w].[IsFenced], [w].[LoadingDocks], CASE
+        WHEN [w].[Id] IS NOT NULL THEN N'WarehouseProperty'
+        WHEN [v].[Id] IS NOT NULL THEN N'VillaProperty'
+        WHEN [o].[Id] IS NOT NULL THEN N'OfficeProperty'
+        WHEN [l].[Id] IS NOT NULL THEN N'LandProperty'
+        WHEN [b].[Id] IS NOT NULL THEN N'BuildingProperty'
+        WHEN [a].[Id] IS NOT NULL THEN N'ApartmentProperty'
+    END AS [Discriminator]
+    FROM [Properties] AS [p0]
+    LEFT JOIN [ApartmentProperties] AS [a] ON [p0].[Id] = [a].[Id]
+    LEFT JOIN [BuildingProperties] AS [b] ON [p0].[Id] = [b].[Id]
+    LEFT JOIN [LandProperties] AS [l] ON [p0].[Id] = [l].[Id]
+    LEFT JOIN [OfficeProperties] AS [o] ON [p0].[Id] = [o].[Id]
+    LEFT JOIN [VillaProperties] AS [v] ON [p0].[Id] = [v].[Id]
+    LEFT JOIN [WarehouseProperties] AS [w] ON [p0].[Id] = [w].[Id]
+    WHERE [p0].[IsDeleted] = CAST(0 AS bit)
+) AS [s] ON [c0].[PropertyId] = [s].[Id]
+WHERE [p].[IsDeleted] = CAST(0 AS bit) AND [p].[PaymentStatus] = N'Pending' AND CONVERT(date, [p].[DueDate]) >= @today AND CONVERT(date, [p].[DueDate]) <= @targetDate {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","MachineName":"DESKTOP-C2AKODT","ThreadId":7}
+[2026-10-03 01:12:31 DBG] info: 10/3/2026 01:12:31.314 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (39ms) [Parameters=[@today='2026-10-02T00:00:00.0000000Z', @targetDate='2026-10-05T00:00:00.0000000Z'], CommandType='Text', CommandTimeout='30']
+      SELECT [p].[Id], [p].[Amount], [p].[CompanyId], [p].[ContractId], [p].[CreatedAt], [p].[DueDate], [p].[IsDeleted], [p].[Notes], [p].[PaidDate], [p].[PaymentMethod], [p].[PaymentNumber], [p].[PaymentStatus], [p].[Reference], [p].[UpdatedAt], [c0].[Id], [c0].[AgentId], [c0].[Amount], [c0].[CancellationReason], [c0].[CancelledAt], [c0].[ClientId], [c0].[Commission], [c0].[CommissionStatus], [c0].[CommissionType], [c0].[CompanyId], [c0].[ContractNumber], [c0].[ContractStatus], [c0].[ContractType], [c0].[CreatedAt], [c0].[EndDate], [c0].[IsDeleted], [c0].[Notes], [c0].[PaymentCycle], [c0].[PaymentMethod], [c0].[PropertyId], [c0].[RenewedFromContractId], [c0].[SecurityDeposit], [c0].[StartDate], [c0].[UpdatedAt], [c2].[Id], [c2].[AssignedAgentId], [c2].[CompanyId], [c2].[CreatedAt], [c2].[Email], [c2].[FullName], [c2].[IsActive], [c2].[IsDeleted], [c2].[LeadStatus], [c2].[NationalId], [c2].[Nationality], [c2].[Notes], [c2].[Phone], [c2].[Source], [c2].[UpdatedAt], [s].[Id], [s].[Address], [s].[AgeInYears], [s].[AgentId], [s].[Area], [s].[City], [s].[CompanyId], [s].[CreatedAt], [s].[DeedNumber], [s].[Description], [s].[District], [s].[FacingDirection], [s].[IsDeleted], [s].[IsFeatured], [s].[IsPublished], [s].[Latitude], [s].[Longitude], [s].[MunicipalityNumber], [s].[OwnerId], [s].[ParentPropertyId], [s].[ParkingSpots], [s].[Price], [s].[PropertyCode], [s].[PropertyStatus], [s].[Purpose], [s].[RegaLicenseNumber], [s].[Title], [s].[Type], [s].[UnitNumber], [s].[UpdatedAt], [s].[Bathrooms], [s].[Bedrooms], [s].[FloorNumber], [s].[FurnishedStatus], [s].[HasBalcony], [s].[HasCentralAC], [s].[HasElevator], [s].[HasMaidRoom], [s].[HasStorage], [s].[LivingRooms], [s].[BasementFloors], [s].[HasCCTV], [s].[HasElevator0], [s].[HasGenerator], [s].[HasGuard], [s].[HasMosque], [s].[HasParkingFloor], [s].[TotalFloors], [s].[UnitsCount], [s].[HasElectricity], [s].[HasSewer], [s].[HasWater], [s].[IsCornerLand], [s].[IsWalled], [s].[LandShape], [s].[NumberOfStreets], [s].[StreetWidth], [s].[ZoningType], [s].[Bathrooms0], [s].[FloorNumber0], [s].[FurnishedStatus0], [s].[HasCCTV0], [s].[HasCentralAC0], [s].[HasElevator1], [s].[HasKitchen], [s].[HasReceptionArea], [s].[HasStorage0], [s].[MeetingRooms], [s].[OfficesCount], [s].[Bathrooms1], [s].[Bedrooms0], [s].[Floors], [s].[FurnishedStatus1], [s].[GardenArea], [s].[HasCCTV1], [s].[HasDriverRoom], [s].[HasElevator2], [s].[HasGarden], [s].[HasGenerator0], [s].[HasMaidRoom0], [s].[HasMajlis], [s].[HasMosque0], [s].[HasPool], [s].[HasStorage1], [s].[LivingRooms0], [s].[CeilingHeight], [s].[ElectricityCapacity], [s].[GateCount], [s].[HasCCTV2], [s].[HasColdStorage], [s].[HasFireSystem], [s].[HasMosanada], [s].[HasOfficeSpace], [s].[HasSecurityRoom], [s].[HasTruckAccess], [s].[IsFenced], [s].[LoadingDocks], [s].[Discriminator]
+      FROM [Payments] AS [p]
+      INNER JOIN (
+          SELECT [c].[Id], [c].[AgentId], [c].[Amount], [c].[CancellationReason], [c].[CancelledAt], [c].[ClientId], [c].[Commission], [c].[CommissionStatus], [c].[CommissionType], [c].[CompanyId], [c].[ContractNumber], [c].[ContractStatus], [c].[ContractType], [c].[CreatedAt], [c].[EndDate], [c].[IsDeleted], [c].[Notes], [c].[PaymentCycle], [c].[PaymentMethod], [c].[PropertyId], [c].[RenewedFromContractId], [c].[SecurityDeposit], [c].[StartDate], [c].[UpdatedAt]
+          FROM [Contracts] AS [c]
+          WHERE [c].[IsDeleted] = CAST(0 AS bit)
+      ) AS [c0] ON [p].[ContractId] = [c0].[Id]
+      INNER JOIN (
+          SELECT [c1].[Id], [c1].[AssignedAgentId], [c1].[CompanyId], [c1].[CreatedAt], [c1].[Email], [c1].[FullName], [c1].[IsActive], [c1].[IsDeleted], [c1].[LeadStatus], [c1].[NationalId], [c1].[Nationality], [c1].[Notes], [c1].[Phone], [c1].[Source], [c1].[UpdatedAt]
+          FROM [Clients] AS [c1]
+          WHERE [c1].[IsDeleted] = CAST(0 AS bit)
+      ) AS [c2] ON [c0].[ClientId] = [c2].[Id]
+      INNER JOIN (
+          SELECT [p0].[Id], [p0].[Address], [p0].[AgeInYears], [p0].[AgentId], [p0].[Area], [p0].[City], [p0].[CompanyId], [p0].[CreatedAt], [p0].[DeedNumber], [p0].[Description], [p0].[District], [p0].[FacingDirection], [p0].[IsDeleted], [p0].[IsFeatured], [p0].[IsPublished], [p0].[Latitude], [p0].[Longitude], [p0].[MunicipalityNumber], [p0].[OwnerId], [p0].[ParentPropertyId], [p0].[ParkingSpots], [p0].[Price], [p0].[PropertyCode], [p0].[PropertyStatus], [p0].[Purpose], [p0].[RegaLicenseNumber], [p0].[Title], [p0].[Type], [p0].[UnitNumber], [p0].[UpdatedAt], [a].[Bathrooms], [a].[Bedrooms], [a].[FloorNumber], [a].[FurnishedStatus], [a].[HasBalcony], [a].[HasCentralAC], [a].[HasElevator], [a].[HasMaidRoom], [a].[HasStorage], [a].[LivingRooms], [b].[BasementFloors], [b].[HasCCTV], [b].[HasElevator] AS [HasElevator0], [b].[HasGenerator], [b].[HasGuard], [b].[HasMosque], [b].[HasParkingFloor], [b].[TotalFloors], [b].[UnitsCount], [l].[HasElectricity], [l].[HasSewer], [l].[HasWater], [l].[IsCornerLand], [l].[IsWalled], [l].[LandShape], [l].[NumberOfStreets], [l].[StreetWidth], [l].[ZoningType], [o].[Bathrooms] AS [Bathrooms0], [o].[FloorNumber] AS [FloorNumber0], [o].[FurnishedStatus] AS [FurnishedStatus0], [o].[HasCCTV] AS [HasCCTV0], [o].[HasCentralAC] AS [HasCentralAC0], [o].[HasElevator] AS [HasElevator1], [o].[HasKitchen], [o].[HasReceptionArea], [o].[HasStorage] AS [HasStorage0], [o].[MeetingRooms], [o].[OfficesCount], [v].[Bathrooms] AS [Bathrooms1], [v].[Bedrooms] AS [Bedrooms0], [v].[Floors], [v].[FurnishedStatus] AS [FurnishedStatus1], [v].[GardenArea], [v].[HasCCTV] AS [HasCCTV1], [v].[HasDriverRoom], [v].[HasElevator] AS [HasElevator2], [v].[HasGarden], [v].[HasGenerator] AS [HasGenerator0], [v].[HasMaidRoom] AS [HasMaidRoom0], [v].[HasMajlis], [v].[HasMosque] AS [HasMosque0], [v].[HasPool], [v].[HasStorage] AS [HasStorage1], [v].[LivingRooms] AS [LivingRooms0], [w].[CeilingHeight], [w].[ElectricityCapacity], [w].[GateCount], [w].[HasCCTV] AS [HasCCTV2], [w].[HasColdStorage], [w].[HasFireSystem], [w].[HasMosanada], [w].[HasOfficeSpace], [w].[HasSecurityRoom], [w].[HasTruckAccess], [w].[IsFenced], [w].[LoadingDocks], CASE
+              WHEN [w].[Id] IS NOT NULL THEN N'WarehouseProperty'
+              WHEN [v].[Id] IS NOT NULL THEN N'VillaProperty'
+              WHEN [o].[Id] IS NOT NULL THEN N'OfficeProperty'
+              WHEN [l].[Id] IS NOT NULL THEN N'LandProperty'
+              WHEN [b].[Id] IS NOT NULL THEN N'BuildingProperty'
+              WHEN [a].[Id] IS NOT NULL THEN N'ApartmentProperty'
+          END AS [Discriminator]
+          FROM [Properties] AS [p0]
+          LEFT JOIN [ApartmentProperties] AS [a] ON [p0].[Id] = [a].[Id]
+          LEFT JOIN [BuildingProperties] AS [b] ON [p0].[Id] = [b].[Id]
+          LEFT JOIN [LandProperties] AS [l] ON [p0].[Id] = [l].[Id]
+          LEFT JOIN [OfficeProperties] AS [o] ON [p0].[Id] = [o].[Id]
+          LEFT JOIN [VillaProperties] AS [v] ON [p0].[Id] = [v].[Id]
+          LEFT JOIN [WarehouseProperties] AS [w] ON [p0].[Id] = [w].[Id]
+          WHERE [p0].[IsDeleted] = CAST(0 AS bit)
+      ) AS [s] ON [c0].[PropertyId] = [s].[Id]
+      WHERE [p].[IsDeleted] = CAST(0 AS bit) AND [p].[PaymentStatus] = N'Pending' AND CONVERT(date, [p].[DueDate]) >= @today AND CONVERT(date, [p].[DueDate]) <= @targetDate {"MachineName":"DESKTOP-C2AKODT","ThreadId":7}
+[2026-10-03 01:12:31 INF] Executed DbCommand (20ms) [Parameters=[@tomorrow='2026-10-03T00:00:00.0000000Z'], CommandType='"Text"', CommandTimeout='30']
+SELECT [a].[Id], [a].[ActualVisitAt], [a].[AgentId], [a].[CancellationReason], [a].[CancelledAt], [a].[ClientId], [a].[CompanyId], [a].[CreatedAt], [a].[DurationMinutes], [a].[Feedback], [a].[IsDeleted], [a].[Notes], [a].[PropertyId], [a].[Result], [a].[ScheduledAt], [a].[Status], [a].[UpdatedAt], [c0].[Id], [c0].[AssignedAgentId], [c0].[CompanyId], [c0].[CreatedAt], [c0].[Email], [c0].[FullName], [c0].[IsActive], [c0].[IsDeleted], [c0].[LeadStatus], [c0].[NationalId], [c0].[Nationality], [c0].[Notes], [c0].[Phone], [c0].[Source], [c0].[UpdatedAt], [s].[Id], [s].[Address], [s].[AgeInYears], [s].[AgentId], [s].[Area], [s].[City], [s].[CompanyId], [s].[CreatedAt], [s].[DeedNumber], [s].[Description], [s].[District], [s].[FacingDirection], [s].[IsDeleted], [s].[IsFeatured], [s].[IsPublished], [s].[Latitude], [s].[Longitude], [s].[MunicipalityNumber], [s].[OwnerId], [s].[ParentPropertyId], [s].[ParkingSpots], [s].[Price], [s].[PropertyCode], [s].[PropertyStatus], [s].[Purpose], [s].[RegaLicenseNumber], [s].[Title], [s].[Type], [s].[UnitNumber], [s].[UpdatedAt], [s].[Bathrooms], [s].[Bedrooms], [s].[FloorNumber], [s].[FurnishedStatus], [s].[HasBalcony], [s].[HasCentralAC], [s].[HasElevator], [s].[HasMaidRoom], [s].[HasStorage], [s].[LivingRooms], [s].[BasementFloors], [s].[HasCCTV], [s].[HasElevator0], [s].[HasGenerator], [s].[HasGuard], [s].[HasMosque], [s].[HasParkingFloor], [s].[TotalFloors], [s].[UnitsCount], [s].[HasElectricity], [s].[HasSewer], [s].[HasWater], [s].[IsCornerLand], [s].[IsWalled], [s].[LandShape], [s].[NumberOfStreets], [s].[StreetWidth], [s].[ZoningType], [s].[Bathrooms0], [s].[FloorNumber0], [s].[FurnishedStatus0], [s].[HasCCTV0], [s].[HasCentralAC0], [s].[HasElevator1], [s].[HasKitchen], [s].[HasReceptionArea], [s].[HasStorage0], [s].[MeetingRooms], [s].[OfficesCount], [s].[Bathrooms1], [s].[Bedrooms0], [s].[Floors], [s].[FurnishedStatus1], [s].[GardenArea], [s].[HasCCTV1], [s].[HasDriverRoom], [s].[HasElevator2], [s].[HasGarden], [s].[HasGenerator0], [s].[HasMaidRoom0], [s].[HasMajlis], [s].[HasMosque0], [s].[HasPool], [s].[HasStorage1], [s].[LivingRooms0], [s].[CeilingHeight], [s].[ElectricityCapacity], [s].[GateCount], [s].[HasCCTV2], [s].[HasColdStorage], [s].[HasFireSystem], [s].[HasMosanada], [s].[HasOfficeSpace], [s].[HasSecurityRoom], [s].[HasTruckAccess], [s].[IsFenced], [s].[LoadingDocks], [s].[Discriminator]
+FROM [Appointments] AS [a]
+INNER JOIN (
+    SELECT [c].[Id], [c].[AssignedAgentId], [c].[CompanyId], [c].[CreatedAt], [c].[Email], [c].[FullName], [c].[IsActive], [c].[IsDeleted], [c].[LeadStatus], [c].[NationalId], [c].[Nationality], [c].[Notes], [c].[Phone], [c].[Source], [c].[UpdatedAt]
+    FROM [Clients] AS [c]
+    WHERE [c].[IsDeleted] = CAST(0 AS bit)
+) AS [c0] ON [a].[ClientId] = [c0].[Id]
+INNER JOIN (
+    SELECT [p].[Id], [p].[Address], [p].[AgeInYears], [p].[AgentId], [p].[Area], [p].[City], [p].[CompanyId], [p].[CreatedAt], [p].[DeedNumber], [p].[Description], [p].[District], [p].[FacingDirection], [p].[IsDeleted], [p].[IsFeatured], [p].[IsPublished], [p].[Latitude], [p].[Longitude], [p].[MunicipalityNumber], [p].[OwnerId], [p].[ParentPropertyId], [p].[ParkingSpots], [p].[Price], [p].[PropertyCode], [p].[PropertyStatus], [p].[Purpose], [p].[RegaLicenseNumber], [p].[Title], [p].[Type], [p].[UnitNumber], [p].[UpdatedAt], [a0].[Bathrooms], [a0].[Bedrooms], [a0].[FloorNumber], [a0].[FurnishedStatus], [a0].[HasBalcony], [a0].[HasCentralAC], [a0].[HasElevator], [a0].[HasMaidRoom], [a0].[HasStorage], [a0].[LivingRooms], [b].[BasementFloors], [b].[HasCCTV], [b].[HasElevator] AS [HasElevator0], [b].[HasGenerator], [b].[HasGuard], [b].[HasMosque], [b].[HasParkingFloor], [b].[TotalFloors], [b].[UnitsCount], [l].[HasElectricity], [l].[HasSewer], [l].[HasWater], [l].[IsCornerLand], [l].[IsWalled], [l].[LandShape], [l].[NumberOfStreets], [l].[StreetWidth], [l].[ZoningType], [o].[Bathrooms] AS [Bathrooms0], [o].[FloorNumber] AS [FloorNumber0], [o].[FurnishedStatus] AS [FurnishedStatus0], [o].[HasCCTV] AS [HasCCTV0], [o].[HasCentralAC] AS [HasCentralAC0], [o].[HasElevator] AS [HasElevator1], [o].[HasKitchen], [o].[HasReceptionArea], [o].[HasStorage] AS [HasStorage0], [o].[MeetingRooms], [o].[OfficesCount], [v].[Bathrooms] AS [Bathrooms1], [v].[Bedrooms] AS [Bedrooms0], [v].[Floors], [v].[FurnishedStatus] AS [FurnishedStatus1], [v].[GardenArea], [v].[HasCCTV] AS [HasCCTV1], [v].[HasDriverRoom], [v].[HasElevator] AS [HasElevator2], [v].[HasGarden], [v].[HasGenerator] AS [HasGenerator0], [v].[HasMaidRoom] AS [HasMaidRoom0], [v].[HasMajlis], [v].[HasMosque] AS [HasMosque0], [v].[HasPool], [v].[HasStorage] AS [HasStorage1], [v].[LivingRooms] AS [LivingRooms0], [w].[CeilingHeight], [w].[ElectricityCapacity], [w].[GateCount], [w].[HasCCTV] AS [HasCCTV2], [w].[HasColdStorage], [w].[HasFireSystem], [w].[HasMosanada], [w].[HasOfficeSpace], [w].[HasSecurityRoom], [w].[HasTruckAccess], [w].[IsFenced], [w].[LoadingDocks], CASE
+        WHEN [w].[Id] IS NOT NULL THEN N'WarehouseProperty'
+        WHEN [v].[Id] IS NOT NULL THEN N'VillaProperty'
+        WHEN [o].[Id] IS NOT NULL THEN N'OfficeProperty'
+        WHEN [l].[Id] IS NOT NULL THEN N'LandProperty'
+        WHEN [b].[Id] IS NOT NULL THEN N'BuildingProperty'
+        WHEN [a0].[Id] IS NOT NULL THEN N'ApartmentProperty'
+    END AS [Discriminator]
+    FROM [Properties] AS [p]
+    LEFT JOIN [ApartmentProperties] AS [a0] ON [p].[Id] = [a0].[Id]
+    LEFT JOIN [BuildingProperties] AS [b] ON [p].[Id] = [b].[Id]
+    LEFT JOIN [LandProperties] AS [l] ON [p].[Id] = [l].[Id]
+    LEFT JOIN [OfficeProperties] AS [o] ON [p].[Id] = [o].[Id]
+    LEFT JOIN [VillaProperties] AS [v] ON [p].[Id] = [v].[Id]
+    LEFT JOIN [WarehouseProperties] AS [w] ON [p].[Id] = [w].[Id]
+    WHERE [p].[IsDeleted] = CAST(0 AS bit)
+) AS [s] ON [a].[PropertyId] = [s].[Id]
+WHERE [a].[IsDeleted] = CAST(0 AS bit) AND [a].[Status] = N'Confirmed' AND CONVERT(date, [a].[ScheduledAt]) = @tomorrow {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:31 INF] Executed DbCommand (28ms) [Parameters=[@today='2026-10-02T00:00:00.0000000Z', @targetDate='2026-11-01T00:00:00.0000000Z'], CommandType='"Text"', CommandTimeout='30']
+SELECT [c].[Id], [c].[AgentId], [c].[Amount], [c].[CancellationReason], [c].[CancelledAt], [c].[ClientId], [c].[Commission], [c].[CommissionStatus], [c].[CommissionType], [c].[CompanyId], [c].[ContractNumber], [c].[ContractStatus], [c].[ContractType], [c].[CreatedAt], [c].[EndDate], [c].[IsDeleted], [c].[Notes], [c].[PaymentCycle], [c].[PaymentMethod], [c].[PropertyId], [c].[RenewedFromContractId], [c].[SecurityDeposit], [c].[StartDate], [c].[UpdatedAt], [c1].[Id], [c1].[AssignedAgentId], [c1].[CompanyId], [c1].[CreatedAt], [c1].[Email], [c1].[FullName], [c1].[IsActive], [c1].[IsDeleted], [c1].[LeadStatus], [c1].[NationalId], [c1].[Nationality], [c1].[Notes], [c1].[Phone], [c1].[Source], [c1].[UpdatedAt], [s].[Id], [s].[Address], [s].[AgeInYears], [s].[AgentId], [s].[Area], [s].[City], [s].[CompanyId], [s].[CreatedAt], [s].[DeedNumber], [s].[Description], [s].[District], [s].[FacingDirection], [s].[IsDeleted], [s].[IsFeatured], [s].[IsPublished], [s].[Latitude], [s].[Longitude], [s].[MunicipalityNumber], [s].[OwnerId], [s].[ParentPropertyId], [s].[ParkingSpots], [s].[Price], [s].[PropertyCode], [s].[PropertyStatus], [s].[Purpose], [s].[RegaLicenseNumber], [s].[Title], [s].[Type], [s].[UnitNumber], [s].[UpdatedAt], [s].[Bathrooms], [s].[Bedrooms], [s].[FloorNumber], [s].[FurnishedStatus], [s].[HasBalcony], [s].[HasCentralAC], [s].[HasElevator], [s].[HasMaidRoom], [s].[HasStorage], [s].[LivingRooms], [s].[BasementFloors], [s].[HasCCTV], [s].[HasElevator0], [s].[HasGenerator], [s].[HasGuard], [s].[HasMosque], [s].[HasParkingFloor], [s].[TotalFloors], [s].[UnitsCount], [s].[HasElectricity], [s].[HasSewer], [s].[HasWater], [s].[IsCornerLand], [s].[IsWalled], [s].[LandShape], [s].[NumberOfStreets], [s].[StreetWidth], [s].[ZoningType], [s].[Bathrooms0], [s].[FloorNumber0], [s].[FurnishedStatus0], [s].[HasCCTV0], [s].[HasCentralAC0], [s].[HasElevator1], [s].[HasKitchen], [s].[HasReceptionArea], [s].[HasStorage0], [s].[MeetingRooms], [s].[OfficesCount], [s].[Bathrooms1], [s].[Bedrooms0], [s].[Floors], [s].[FurnishedStatus1], [s].[GardenArea], [s].[HasCCTV1], [s].[HasDriverRoom], [s].[HasElevator2], [s].[HasGarden], [s].[HasGenerator0], [s].[HasMaidRoom0], [s].[HasMajlis], [s].[HasMosque0], [s].[HasPool], [s].[HasStorage1], [s].[LivingRooms0], [s].[CeilingHeight], [s].[ElectricityCapacity], [s].[GateCount], [s].[HasCCTV2], [s].[HasColdStorage], [s].[HasFireSystem], [s].[HasMosanada], [s].[HasOfficeSpace], [s].[HasSecurityRoom], [s].[HasTruckAccess], [s].[IsFenced], [s].[LoadingDocks], [s].[Discriminator]
+FROM [Contracts] AS [c]
+INNER JOIN (
+    SELECT [c0].[Id], [c0].[AssignedAgentId], [c0].[CompanyId], [c0].[CreatedAt], [c0].[Email], [c0].[FullName], [c0].[IsActive], [c0].[IsDeleted], [c0].[LeadStatus], [c0].[NationalId], [c0].[Nationality], [c0].[Notes], [c0].[Phone], [c0].[Source], [c0].[UpdatedAt]
+    FROM [Clients] AS [c0]
+    WHERE [c0].[IsDeleted] = CAST(0 AS bit)
+) AS [c1] ON [c].[ClientId] = [c1].[Id]
+INNER JOIN (
+    SELECT [p].[Id], [p].[Address], [p].[AgeInYears], [p].[AgentId], [p].[Area], [p].[City], [p].[CompanyId], [p].[CreatedAt], [p].[DeedNumber], [p].[Description], [p].[District], [p].[FacingDirection], [p].[IsDeleted], [p].[IsFeatured], [p].[IsPublished], [p].[Latitude], [p].[Longitude], [p].[MunicipalityNumber], [p].[OwnerId], [p].[ParentPropertyId], [p].[ParkingSpots], [p].[Price], [p].[PropertyCode], [p].[PropertyStatus], [p].[Purpose], [p].[RegaLicenseNumber], [p].[Title], [p].[Type], [p].[UnitNumber], [p].[UpdatedAt], [a].[Bathrooms], [a].[Bedrooms], [a].[FloorNumber], [a].[FurnishedStatus], [a].[HasBalcony], [a].[HasCentralAC], [a].[HasElevator], [a].[HasMaidRoom], [a].[HasStorage], [a].[LivingRooms], [b].[BasementFloors], [b].[HasCCTV], [b].[HasElevator] AS [HasElevator0], [b].[HasGenerator], [b].[HasGuard], [b].[HasMosque], [b].[HasParkingFloor], [b].[TotalFloors], [b].[UnitsCount], [l].[HasElectricity], [l].[HasSewer], [l].[HasWater], [l].[IsCornerLand], [l].[IsWalled], [l].[LandShape], [l].[NumberOfStreets], [l].[StreetWidth], [l].[ZoningType], [o].[Bathrooms] AS [Bathrooms0], [o].[FloorNumber] AS [FloorNumber0], [o].[FurnishedStatus] AS [FurnishedStatus0], [o].[HasCCTV] AS [HasCCTV0], [o].[HasCentralAC] AS [HasCentralAC0], [o].[HasElevator] AS [HasElevator1], [o].[HasKitchen], [o].[HasReceptionArea], [o].[HasStorage] AS [HasStorage0], [o].[MeetingRooms], [o].[OfficesCount], [v].[Bathrooms] AS [Bathrooms1], [v].[Bedrooms] AS [Bedrooms0], [v].[Floors], [v].[FurnishedStatus] AS [FurnishedStatus1], [v].[GardenArea], [v].[HasCCTV] AS [HasCCTV1], [v].[HasDriverRoom], [v].[HasElevator] AS [HasElevator2], [v].[HasGarden], [v].[HasGenerator] AS [HasGenerator0], [v].[HasMaidRoom] AS [HasMaidRoom0], [v].[HasMajlis], [v].[HasMosque] AS [HasMosque0], [v].[HasPool], [v].[HasStorage] AS [HasStorage1], [v].[LivingRooms] AS [LivingRooms0], [w].[CeilingHeight], [w].[ElectricityCapacity], [w].[GateCount], [w].[HasCCTV] AS [HasCCTV2], [w].[HasColdStorage], [w].[HasFireSystem], [w].[HasMosanada], [w].[HasOfficeSpace], [w].[HasSecurityRoom], [w].[HasTruckAccess], [w].[IsFenced], [w].[LoadingDocks], CASE
+        WHEN [w].[Id] IS NOT NULL THEN N'WarehouseProperty'
+        WHEN [v].[Id] IS NOT NULL THEN N'VillaProperty'
+        WHEN [o].[Id] IS NOT NULL THEN N'OfficeProperty'
+        WHEN [l].[Id] IS NOT NULL THEN N'LandProperty'
+        WHEN [b].[Id] IS NOT NULL THEN N'BuildingProperty'
+        WHEN [a].[Id] IS NOT NULL THEN N'ApartmentProperty'
+    END AS [Discriminator]
+    FROM [Properties] AS [p]
+    LEFT JOIN [ApartmentProperties] AS [a] ON [p].[Id] = [a].[Id]
+    LEFT JOIN [BuildingProperties] AS [b] ON [p].[Id] = [b].[Id]
+    LEFT JOIN [LandProperties] AS [l] ON [p].[Id] = [l].[Id]
+    LEFT JOIN [OfficeProperties] AS [o] ON [p].[Id] = [o].[Id]
+    LEFT JOIN [VillaProperties] AS [v] ON [p].[Id] = [v].[Id]
+    LEFT JOIN [WarehouseProperties] AS [w] ON [p].[Id] = [w].[Id]
+    WHERE [p].[IsDeleted] = CAST(0 AS bit)
+) AS [s] ON [c].[PropertyId] = [s].[Id]
+WHERE [c].[IsDeleted] = CAST(0 AS bit) AND [c].[ContractStatus] = N'Active' AND [c].[EndDate] IS NOT NULL AND CONVERT(date, [c].[EndDate]) >= @today AND CONVERT(date, [c].[EndDate]) <= @targetDate {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","MachineName":"DESKTOP-C2AKODT","ThreadId":46}
+[2026-10-03 01:12:31 INF] Sending 0 payment reminders {"SourceContext":"RealEstate.Infrastructure.Jobs.NotificationJobService","MachineName":"DESKTOP-C2AKODT","ThreadId":7}
+[2026-10-03 01:12:31 DBG] info: 10/3/2026 01:12:31.328 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (20ms) [Parameters=[@tomorrow='2026-10-03T00:00:00.0000000Z'], CommandType='Text', CommandTimeout='30']
+      SELECT [a].[Id], [a].[ActualVisitAt], [a].[AgentId], [a].[CancellationReason], [a].[CancelledAt], [a].[ClientId], [a].[CompanyId], [a].[CreatedAt], [a].[DurationMinutes], [a].[Feedback], [a].[IsDeleted], [a].[Notes], [a].[PropertyId], [a].[Result], [a].[ScheduledAt], [a].[Status], [a].[UpdatedAt], [c0].[Id], [c0].[AssignedAgentId], [c0].[CompanyId], [c0].[CreatedAt], [c0].[Email], [c0].[FullName], [c0].[IsActive], [c0].[IsDeleted], [c0].[LeadStatus], [c0].[NationalId], [c0].[Nationality], [c0].[Notes], [c0].[Phone], [c0].[Source], [c0].[UpdatedAt], [s].[Id], [s].[Address], [s].[AgeInYears], [s].[AgentId], [s].[Area], [s].[City], [s].[CompanyId], [s].[CreatedAt], [s].[DeedNumber], [s].[Description], [s].[District], [s].[FacingDirection], [s].[IsDeleted], [s].[IsFeatured], [s].[IsPublished], [s].[Latitude], [s].[Longitude], [s].[MunicipalityNumber], [s].[OwnerId], [s].[ParentPropertyId], [s].[ParkingSpots], [s].[Price], [s].[PropertyCode], [s].[PropertyStatus], [s].[Purpose], [s].[RegaLicenseNumber], [s].[Title], [s].[Type], [s].[UnitNumber], [s].[UpdatedAt], [s].[Bathrooms], [s].[Bedrooms], [s].[FloorNumber], [s].[FurnishedStatus], [s].[HasBalcony], [s].[HasCentralAC], [s].[HasElevator], [s].[HasMaidRoom], [s].[HasStorage], [s].[LivingRooms], [s].[BasementFloors], [s].[HasCCTV], [s].[HasElevator0], [s].[HasGenerator], [s].[HasGuard], [s].[HasMosque], [s].[HasParkingFloor], [s].[TotalFloors], [s].[UnitsCount], [s].[HasElectricity], [s].[HasSewer], [s].[HasWater], [s].[IsCornerLand], [s].[IsWalled], [s].[LandShape], [s].[NumberOfStreets], [s].[StreetWidth], [s].[ZoningType], [s].[Bathrooms0], [s].[FloorNumber0], [s].[FurnishedStatus0], [s].[HasCCTV0], [s].[HasCentralAC0], [s].[HasElevator1], [s].[HasKitchen], [s].[HasReceptionArea], [s].[HasStorage0], [s].[MeetingRooms], [s].[OfficesCount], [s].[Bathrooms1], [s].[Bedrooms0], [s].[Floors], [s].[FurnishedStatus1], [s].[GardenArea], [s].[HasCCTV1], [s].[HasDriverRoom], [s].[HasElevator2], [s].[HasGarden], [s].[HasGenerator0], [s].[HasMaidRoom0], [s].[HasMajlis], [s].[HasMosque0], [s].[HasPool], [s].[HasStorage1], [s].[LivingRooms0], [s].[CeilingHeight], [s].[ElectricityCapacity], [s].[GateCount], [s].[HasCCTV2], [s].[HasColdStorage], [s].[HasFireSystem], [s].[HasMosanada], [s].[HasOfficeSpace], [s].[HasSecurityRoom], [s].[HasTruckAccess], [s].[IsFenced], [s].[LoadingDocks], [s].[Discriminator]
+      FROM [Appointments] AS [a]
+      INNER JOIN (
+          SELECT [c].[Id], [c].[AssignedAgentId], [c].[CompanyId], [c].[CreatedAt], [c].[Email], [c].[FullName], [c].[IsActive], [c].[IsDeleted], [c].[LeadStatus], [c].[NationalId], [c].[Nationality], [c].[Notes], [c].[Phone], [c].[Source], [c].[UpdatedAt]
+          FROM [Clients] AS [c]
+          WHERE [c].[IsDeleted] = CAST(0 AS bit)
+      ) AS [c0] ON [a].[ClientId] = [c0].[Id]
+      INNER JOIN (
+          SELECT [p].[Id], [p].[Address], [p].[AgeInYears], [p].[AgentId], [p].[Area], [p].[City], [p].[CompanyId], [p].[CreatedAt], [p].[DeedNumber], [p].[Description], [p].[District], [p].[FacingDirection], [p].[IsDeleted], [p].[IsFeatured], [p].[IsPublished], [p].[Latitude], [p].[Longitude], [p].[MunicipalityNumber], [p].[OwnerId], [p].[ParentPropertyId], [p].[ParkingSpots], [p].[Price], [p].[PropertyCode], [p].[PropertyStatus], [p].[Purpose], [p].[RegaLicenseNumber], [p].[Title], [p].[Type], [p].[UnitNumber], [p].[UpdatedAt], [a0].[Bathrooms], [a0].[Bedrooms], [a0].[FloorNumber], [a0].[FurnishedStatus], [a0].[HasBalcony], [a0].[HasCentralAC], [a0].[HasElevator], [a0].[HasMaidRoom], [a0].[HasStorage], [a0].[LivingRooms], [b].[BasementFloors], [b].[HasCCTV], [b].[HasElevator] AS [HasElevator0], [b].[HasGenerator], [b].[HasGuard], [b].[HasMosque], [b].[HasParkingFloor], [b].[TotalFloors], [b].[UnitsCount], [l].[HasElectricity], [l].[HasSewer], [l].[HasWater], [l].[IsCornerLand], [l].[IsWalled], [l].[LandShape], [l].[NumberOfStreets], [l].[StreetWidth], [l].[ZoningType], [o].[Bathrooms] AS [Bathrooms0], [o].[FloorNumber] AS [FloorNumber0], [o].[FurnishedStatus] AS [FurnishedStatus0], [o].[HasCCTV] AS [HasCCTV0], [o].[HasCentralAC] AS [HasCentralAC0], [o].[HasElevator] AS [HasElevator1], [o].[HasKitchen], [o].[HasReceptionArea], [o].[HasStorage] AS [HasStorage0], [o].[MeetingRooms], [o].[OfficesCount], [v].[Bathrooms] AS [Bathrooms1], [v].[Bedrooms] AS [Bedrooms0], [v].[Floors], [v].[FurnishedStatus] AS [FurnishedStatus1], [v].[GardenArea], [v].[HasCCTV] AS [HasCCTV1], [v].[HasDriverRoom], [v].[HasElevator] AS [HasElevator2], [v].[HasGarden], [v].[HasGenerator] AS [HasGenerator0], [v].[HasMaidRoom] AS [HasMaidRoom0], [v].[HasMajlis], [v].[HasMosque] AS [HasMosque0], [v].[HasPool], [v].[HasStorage] AS [HasStorage1], [v].[LivingRooms] AS [LivingRooms0], [w].[CeilingHeight], [w].[ElectricityCapacity], [w].[GateCount], [w].[HasCCTV] AS [HasCCTV2], [w].[HasColdStorage], [w].[HasFireSystem], [w].[HasMosanada], [w].[HasOfficeSpace], [w].[HasSecurityRoom], [w].[HasTruckAccess], [w].[IsFenced], [w].[LoadingDocks], CASE
+              WHEN [w].[Id] IS NOT NULL THEN N'WarehouseProperty'
+              WHEN [v].[Id] IS NOT NULL THEN N'VillaProperty'
+              WHEN [o].[Id] IS NOT NULL THEN N'OfficeProperty'
+              WHEN [l].[Id] IS NOT NULL THEN N'LandProperty'
+              WHEN [b].[Id] IS NOT NULL THEN N'BuildingProperty'
+              WHEN [a0].[Id] IS NOT NULL THEN N'ApartmentProperty'
+          END AS [Discriminator]
+          FROM [Properties] AS [p]
+          LEFT JOIN [ApartmentProperties] AS [a0] ON [p].[Id] = [a0].[Id]
+          LEFT JOIN [BuildingProperties] AS [b] ON [p].[Id] = [b].[Id]
+          LEFT JOIN [LandProperties] AS [l] ON [p].[Id] = [l].[Id]
+          LEFT JOIN [OfficeProperties] AS [o] ON [p].[Id] = [o].[Id]
+          LEFT JOIN [VillaProperties] AS [v] ON [p].[Id] = [v].[Id]
+          LEFT JOIN [WarehouseProperties] AS [w] ON [p].[Id] = [w].[Id]
+          WHERE [p].[IsDeleted] = CAST(0 AS bit)
+      ) AS [s] ON [a].[PropertyId] = [s].[Id]
+      WHERE [a].[IsDeleted] = CAST(0 AS bit) AND [a].[Status] = N'Confirmed' AND CONVERT(date, [a].[ScheduledAt]) = @tomorrow {"MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:31 DBG] info: 10/3/2026 01:12:31.338 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (28ms) [Parameters=[@today='2026-10-02T00:00:00.0000000Z', @targetDate='2026-11-01T00:00:00.0000000Z'], CommandType='Text', CommandTimeout='30']
+      SELECT [c].[Id], [c].[AgentId], [c].[Amount], [c].[CancellationReason], [c].[CancelledAt], [c].[ClientId], [c].[Commission], [c].[CommissionStatus], [c].[CommissionType], [c].[CompanyId], [c].[ContractNumber], [c].[ContractStatus], [c].[ContractType], [c].[CreatedAt], [c].[EndDate], [c].[IsDeleted], [c].[Notes], [c].[PaymentCycle], [c].[PaymentMethod], [c].[PropertyId], [c].[RenewedFromContractId], [c].[SecurityDeposit], [c].[StartDate], [c].[UpdatedAt], [c1].[Id], [c1].[AssignedAgentId], [c1].[CompanyId], [c1].[CreatedAt], [c1].[Email], [c1].[FullName], [c1].[IsActive], [c1].[IsDeleted], [c1].[LeadStatus], [c1].[NationalId], [c1].[Nationality], [c1].[Notes], [c1].[Phone], [c1].[Source], [c1].[UpdatedAt], [s].[Id], [s].[Address], [s].[AgeInYears], [s].[AgentId], [s].[Area], [s].[City], [s].[CompanyId], [s].[CreatedAt], [s].[DeedNumber], [s].[Description], [s].[District], [s].[FacingDirection], [s].[IsDeleted], [s].[IsFeatured], [s].[IsPublished], [s].[Latitude], [s].[Longitude], [s].[MunicipalityNumber], [s].[OwnerId], [s].[ParentPropertyId], [s].[ParkingSpots], [s].[Price], [s].[PropertyCode], [s].[PropertyStatus], [s].[Purpose], [s].[RegaLicenseNumber], [s].[Title], [s].[Type], [s].[UnitNumber], [s].[UpdatedAt], [s].[Bathrooms], [s].[Bedrooms], [s].[FloorNumber], [s].[FurnishedStatus], [s].[HasBalcony], [s].[HasCentralAC], [s].[HasElevator], [s].[HasMaidRoom], [s].[HasStorage], [s].[LivingRooms], [s].[BasementFloors], [s].[HasCCTV], [s].[HasElevator0], [s].[HasGenerator], [s].[HasGuard], [s].[HasMosque], [s].[HasParkingFloor], [s].[TotalFloors], [s].[UnitsCount], [s].[HasElectricity], [s].[HasSewer], [s].[HasWater], [s].[IsCornerLand], [s].[IsWalled], [s].[LandShape], [s].[NumberOfStreets], [s].[StreetWidth], [s].[ZoningType], [s].[Bathrooms0], [s].[FloorNumber0], [s].[FurnishedStatus0], [s].[HasCCTV0], [s].[HasCentralAC0], [s].[HasElevator1], [s].[HasKitchen], [s].[HasReceptionArea], [s].[HasStorage0], [s].[MeetingRooms], [s].[OfficesCount], [s].[Bathrooms1], [s].[Bedrooms0], [s].[Floors], [s].[FurnishedStatus1], [s].[GardenArea], [s].[HasCCTV1], [s].[HasDriverRoom], [s].[HasElevator2], [s].[HasGarden], [s].[HasGenerator0], [s].[HasMaidRoom0], [s].[HasMajlis], [s].[HasMosque0], [s].[HasPool], [s].[HasStorage1], [s].[LivingRooms0], [s].[CeilingHeight], [s].[ElectricityCapacity], [s].[GateCount], [s].[HasCCTV2], [s].[HasColdStorage], [s].[HasFireSystem], [s].[HasMosanada], [s].[HasOfficeSpace], [s].[HasSecurityRoom], [s].[HasTruckAccess], [s].[IsFenced], [s].[LoadingDocks], [s].[Discriminator]
+      FROM [Contracts] AS [c]
+      INNER JOIN (
+          SELECT [c0].[Id], [c0].[AssignedAgentId], [c0].[CompanyId], [c0].[CreatedAt], [c0].[Email], [c0].[FullName], [c0].[IsActive], [c0].[IsDeleted], [c0].[LeadStatus], [c0].[NationalId], [c0].[Nationality], [c0].[Notes], [c0].[Phone], [c0].[Source], [c0].[UpdatedAt]
+          FROM [Clients] AS [c0]
+          WHERE [c0].[IsDeleted] = CAST(0 AS bit)
+      ) AS [c1] ON [c].[ClientId] = [c1].[Id]
+      INNER JOIN (
+          SELECT [p].[Id], [p].[Address], [p].[AgeInYears], [p].[AgentId], [p].[Area], [p].[City], [p].[CompanyId], [p].[CreatedAt], [p].[DeedNumber], [p].[Description], [p].[District], [p].[FacingDirection], [p].[IsDeleted], [p].[IsFeatured], [p].[IsPublished], [p].[Latitude], [p].[Longitude], [p].[MunicipalityNumber], [p].[OwnerId], [p].[ParentPropertyId], [p].[ParkingSpots], [p].[Price], [p].[PropertyCode], [p].[PropertyStatus], [p].[Purpose], [p].[RegaLicenseNumber], [p].[Title], [p].[Type], [p].[UnitNumber], [p].[UpdatedAt], [a].[Bathrooms], [a].[Bedrooms], [a].[FloorNumber], [a].[FurnishedStatus], [a].[HasBalcony], [a].[HasCentralAC], [a].[HasElevator], [a].[HasMaidRoom], [a].[HasStorage], [a].[LivingRooms], [b].[BasementFloors], [b].[HasCCTV], [b].[HasElevator] AS [HasElevator0], [b].[HasGenerator], [b].[HasGuard], [b].[HasMosque], [b].[HasParkingFloor], [b].[TotalFloors], [b].[UnitsCount], [l].[HasElectricity], [l].[HasSewer], [l].[HasWater], [l].[IsCornerLand], [l].[IsWalled], [l].[LandShape], [l].[NumberOfStreets], [l].[StreetWidth], [l].[ZoningType], [o].[Bathrooms] AS [Bathrooms0], [o].[FloorNumber] AS [FloorNumber0], [o].[FurnishedStatus] AS [FurnishedStatus0], [o].[HasCCTV] AS [HasCCTV0], [o].[HasCentralAC] AS [HasCentralAC0], [o].[HasElevator] AS [HasElevator1], [o].[HasKitchen], [o].[HasReceptionArea], [o].[HasStorage] AS [HasStorage0], [o].[MeetingRooms], [o].[OfficesCount], [v].[Bathrooms] AS [Bathrooms1], [v].[Bedrooms] AS [Bedrooms0], [v].[Floors], [v].[FurnishedStatus] AS [FurnishedStatus1], [v].[GardenArea], [v].[HasCCTV] AS [HasCCTV1], [v].[HasDriverRoom], [v].[HasElevator] AS [HasElevator2], [v].[HasGarden], [v].[HasGenerator] AS [HasGenerator0], [v].[HasMaidRoom] AS [HasMaidRoom0], [v].[HasMajlis], [v].[HasMosque] AS [HasMosque0], [v].[HasPool], [v].[HasStorage] AS [HasStorage1], [v].[LivingRooms] AS [LivingRooms0], [w].[CeilingHeight], [w].[ElectricityCapacity], [w].[GateCount], [w].[HasCCTV] AS [HasCCTV2], [w].[HasColdStorage], [w].[HasFireSystem], [w].[HasMosanada], [w].[HasOfficeSpace], [w].[HasSecurityRoom], [w].[HasTruckAccess], [w].[IsFenced], [w].[LoadingDocks], CASE
+              WHEN [w].[Id] IS NOT NULL THEN N'WarehouseProperty'
+              WHEN [v].[Id] IS NOT NULL THEN N'VillaProperty'
+              WHEN [o].[Id] IS NOT NULL THEN N'OfficeProperty'
+              WHEN [l].[Id] IS NOT NULL THEN N'LandProperty'
+              WHEN [b].[Id] IS NOT NULL THEN N'BuildingProperty'
+              WHEN [a].[Id] IS NOT NULL THEN N'ApartmentProperty'
+          END AS [Discriminator]
+          FROM [Properties] AS [p]
+          LEFT JOIN [ApartmentProperties] AS [a] ON [p].[Id] = [a].[Id]
+          LEFT JOIN [BuildingProperties] AS [b] ON [p].[Id] = [b].[Id]
+          LEFT JOIN [LandProperties] AS [l] ON [p].[Id] = [l].[Id]
+          LEFT JOIN [OfficeProperties] AS [o] ON [p].[Id] = [o].[Id]
+          LEFT JOIN [VillaProperties] AS [v] ON [p].[Id] = [v].[Id]
+          LEFT JOIN [WarehouseProperties] AS [w] ON [p].[Id] = [w].[Id]
+          WHERE [p].[IsDeleted] = CAST(0 AS bit)
+      ) AS [s] ON [c].[PropertyId] = [s].[Id]
+      WHERE [c].[IsDeleted] = CAST(0 AS bit) AND [c].[ContractStatus] = N'Active' AND [c].[EndDate] IS NOT NULL AND CONVERT(date, [c].[EndDate]) >= @today AND CONVERT(date, [c].[EndDate]) <= @targetDate {"MachineName":"DESKTOP-C2AKODT","ThreadId":46}
+[2026-10-03 01:12:31 INF] Sending 0 appointment reminders {"SourceContext":"RealEstate.Infrastructure.Jobs.NotificationJobService","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:31 INF] Sending 0 contract expiry alerts {"SourceContext":"RealEstate.Infrastructure.Jobs.NotificationJobService","MachineName":"DESKTOP-C2AKODT","ThreadId":46}
+[2026-10-03 01:12:33 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN93:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":46}
+[2026-10-03 01:12:33 ERR] HTTP GET /swagger/index.html → 500 (9.1303ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0Q910VN93:00000001","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2026-10-03 01:12:33 ERR] Unhandled exception on GET /swagger/index.html {"SourceContext":"RealEstate.API.Middleware.ExceptionMiddleware","RequestId":"0HNP0Q910VN93:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at RealEstate.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\RealEstate\RealEstate.API\Middleware\ExceptionMiddleware.cs:line 25
+[2026-10-03 01:12:34 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.html - 500 null application/json 648.1379ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN93:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:12:34 INF] Request starting HTTP/1.1 GET http://localhost:5171/favicon.ico - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN93:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:12:34 ERR] HTTP GET /favicon.ico → 500 (2.6633ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0Q910VN93:00000002","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2026-10-03 01:12:34 ERR] Unhandled exception on GET /favicon.ico {"SourceContext":"RealEstate.API.Middleware.ExceptionMiddleware","RequestId":"0HNP0Q910VN93:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at RealEstate.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\RealEstate\RealEstate.API\Middleware\ExceptionMiddleware.cs:line 25
+[2026-10-03 01:12:34 INF] Request finished HTTP/1.1 GET http://localhost:5171/favicon.ico - 500 null application/json 87.843ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN93:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN93","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:17:15 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":50}
+[2026-10-03 01:17:16 ERR] HTTP GET /swagger/index.html → 500 (3.0928ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0Q910VN95:00000001","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2026-10-03 01:17:16 ERR] Unhandled exception on GET /swagger/index.html {"SourceContext":"RealEstate.API.Middleware.ExceptionMiddleware","RequestId":"0HNP0Q910VN95:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at RealEstate.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\RealEstate\RealEstate.API\Middleware\ExceptionMiddleware.cs:line 25
+[2026-10-03 01:17:16 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.html - 500 null application/json 501.742ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000001","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+[2026-10-03 01:17:16 INF] Request starting HTTP/1.1 GET http://localhost:5171/favicon.ico - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+[2026-10-03 01:17:16 ERR] HTTP GET /favicon.ico → 500 (2.5500ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0Q910VN95:00000002","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2026-10-03 01:17:16 ERR] Unhandled exception on GET /favicon.ico {"SourceContext":"RealEstate.API.Middleware.ExceptionMiddleware","RequestId":"0HNP0Q910VN95:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at RealEstate.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\RealEstate\RealEstate.API\Middleware\ExceptionMiddleware.cs:line 25
+[2026-10-03 01:17:16 INF] Request finished HTTP/1.1 GET http://localhost:5171/favicon.ico - 500 null application/json 113.7642ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":51}
+[2026-10-03 01:19:05 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000003","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":3}
+[2026-10-03 01:19:05 ERR] HTTP GET /swagger/v1/swagger.json → 500 (1.8012ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0Q910VN95:00000003","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2026-10-03 01:19:05 ERR] Unhandled exception on GET /swagger/v1/swagger.json {"SourceContext":"RealEstate.API.Middleware.ExceptionMiddleware","RequestId":"0HNP0Q910VN95:00000003","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at RealEstate.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\RealEstate\RealEstate.API\Middleware\ExceptionMiddleware.cs:line 25
+[2026-10-03 01:19:06 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - 500 null application/json 109.4244ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000003","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+[2026-10-03 01:19:06 INF] Request starting HTTP/1.1 GET http://localhost:5171/favicon.ico - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000004","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+[2026-10-03 01:19:06 ERR] HTTP GET /favicon.ico → 500 (3.4095ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0Q910VN95:00000004","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+[2026-10-03 01:19:06 ERR] Unhandled exception on GET /favicon.ico {"SourceContext":"RealEstate.API.Middleware.ExceptionMiddleware","RequestId":"0HNP0Q910VN95:00000004","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+System.IO.FileNotFoundException: Could not find file 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'.
+File name: 'D:\RealEstate\RealEstate.API\bin\Release\net10.0\RealEstate.API.xml'
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.Open(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.OSFileStreamStrategy..ctor(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.Strategies.FileStreamHelpers.ChooseStrategyCore(String path, FileMode mode, FileAccess access, FileShare share, FileOptions options, Int64 preallocationSize, Nullable`1 unixCreateMode)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize)
+   at System.Xml.XmlDownloadManager.GetStream(Uri uri, ICredentials credentials, IWebProxy proxy)
+   at System.Xml.XmlTextReaderImpl.OpenUrl()
+   at System.Xml.XmlTextReaderImpl.Read()
+   at System.Xml.XPath.XPathDocument.LoadFromReader(XmlReader reader, XmlSpace space)
+   at System.Xml.XPath.XPathDocument..ctor(String uri)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.<>c__DisplayClass45_0.<IncludeXmlComments>b__0()
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, Func`1 xmlDocFactory, Boolean includeControllerXmlComments)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenOptionsExtensions.IncludeXmlComments(SwaggerGenOptions swaggerGenOptions, String filePath, Boolean includeControllerXmlComments)
+   at Program.<>c.<<Main>$>b__0_2(SwaggerGenOptions options) in D:\RealEstate\RealEstate.API\Program.cs:line 66
+   at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)
+   at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()
+   at Swashbuckle.AspNetCore.SwaggerGen.ConfigureSwaggerGeneratorOptions..ctor(IOptions`1 swaggerGenOptionsAccessor, IServiceProvider serviceProvider, IWebHostEnvironment hostingEnv)
+   at InvokeStub_ConfigureSwaggerGeneratorOptions..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at System.Reflection.RuntimeConstructorInfo.Invoke(BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitIEnumerable(IEnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.CreateServiceAccessor(ServiceIdentifier serviceIdentifier)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_3(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.SwaggerGenServiceCollectionExtensions.<>c.<AddSwaggerGen>b__0_1(IServiceProvider s)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.GetService(Type serviceType)
+   at lambda_method10(Closure, Object, HttpContext, IServiceProvider)
+   at Serilog.AspNetCore.RequestLoggingMiddleware.Invoke(HttpContext httpContext)
+   at RealEstate.API.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in D:\RealEstate\RealEstate.API\Middleware\ExceptionMiddleware.cs:line 25
+[2026-10-03 01:19:06 INF] Request finished HTTP/1.1 GET http://localhost:5171/favicon.ico - 500 null application/json 85.4841ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0Q910VN95:00000004","RequestPath":"/favicon.ico","ConnectionId":"0HNP0Q910VN95","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+[2026-10-03 01:21:40 WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development. {"EventId":{"Id":10400,"Name":"Microsoft.EntityFrameworkCore.Infrastructure.SensitiveDataLoggingEnabledWarning"},"SourceContext":"Microsoft.EntityFrameworkCore.Model.Validation","MachineName":"DESKTOP-C2AKODT","ThreadId":2}
+[2026-10-03 01:21:41 DBG] warn: 10/3/2026 01:21:41.037 CoreEventId.SensitiveDataLoggingEnabledWarning[10400] (Microsoft.EntityFrameworkCore.Infrastructure) 
+      Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development. {"MachineName":"DESKTOP-C2AKODT","ThreadId":2}
+[2026-10-03 01:21:43 INF] Executed DbCommand (94ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Companies] AS [c]
+        WHERE [c].[IsDeleted] = CAST(0 AS bit)) THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END {"EventId":{"Id":20101,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandExecuted"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:43 DBG] info: 10/3/2026 01:21:43.536 RelationalEventId.CommandExecuted[20101] (Microsoft.EntityFrameworkCore.Database.Command) 
+      Executed DbCommand (94ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT CASE
+          WHEN EXISTS (
+              SELECT 1
+              FROM [Companies] AS [c]
+              WHERE [c].[IsDeleted] = CAST(0 AS bit)) THEN CAST(1 AS bit)
+          ELSE CAST(0 AS bit)
+      END {"MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:43 INF] Database already seeded — skipping {"SourceContext":"Program","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:43 INF] Start installing Hangfire SQL objects... {"SourceContext":"Hangfire.SqlServer.SqlServerObjectsInstaller","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:44 INF] Hangfire SQL objects installed. {"SourceContext":"Hangfire.SqlServer.SqlServerObjectsInstaller","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:44 INF] Background jobs scheduled successfully {"SourceContext":"RealEstate.Infrastructure.Jobs.NotificationJobService","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:44 INF] RealEstate API started successfully {"MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:44 INF] User profile is available. Using 'C:\Users\DELL\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest. {"EventId":{"Id":63,"Name":"UsingProfileAsKeyRepositoryWithDPAPI"},"SourceContext":"Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Now listening on: http://localhost:5171 {"EventId":{"Id":14,"Name":"ListeningOnAddress"},"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Starting Hangfire Server using job storage: 'SQL Server: (localdb)\MSSQLLocalDB@RealEstateSaasDb' {"SourceContext":"Hangfire.BackgroundJobServer","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Using the following options for SQL Server job storage: Queue poll interval: 00:00:00. {"SourceContext":"Hangfire.BackgroundJobServer","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Using the following options for Hangfire Server:
+    Worker count: 20
+    Listening queues: 'default'
+    Shutdown timeout: 00:00:15
+    Schedule polling interval: 00:00:15 {"SourceContext":"Hangfire.BackgroundJobServer","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Application started. Press Ctrl+C to shut down. {"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Hosting environment: Development {"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Content root path: D:\RealEstate\RealEstate.API {"SourceContext":"Microsoft.Hosting.Lifetime","MachineName":"DESKTOP-C2AKODT","ThreadId":11}
+[2026-10-03 01:21:45 INF] Server desktop-c2akodt:16252:ce4f037e successfully announced in 45.6492 ms {"SourceContext":"Hangfire.Server.BackgroundServerProcess","MachineName":"DESKTOP-C2AKODT","ThreadId":17}
+[2026-10-03 01:21:45 INF] Server desktop-c2akodt:16252:ce4f037e is starting the registered dispatchers: ServerWatchdog, ServerJobCancellationWatcher, SqlServerHeartbeatProcess, ExpirationManager, CountersAggregator, Worker, DelayedJobScheduler, RecurringJobScheduler... {"SourceContext":"Hangfire.Server.BackgroundServerProcess","MachineName":"DESKTOP-C2AKODT","ThreadId":17}
+[2026-10-03 01:21:45 INF] Server desktop-c2akodt:16252:ce4f037e all the dispatchers started {"SourceContext":"Hangfire.Server.BackgroundServerProcess","MachineName":"DESKTOP-C2AKODT","ThreadId":17}
+[2026-10-03 01:21:51 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000001","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":16}
+[2026-10-03 01:21:52 INF] HTTP GET /swagger/v1/swagger.json → 200 (256.1477ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407M:00000001","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:21:52 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 557.5679ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000001","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:21:52 INF] Request starting HTTP/1.1 GET http://localhost:5171/favicon.ico - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:21:52 WRN] Failed to determine the https port for redirect. {"EventId":{"Id":3,"Name":"FailedToDeterminePort"},"SourceContext":"Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware","RequestId":"0HNP0QE7D407M:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:21:54 WRN] HTTP GET /favicon.ico → 404 (2031.1822ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407M:00000002","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:21:54 INF] Request finished HTTP/1.1 GET http://localhost:5171/favicon.ico - 404 0 null 2069.0424ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:21:54 INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5171/favicon.ico, Response status code: 404 {"EventId":{"Id":16},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000002","RequestPath":"/favicon.ico","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:38 INF] HTTP GET /swagger/index.html → 200 (102.5811ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407M:00000003","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":48}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui.css - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000001","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:38 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.html - 200 null text/html;charset=utf-8 207.8715ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000003","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":48}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-bundle.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407R:00000001","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":49}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407O:00000001","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNP0QE7D407O","MachineName":"DESKTOP-C2AKODT","ThreadId":3}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-standalone-preset.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000004","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":48}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407S:00000001","RequestPath":"/swagger/index.js","ConnectionId":"0HNP0QE7D407S","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+[2026-10-03 01:24:38 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.css - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407Q:00000001","RequestPath":"/swagger/index.css","ConnectionId":"0HNP0QE7D407Q","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:24:38 INF] Request finished HTTP/1.1 GET http://localhost:5171/_framework/aspnetcore-browser-refresh.js - 200 14933 application/javascript; charset=utf-8 103.3887ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407O:00000001","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNP0QE7D407O","MachineName":"DESKTOP-C2AKODT","ThreadId":3}
+[2026-10-03 01:24:38 INF] HTTP GET /swagger/index.js → 304 (0.4499ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407S:00000001","ConnectionId":"0HNP0QE7D407S","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+[2026-10-03 01:24:38 INF] HTTP GET /swagger/index.css → 304 (6.9695ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407Q:00000001","ConnectionId":"0HNP0QE7D407Q","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:24:38 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.js - 304 null null 140.42ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407S:00000001","RequestPath":"/swagger/index.js","ConnectionId":"0HNP0QE7D407S","MachineName":"DESKTOP-C2AKODT","ThreadId":52}
+[2026-10-03 01:24:38 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.css - 304 null null 153.8816ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407Q:00000001","RequestPath":"/swagger/index.css","ConnectionId":"0HNP0QE7D407Q","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:24:39 INF] HTTP GET /swagger/swagger-ui.css → 304 (501.3184ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407P:00000001","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui.css - 304 null null 553.7825ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000001","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] HTTP GET /swagger/swagger-ui-standalone-preset.js → 304 (454.1678ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407M:00000004","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":48}
+[2026-10-03 01:24:39 INF] HTTP GET /swagger/swagger-ui-bundle.js → 304 (492.6418ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407R:00000001","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":49}
+[2026-10-03 01:24:39 INF] Request starting HTTP/1.1 GET http://localhost:5171/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000002","RequestPath":"/_vs/browserLink","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-standalone-preset.js - 304 null null 528.4108ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000004","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":48}
+[2026-10-03 01:24:39 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-bundle.js - 304 null null 621.485ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407R:00000001","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":49}
+[2026-10-03 01:24:39 INF] Request finished HTTP/1.1 GET http://localhost:5171/_vs/browserLink - 200 null text/javascript; charset=UTF-8 330.5261ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000002","RequestPath":"/_vs/browserLink","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000003","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":49}
+[2026-10-03 01:24:39 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/favicon-32x32.png - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407R:00000002","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] HTTP GET /swagger/favicon-32x32.png → 304 (0.4733ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407R:00000002","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/favicon-32x32.png - 304 null null 103.2921ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407R:00000002","RequestPath":"/swagger/favicon-32x32.png","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":47}
+[2026-10-03 01:24:39 INF] HTTP GET /swagger/v1/swagger.json → 200 (267.5834ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407P:00000003","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:24:39 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 305.9848ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000003","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:26:45 INF] 1 servers were removed due to timeout {"SourceContext":"Hangfire.Server.ServerWatchdog","MachineName":"DESKTOP-C2AKODT","ThreadId":19}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.html - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000004","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":54}
+[2026-10-03 01:26:55 INF] HTTP GET /swagger/index.html → 304 (0.4306ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407P:00000004","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":55}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.html - 304 null null 28.3967ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000004","RequestPath":"/swagger/index.html","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":55}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.css - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407R:00000003","RequestPath":"/swagger/index.css","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":55}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui.css - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-bundle.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000005","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":54}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-standalone-preset.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407Q:00000002","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNP0QE7D407Q","MachineName":"DESKTOP-C2AKODT","ThreadId":50}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/index.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407S:00000002","RequestPath":"/swagger/index.js","ConnectionId":"0HNP0QE7D407S","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/_framework/aspnetcore-browser-refresh.js - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407O:00000002","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNP0QE7D407O","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:26:55 INF] HTTP GET /swagger/index.css → 304 (0.1851ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407R:00000003","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":55}
+[2026-10-03 01:26:55 INF] HTTP GET /swagger/swagger-ui.css → 304 (0.1944ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407P:00000005","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:26:55 INF] HTTP GET /swagger/swagger-ui-bundle.js → 304 (0.1933ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407M:00000005","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":54}
+[2026-10-03 01:26:55 INF] HTTP GET /swagger/swagger-ui-standalone-preset.js → 304 (0.1009ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407Q:00000002","ConnectionId":"0HNP0QE7D407Q","MachineName":"DESKTOP-C2AKODT","ThreadId":50}
+[2026-10-03 01:26:55 INF] HTTP GET /swagger/index.js → 304 (0.3740ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407S:00000002","ConnectionId":"0HNP0QE7D407S","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/_framework/aspnetcore-browser-refresh.js - 200 14933 application/javascript; charset=utf-8 83.4106ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407O:00000002","RequestPath":"/_framework/aspnetcore-browser-refresh.js","ConnectionId":"0HNP0QE7D407O","MachineName":"DESKTOP-C2AKODT","ThreadId":10}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.css - 304 null null 142.5072ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407R:00000003","RequestPath":"/swagger/index.css","ConnectionId":"0HNP0QE7D407R","MachineName":"DESKTOP-C2AKODT","ThreadId":55}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui.css - 304 null null 158.0325ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407P:00000005","RequestPath":"/swagger/swagger-ui.css","ConnectionId":"0HNP0QE7D407P","MachineName":"DESKTOP-C2AKODT","ThreadId":53}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-bundle.js - 304 null null 142.1374ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000005","RequestPath":"/swagger/swagger-ui-bundle.js","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":54}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/swagger-ui-standalone-preset.js - 304 null null 159.0206ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407Q:00000002","RequestPath":"/swagger/swagger-ui-standalone-preset.js","ConnectionId":"0HNP0QE7D407Q","MachineName":"DESKTOP-C2AKODT","ThreadId":50}
+[2026-10-03 01:26:55 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/index.js - 304 null null 171.811ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407S:00000002","RequestPath":"/swagger/index.js","ConnectionId":"0HNP0QE7D407S","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:26:55 INF] Request starting HTTP/1.1 GET http://localhost:5171/_vs/browserLink - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000006","RequestPath":"/_vs/browserLink","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":54}
+[2026-10-03 01:26:56 INF] Request finished HTTP/1.1 GET http://localhost:5171/_vs/browserLink - 200 null text/javascript; charset=UTF-8 82.7721ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000006","RequestPath":"/_vs/browserLink","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":8}
+[2026-10-03 01:26:56 INF] Request starting HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - null null {"EventId":{"Id":1},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:26:56 INF] HTTP GET /swagger/v1/swagger.json → 200 (71.3602ms) {"RequestHost":"localhost:5171","RequestScheme":"http","UserAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36","SourceContext":"Serilog.AspNetCore.RequestLoggingMiddleware","RequestId":"0HNP0QE7D407M:00000007","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":15}
+[2026-10-03 01:26:56 INF] Request finished HTTP/1.1 GET http://localhost:5171/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 107.6291ms {"EventId":{"Id":2},"SourceContext":"Microsoft.AspNetCore.Hosting.Diagnostics","RequestId":"0HNP0QE7D407M:00000007","RequestPath":"/swagger/v1/swagger.json","ConnectionId":"0HNP0QE7D407M","MachineName":"DESKTOP-C2AKODT","ThreadId":15}

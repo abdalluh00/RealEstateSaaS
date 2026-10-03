@@ -9,9 +9,13 @@ using RealEstate.Application.Features.Owners.Queries.GetOwnerDetail;
 using RealEstate.Application.Features.Owners.Queries.GetPagedOwners;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Authorization;
+using RealEstate.Shared.Common;
 
 namespace RealEstate.API.Controllers
 {
+    /// <summary>
+    /// إدارة الملاك
+    /// </summary>
     [ApiController]
     [Route("api/owners")]
     [Authorize(Policy = Policies.AgentAndUp)]
@@ -22,7 +26,12 @@ namespace RealEstate.API.Controllers
 
         public OwnerController(IMediator mediator) => _mediator = mediator;
 
+        /// <summary>
+        /// الحصول على قائمة الملاك مع الترقيم والتصفية.
+        /// </summary>
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> GetPaged(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -43,7 +52,12 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// الحصول على تفاصيل مالك محدد.
+        /// </summary>
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 404)]
         public async Task<IActionResult> GetDetail(
             Guid id, CancellationToken ct = default)
         {
@@ -53,8 +67,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// إنشاء مالك جديد.
+        /// </summary>
         [HttpPost]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<Guid>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Create(
             [FromBody] CreateOwnerCommand cmd,
             CancellationToken ct = default)
@@ -63,8 +82,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// تحديث بيانات مالك محدد.
+        /// </summary>
         [HttpPut("{id:guid}")]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Update(
             Guid id,
             [FromBody] UpdateOwnerCommand cmd,
@@ -74,8 +98,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// حذف مالك محدد.
+        /// </summary>
         [HttpDelete("{id:guid}")]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<bool>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Delete(
             Guid id, CancellationToken ct = default)
         {

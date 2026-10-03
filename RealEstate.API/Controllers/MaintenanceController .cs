@@ -12,9 +12,13 @@ using RealEstate.Application.Features.Maintenance.Queries.GetMaintenanceDetail;
 using RealEstate.Application.Features.Maintenance.Queries.GetPagedMaintenanceRequests;
 using RealEstate.Domain.Common.Enums;
 using RealEstate.Shared.Authorization;
+using RealEstate.Shared.Common;
 
 namespace RealEstate.API.Controllers
 {
+    /// <summary>
+    /// إدارة طلبات الصيانة
+    /// </summary>
     [ApiController]
     [Route("api/maintenance")]
     [Authorize(Policy = Policies.AgentAndUp)]
@@ -25,7 +29,12 @@ namespace RealEstate.API.Controllers
 
         public MaintenanceController(IMediator mediator) => _mediator = mediator;
 
+        /// <summary>
+        /// الحصول على قائمة طلبات الصيانة مع الترقيم والتصفية.
+        /// </summary>
         [HttpGet]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> GetPaged(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
@@ -55,7 +64,12 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// الحصول على تفاصيل طلب صيانة محدد.
+        /// </summary>
         [HttpGet("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 404)]
         public async Task<IActionResult> GetDetail(
             Guid id, CancellationToken ct = default)
         {
@@ -65,7 +79,12 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// إنشاء طلب صيانة جديد.
+        /// </summary>
         [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse<Guid>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Create(
             [FromBody] CreateMaintenanceRequestCommand cmd,
             CancellationToken ct = default)
@@ -74,8 +93,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// تعيين طلب الصيانة إلى مستخدم.
+        /// </summary>
         [HttpPatch("{id:guid}/assign")]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Assign(
             Guid id,
             [FromBody] AssignMaintenanceRequestCommand cmd,
@@ -85,8 +109,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// حل طلب الصيانة.
+        /// </summary>
         [HttpPatch("{id:guid}/resolve")]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Resolve(
             Guid id,
             [FromBody] ResolveMaintenanceRequestCommand cmd,
@@ -96,8 +125,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// إلغاء طلب الصيانة.
+        /// </summary>
         [HttpPatch("{id:guid}/cancel")]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> Cancel(
             Guid id, CancellationToken ct = default)
         {
@@ -107,8 +141,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// رفع ملف مرفق لطلب الصيانة.
+        /// </summary>
         [HttpPost("{id:guid}/media")]
         [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> UploadMedia(
             Guid id,
             [FromForm] UploadMaintenanceMediaCommand cmd,
@@ -118,8 +157,13 @@ namespace RealEstate.API.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
+        /// <summary>
+        /// حذف ملف مرفق من طلب الصيانة.
+        /// </summary>
         [HttpDelete("media/{mediaId:guid}")]
         [Authorize(Policy = Policies.AdminAndUp)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+        [ProducesResponseType(typeof(ApiResponse<object>), 400)]
         public async Task<IActionResult> DeleteMedia(
             Guid mediaId, CancellationToken ct = default)
         {
